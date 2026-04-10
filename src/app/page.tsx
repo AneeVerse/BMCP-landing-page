@@ -164,9 +164,17 @@ export default function BMCPLanding() {
           .nav-links, .nav-actions { display: none !important; }
           .hamburger-btn { display: flex !important; }
           .section-pad { padding: 24px 16px !important; }
-          .hero-section { min-height: auto !important; padding: 24px 0 30px !important; }
-          .hero-container { gap: 28px !important; }
-          .hero-badges { flex-wrap: wrap !important; gap: 10px !important; }
+          .hero-section { min-height: auto !important; padding: 28px 0 36px !important; }
+          .hero-container {
+            padding: 0 16px !important;
+            gap: 20px !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+          }
+          .hero-text { min-width: 0 !important; flex: 1 1 100% !important; }
+          .hero-form-card { flex: 1 1 100% !important; max-width: 100% !important; }
+          .hero-badges { flex-wrap: wrap !important; gap: 8px !important; }
+          .hero-badges > div { font-size: 11px !important; }
 
           /* Why Choose Us - 2 column grid */
           .features-grid {
@@ -374,20 +382,38 @@ export default function BMCPLanding() {
             justify-content: center !important;
           }
 
-          .footer-cols { gap: 32px !important; }
-          .footer-cols > div:first-child { flex-basis: 100% !important; }
-          .footer-cols > div:not(:first-child) { flex: 1 1 42% !important; min-width: 130px !important; }
+          /* Navbar */
+          .main-nav { padding: 10px 16px !important; }
+
+          /* Footer */
+          .footer-wrap { padding: 40px 0 24px !important; }
+          .footer-inner { padding: 0 16px !important; }
+          .footer-cols {
+            gap: 28px !important;
+            flex-direction: column !important;
+          }
+          .footer-cols > div { flex: 1 1 100% !important; min-width: 0 !important; }
+          .footer-links-row {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 24px !important;
+          }
           .footer-bottom-bar {
             flex-direction: column !important;
             text-align: center !important;
+            gap: 12px !important;
+            padding-top: 20px !important;
+          }
+          .footer-bottom-bar > div {
+            justify-content: center !important;
+            flex-wrap: wrap !important;
             gap: 16px !important;
           }
-          .footer-bottom-bar > div { justify-content: center !important; }
           .whatsapp-fab {
             bottom: 20px !important;
-            right: 20px !important;
-            width: 54px !important;
-            height: 54px !important;
+            right: 16px !important;
+            width: 52px !important;
+            height: 52px !important;
           }
         }
         @keyframes mobileMenuSlide {
@@ -401,7 +427,7 @@ export default function BMCPLanding() {
       `}</style>
 
       {/* NAV */}
-      <nav style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${B}`, padding: "12px clamp(100px, 8vw, 200px)" }}>
+      <nav className="main-nav" style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${B}`, padding: "12px clamp(100px, 8vw, 200px)" }}>
         <div style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
             <div style={{ width: 42, height: 42, overflow: "hidden", display: "flex", alignItems: "center" }}>
@@ -475,7 +501,7 @@ export default function BMCPLanding() {
       }}>
         <div style={{ position: "absolute", top: -120, right: -80, width: 420, height: 420, background: `radial-gradient(circle, rgba(192,57,43,0.12) 0%, transparent 70%)`, borderRadius: "50%" }} />
         <div className="hero-container" style={{ width: "100%", padding: "0 clamp(100px, 8vw, 200px)", display: "flex", gap: 32, alignItems: "center", flexWrap: "wrap", boxSizing: "border-box" }}>
-          <div style={{ flex: "1 1 520px" }}>
+          <div className="hero-text" style={{ flex: "1 1 520px" }}>
             <Badge text="Mumbai's #1 Corporate Party Platform" />
             <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 700, color: "#fff", lineHeight: 1.18, margin: "12px 0 10px" }}>
               Corporate Party in Mumbai?{" "}
@@ -499,7 +525,7 @@ export default function BMCPLanding() {
             </div>
           </div>
           {/* Form */}
-          <div style={{ flex: "1 1 360px", background: "#fff", borderRadius: 14, padding: "22px 20px", boxShadow: "0 24px 48px rgba(0,0,0,0.15)" }}>
+          <div className="hero-form-card" style={{ flex: "1 1 360px", background: "#fff", borderRadius: 14, padding: "22px 20px", boxShadow: "0 24px 48px rgba(0,0,0,0.15)" }}>
             {/* Step indicator */}
             {formStatus !== 'success' && (
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
@@ -889,8 +915,8 @@ export default function BMCPLanding() {
       </section>
 
       {/* ===== 10. EXECUTIVE FOOTER (BRAND RED THEME) ===== */}
-      <footer style={{ background: R, padding: "80px 0 40px" }}>
-        <div style={{ width: "100%", padding: "0 clamp(100px, 8vw, 200px)", boxSizing: "border-box" }}>
+      <footer className="footer-wrap" style={{ background: R, padding: "80px 0 40px" }}>
+        <div className="footer-inner" style={{ width: "100%", padding: "0 clamp(100px, 8vw, 200px)", boxSizing: "border-box" }}>
           <div className="footer-cols" style={{ display: "flex", gap: 60, flexWrap: "wrap", marginBottom: 60 }}>
             {/* Logo & About */}
             <div style={{ flex: "2 1 300px" }}>
@@ -916,19 +942,21 @@ export default function BMCPLanding() {
               </div>
             </div>
 
-            {/* Links Columns */}
-            <div style={{ flex: "1 1 140px" }}>
-              <h4 style={{ color: "#fff", fontSize: 11, fontWeight: 800, marginBottom: 24, textTransform: "uppercase", letterSpacing: "1.5px", opacity: 0.9 }}>Venue Types</h4>
-              {["Lounges & Clubs", "Fine Dine", "Banquets", "Cafes", "Open Lawns", "Resorts & Villas", "Catering"].map(v => (
-                <p key={v} style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 12px", cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{v}</p>
-              ))}
-            </div>
+            {/* Links Columns — side by side on mobile via footer-links-row */}
+            <div className="footer-links-row" style={{ display: "contents" }}>
+              <div style={{ flex: "1 1 140px" }}>
+                <h4 style={{ color: "#fff", fontSize: 11, fontWeight: 800, marginBottom: 20, textTransform: "uppercase", letterSpacing: "1.5px", opacity: 0.9 }}>Venue Types</h4>
+                {["Lounges & Clubs", "Fine Dine", "Banquets", "Cafes", "Open Lawns", "Resorts & Villas", "Catering"].map(v => (
+                  <p key={v} style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 10px", cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{v}</p>
+                ))}
+              </div>
 
-            <div style={{ flex: "1 1 140px" }}>
-              <h4 style={{ color: "#fff", fontSize: 11, fontWeight: 800, marginBottom: 24, textTransform: "uppercase", letterSpacing: "1.5px", opacity: 0.9 }}>Mumbai Areas</h4>
-              {["Andheri", "BKC", "Lower Parel", "Powai", "Bandra", "Goregaon", "Navi Mumbai", "Thane"].map(v => (
-                <p key={v} style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 12px", cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{v}</p>
-              ))}
+              <div style={{ flex: "1 1 140px" }}>
+                <h4 style={{ color: "#fff", fontSize: 11, fontWeight: 800, marginBottom: 20, textTransform: "uppercase", letterSpacing: "1.5px", opacity: 0.9 }}>Mumbai Areas</h4>
+                {["Andheri", "BKC", "Lower Parel", "Powai", "Bandra", "Goregaon", "Navi Mumbai", "Thane"].map(v => (
+                  <p key={v} style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 10px", cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{v}</p>
+                ))}
+              </div>
             </div>
 
             {/* Contact Details */}
