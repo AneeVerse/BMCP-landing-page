@@ -92,7 +92,7 @@ function VenueCard({ v }: { v: Venue }) {
           cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif", 
           transition: "all 0.2s ease",
           flexShrink: 0
-        }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; }} onMouseLeave={e => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = R; }} onClick={() => window.open(WA, '_blank')}>
+        }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; }} onMouseLeave={e => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = R; }} onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })}>
           Get Venue Options →
         </button>
       </div>
@@ -115,7 +115,7 @@ export default function BMCPLanding() {
     setFormStep(2);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setFormStatus('submitting');
     setFormMsg('');
@@ -389,15 +389,17 @@ export default function BMCPLanding() {
           .footer-wrap { padding: 40px 0 24px !important; }
           .footer-inner { padding: 0 16px !important; }
           .footer-cols {
-            gap: 28px !important;
+            gap: 24px !important;
             flex-direction: column !important;
           }
           .footer-cols > div { flex: 1 1 100% !important; min-width: 0 !important; }
           .footer-links-row {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
-            gap: 24px !important;
+            gap: 20px !important;
+            flex: 1 1 100% !important;
           }
+          .footer-links-row > div { flex: unset !important; }
           .footer-bottom-bar {
             flex-direction: column !important;
             text-align: center !important;
@@ -455,7 +457,7 @@ export default function BMCPLanding() {
               </div>
               <a href="tel:+919333749333" style={{ fontSize: 13.5, color: D, textDecoration: "none", fontWeight: 700, letterSpacing: "0.2px" }}>+91 9333 74 9333</a>
             </div>
-            <button className="nav-actions" onClick={() => window.open(WA, '_blank')} style={{ background: R, color: "#fff", border: "none", borderRadius: 7, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Get Started →</button>
+            <button className="nav-actions" onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: R, color: "#fff", border: "none", borderRadius: 7, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Get Started →</button>
             <button className="hamburger-btn" onClick={() => setMenuOpen(!menuOpen)} style={{ background: "none", border: "none", cursor: "pointer", padding: 8, flexDirection: "column", gap: 5, alignItems: "center", justifyContent: "center" }}>
               <span style={{ display: "block", width: 22, height: 2, background: D, borderRadius: 2, transition: "all 0.3s", transform: menuOpen ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
               <span style={{ display: "block", width: 22, height: 2, background: D, borderRadius: 2, transition: "all 0.3s", opacity: menuOpen ? 0 : 1 }} />
@@ -478,7 +480,7 @@ export default function BMCPLanding() {
             <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)} style={{ fontSize: 28, fontWeight: 700, color: D, textDecoration: "none", padding: "24px 0", width: "80%", textAlign: "center", borderBottom: `1px solid ${B}`, animation: `mobileMenuFade 0.5s ${0.1 * (i + 1)}s both`, fontFamily: "var(--font-playfair), serif" }}>{link.name}</a>
           ))}
           <div style={{ marginTop: 48, animation: "mobileMenuFade 0.5s 0.5s both" }}>
-            <button onClick={() => { setMenuOpen(false); window.open(WA, '_blank'); }} style={{ background: R, color: "#fff", border: "none", borderRadius: 12, padding: "18px 52px", fontSize: 17, fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif" }}>Get Started →</button>
+            <button onClick={() => { setMenuOpen(false); setTimeout(() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' }), 300); }} style={{ background: R, color: "#fff", border: "none", borderRadius: 12, padding: "18px 52px", fontSize: 17, fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif" }}>Get Started →</button>
           </div>
           <a href="tel:+919333749333" style={{ marginTop: 28, fontSize: 16, color: G, textDecoration: "none", animation: "mobileMenuFade 0.5s 0.6s both", display: "flex", alignItems: "center", gap: 8 }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={R} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
@@ -525,7 +527,7 @@ export default function BMCPLanding() {
             </div>
           </div>
           {/* Form */}
-          <div className="hero-form-card" style={{ flex: "1 1 360px", background: "#fff", borderRadius: 14, padding: "22px 20px", boxShadow: "0 24px 48px rgba(0,0,0,0.15)" }}>
+          <div id="hero-form" className="hero-form-card" style={{ flex: "1 1 360px", background: "#fff", borderRadius: 14, padding: "22px 20px", boxShadow: "0 24px 48px rgba(0,0,0,0.15)" }}>
             {/* Step indicator */}
             {formStatus !== 'success' && (
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14 }}>
@@ -582,7 +584,15 @@ export default function BMCPLanding() {
                 {/* Event Date */}
                 <div style={{ marginBottom: 10 }}>
                   <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>Event Date</label>
-                  <input type="date" value={formData.date} onChange={e => setFormData({ ...formData, date: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif", color: formData.date ? D : G }} onFocus={e => e.target.style.borderColor = R} onBlur={e => e.target.style.borderColor = B} />
+                  <input
+                    type="date"
+                    value={formData.date}
+                    onChange={e => setFormData({ ...formData, date: e.target.value })}
+                    onClick={e => (e.target as HTMLInputElement).showPicker?.()}
+                    style={{ width: "100%", padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif", color: formData.date ? D : "#888", cursor: "pointer" }}
+                    onFocus={e => e.target.style.borderColor = R}
+                    onBlur={e => e.target.style.borderColor = B}
+                  />
                 </div>
 
                 <label style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 12, color: G, marginBottom: 14, cursor: "pointer" }}>
@@ -899,7 +909,7 @@ export default function BMCPLanding() {
             Shortlist and finalize everything in 30 minutes.
           </p>
           
-          <button onClick={() => window.open(WA, '_blank')} style={{ background: R, color: "#fff", border: "none", borderRadius: 12, padding: "20px 52px", fontSize: 18, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif", boxShadow: "0 12px 30px rgba(192,57,43,0.3)", transition: "transform 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+          <button onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: R, color: "#fff", border: "none", borderRadius: 12, padding: "20px 52px", fontSize: 18, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif", boxShadow: "0 12px 30px rgba(192,57,43,0.3)", transition: "transform 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
             GET VENUE OPTIONS FREE →
           </button>
           
@@ -942,8 +952,8 @@ export default function BMCPLanding() {
               </div>
             </div>
 
-            {/* Links Columns — side by side on mobile via footer-links-row */}
-            <div className="footer-links-row" style={{ display: "contents" }}>
+            {/* Links Columns — flex row on desktop, 2-col grid on mobile */}
+            <div className="footer-links-row" style={{ display: "flex", flex: "2 1 280px", gap: 60 }}>
               <div style={{ flex: "1 1 140px" }}>
                 <h4 style={{ color: "#fff", fontSize: 11, fontWeight: 800, marginBottom: 20, textTransform: "uppercase", letterSpacing: "1.5px", opacity: 0.9 }}>Venue Types</h4>
                 {["Lounges & Clubs", "Fine Dine", "Banquets", "Cafes", "Open Lawns", "Resorts & Villas", "Catering"].map(v => (
