@@ -108,6 +108,8 @@ export default function BMCPLanding() {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [formMsg, setFormMsg] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showWaPopup, setShowWaPopup] = useState(false);
+  const [waForm, setWaForm] = useState({ name: '', phone: '', event: '' });
   const userGeo = useGeoLocation();
   const visitorTracked = useRef(false);
 
@@ -130,6 +132,32 @@ export default function BMCPLanding() {
       }),
     }).catch(() => {});
   }, [userGeo]);
+
+  const handleWaSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Open WhatsApp immediately — must stay synchronous to avoid browser popup blocker
+    window.open(WA, '_blank', 'noopener,noreferrer');
+    setShowWaPopup(false);
+    const snapshot = { ...waForm };
+    setWaForm({ name: '', phone: '', event: '' });
+    // Fire-and-forget lead capture in background
+    fetch('/api/submit-form', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: snapshot.name,
+        phone: snapshot.phone,
+        event: snapshot.event || 'WhatsApp Inquiry',
+        city: 'Mumbai',
+        area: '',
+        date: '',
+        whatsapp: true,
+        userLocation: userGeo ? `${userGeo.city}, ${userGeo.region}, ${userGeo.country}` : 'Unknown',
+        userPincode: userGeo ? userGeo.pincode : 'Unknown',
+        userIp: userGeo ? userGeo.ip : 'Unknown',
+      }),
+    }).catch(() => {});
+  };
 
   const handleStep1 = (e: React.FormEvent) => {
     e.preventDefault();
@@ -185,7 +213,7 @@ export default function BMCPLanding() {
           .nav-links, .nav-actions { display: none !important; }
           .hamburger-btn { display: flex !important; }
           .section-pad { padding: 24px 16px !important; }
-          .hero-section { min-height: auto !important; padding: 28px 0 36px !important; }
+          .hero-section { min-height: auto !important; padding: 28px 0 36px !important; background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('/images/home_banner.png') center/cover !important; }
           .hero-container {
             padding: 0 16px !important;
             gap: 20px !important;
@@ -523,24 +551,24 @@ export default function BMCPLanding() {
         overflow: "hidden"
       }}>
         <div style={{ position: "absolute", top: -120, right: -80, width: 420, height: 420, background: `radial-gradient(circle, rgba(192,57,43,0.12) 0%, transparent 70%)`, borderRadius: "50%" }} />
-        <div className="hero-container" style={{ width: "100%", padding: "0 clamp(100px, 8vw, 200px)", display: "flex", gap: 32, alignItems: "center", flexWrap: "wrap", boxSizing: "border-box" }}>
-          <div className="hero-text" style={{ flex: "1 1 520px" }}>
+        <div className="hero-container" style={{ width: "100%", padding: "0 clamp(100px, 8vw, 200px)", display: "flex", gap: 48, alignItems: "flex-start", flexWrap: "wrap", boxSizing: "border-box" }}>
+          <div className="hero-text" style={{ flex: "1 1 520px", paddingTop: 8 }}>
             <Badge text="Mumbai's #1 Corporate Party Platform" />
-            <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 700, color: "#fff", lineHeight: 1.18, margin: "12px 0 10px" }}>
+            <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(32px, 4.8vw, 54px)", fontWeight: 700, color: "#fff", lineHeight: 1.15, margin: "16px 0 14px" }}>
               Corporate Party in Mumbai?{" "}
               <span style={{ color: "#FF5252" }}>Get Venue Options in 30 Minutes.</span>
             </h1>
-            <p style={{ fontSize: 15, color: "#E0E0E0", lineHeight: 1.55, margin: "0 0 16px", maxWidth: 500 }}>
+            <p style={{ fontSize: 17, color: "#E0E0E0", lineHeight: 1.65, margin: "0 0 24px", maxWidth: 520 }}>
               Tell us your team size, budget, and date. We shortlist the best lounges, banquets, and party venues in Mumbai — so you don't have to call 20 places.
             </p>
-            <div className="hero-badges" style={{ display: "flex", gap: 14, marginTop: 12, alignItems: "center" }}>
+            <div className="hero-badges" style={{ display: "flex", gap: 20, marginTop: 8, alignItems: "center", flexWrap: "wrap" }}>
               {[
                 { label: "500+ Companies", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6 }}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> },
                 { label: "30-Min Turnaround", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6 }}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> },
                 { label: "100% Free", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6 }}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> },
                 { label: "WhatsApp Support", icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6 }}><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-10.6 8.38 8.38 0 0 1 3.9.9L22 4z"></path></svg> },
               ].map((item, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", color: "#E0E0E0", fontSize: 12.5, fontWeight: 600, whiteSpace: "nowrap" }}>
+                <div key={i} style={{ display: "flex", alignItems: "center", color: "#E0E0E0", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap" }}>
                   <span style={{ color: "#FF5252", display: "flex", alignItems: "center" }}>{item.icon}</span>
                   {item.label}
                 </div>
@@ -581,7 +609,21 @@ export default function BMCPLanding() {
                 {/* Event / Occasion */}
                 <div style={{ marginBottom: 10 }}>
                   <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>Event / Occasion *</label>
-                  <input required type="text" placeholder="e.g. Annual Office Party, Team Outing" value={formData.event} onChange={e => setFormData({ ...formData, event: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif" }} onFocus={e => e.target.style.borderColor = R} onBlur={e => e.target.style.borderColor = B} />
+                  <select required value={formData.event} onChange={e => setFormData({ ...formData, event: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif", background: "#fff", color: formData.event ? D : G, appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center" }} onFocus={e => e.target.style.borderColor = R} onBlur={e => e.target.style.borderColor = B}>
+                    <option value="" disabled>Select event type</option>
+                    <option value="Annual Office Party">Annual Office Party</option>
+                    <option value="Team Outing">Team Outing</option>
+                    <option value="R&R / Reward Night">R&amp;R / Reward Night</option>
+                    <option value="Diwali / Festive Celebration">Diwali / Festive Celebration</option>
+                    <option value="Christmas / New Year Party">Christmas / New Year Party</option>
+                    <option value="Award Night">Award Night</option>
+                    <option value="Client Entertainment">Client Entertainment</option>
+                    <option value="Product Launch">Product Launch</option>
+                    <option value="Corporate Offsite">Corporate Offsite</option>
+                    <option value="Leadership Retreat">Leadership Retreat</option>
+                    <option value="Farewell Party">Farewell Party</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
 
                 {/* City — pre-selected Mumbai */}
@@ -734,35 +776,33 @@ export default function BMCPLanding() {
         </p>
       </Sec>
 
-      {/* ===== 4. HOW IT WORKS (PEARL GRAY) ===== */}
-      <Sec bg="#F5F5F7" id="how-it-works">
+      {/* ===== 4. TESTIMONIALS (PEARL GRAY) ===== */}
+      <Sec bg="#F5F5F7">
         <div style={{ textAlign: "center", marginBottom: 30 }}>
-          <Badge text="HOW IT WORKS" />
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "10px 0 0" }}>
-            From Enquiry to Event in <span style={{ color: R }}>5 Steps</span>
-          </h2>
+          <Badge text="Reviews" />
+          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "10px 0 0" }}>Trusted by <span style={{ color: R }}>500+ Companies</span></h2>
         </div>
-        <div style={{ position: "relative", width: "100%" }}>
-          {/* Connecting Line (Dashed) */}
-          <div className="steps-line" style={{ position: "absolute", top: 26, left: "10%", right: "10%", height: 0, borderTop: `2px dashed ${B}`, zIndex: 0 }} />
-          
-          <div className="steps-container" style={{ display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap", position: "relative", zIndex: 1 }}>
-            {[
-              { t: "Share Details", d: "Event type, area, guest count, date, budget." },
-              { t: "We Shortlist", d: "3–5 handpicked Mumbai venues, vetted for corporate." },
-              { t: "Compare", d: "Photos, packages, pricing — side by side. Site visits on request." },
-              { t: "Finalize", d: "Pick your venue. Confirm in 30 minutes." },
-              { t: "We Coordinate", d: "Menu, DJ, decor, branding — handled until event day." },
-            ].map((s, i) => (
-              <div key={i} style={{ flex: "1 1 180px", textAlign: "center", transition: "transform 0.3s ease" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
-                <div style={{ width: 52, height: 52, background: R, color: "#fff", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 800, margin: "0 auto 20px", boxShadow: "0 8px 20px rgba(192,57,43,0.15)" }}>
-                  {i + 1}
-                </div>
-                <h4 style={{ fontSize: 15.5, fontWeight: 700, margin: "0 0 10px", color: D, letterSpacing: "-0.2px" }}>{s.t}</h4>
-                <p style={{ fontSize: 13, color: G, lineHeight: 1.7, margin: "0 auto", padding: "0 5px", maxWidth: 170 }}>{s.d}</p>
+        <div className="testimonials-row" style={{ display: "flex", gap: 20, flexWrap: "wrap", justifyContent: "center" }}>
+          {[
+            { q: "We needed a lounge in Andheri for 80 people with DJ and bar. BMCP sent 5 options the same day. Finalized in one call.", n: "Priya S.", r: "HR Manager, SaaS Company", a: "Andheri" },
+            { q: "Our annual party used to take 3 weeks. This year — 3 days. They handled venue, food, DJ, everything.", n: "Rohan M.", r: "Admin Lead, Fintech Startup", a: "Navi Mumbai" },
+            { q: "Sent one WhatsApp message. Got 4 venue options with pricing by evening. Booked a banquet in Powai for 200 people.", n: "Sneha K.", r: "People Ops, IT Services", a: "BKC" },
+          ].map((t, i) => (
+            <div key={i} style={{ flex: "1 1 300px", background: "#fff", border: `1px solid ${B}`, borderRadius: 16, padding: "32px 28px", maxWidth: 380, boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
+              <div style={{ display: "flex", gap: 4, marginBottom: 16 }}>
+                {[1, 2, 3, 4, 5].map(s => (
+                  <svg key={s} width="14" height="14" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                ))}
               </div>
-            ))}
-          </div>
+              <p style={{ fontSize: 14.5, color: D, lineHeight: 1.7, margin: "0 0 20px", fontStyle: "italic" }}>
+                "{t.q}"
+              </p>
+              <div style={{ borderTop: `1px solid ${B}`, paddingTop: 16 }}>
+                <p style={{ fontSize: 13.5, color: D, margin: 0 }}><strong style={{ fontWeight: 700 }}>{t.n}</strong></p>
+                <p style={{ fontSize: 12, color: G, margin: "2px 0 0" }}>{t.r}, {t.a}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </Sec>
 
@@ -822,33 +862,33 @@ export default function BMCPLanding() {
         </div>
       </Sec>
 
-      {/* ===== 6. TESTIMONIALS (PEARL GRAY) ===== */}
-      <Sec bg="#F5F5F7">
+      {/* ===== 6. HOW IT WORKS (PEARL GRAY) ===== */}
+      <Sec bg="#F5F5F7" id="how-it-works">
         <div style={{ textAlign: "center", marginBottom: 30 }}>
-          <Badge text="Reviews" />
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "10px 0 0" }}>Trusted by <span style={{ color: R }}>500+ Companies</span></h2>
+          <Badge text="HOW IT WORKS" />
+          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "10px 0 0" }}>
+            From Enquiry to Event in <span style={{ color: R }}>5 Steps</span>
+          </h2>
         </div>
-        <div className="testimonials-row" style={{ display: "flex", gap: 20, flexWrap: "wrap", justifyContent: "center" }}>
-          {[
-            { q: "We needed a lounge in Andheri for 80 people with DJ and bar. BMCP sent 5 options the same day. Finalized in one call.", n: "Priya S.", r: "HR Manager, SaaS Company", a: "Andheri" },
-            { q: "Our annual party used to take 3 weeks. This year — 3 days. They handled venue, food, DJ, everything.", n: "Rohan M.", r: "Admin Lead, Fintech Startup", a: "Navi Mumbai" },
-            { q: "Sent one WhatsApp message. Got 4 venue options with pricing by evening. Booked a banquet in Powai for 200 people.", n: "Sneha K.", r: "People Ops, IT Services", a: "BKC" },
-          ].map((t, i) => (
-            <div key={i} style={{ flex: "1 1 300px", background: "#fff", border: `1px solid ${B}`, borderRadius: 16, padding: "32px 28px", maxWidth: 380, boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
-              <div style={{ display: "flex", gap: 4, marginBottom: 16 }}>
-                {[1, 2, 3, 4, 5].map(s => (
-                  <svg key={s} width="14" height="14" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                ))}
+        <div style={{ position: "relative", width: "100%" }}>
+          <div className="steps-line" style={{ position: "absolute", top: 26, left: "10%", right: "10%", height: 0, borderTop: `2px dashed ${B}`, zIndex: 0 }} />
+          <div className="steps-container" style={{ display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap", position: "relative", zIndex: 1 }}>
+            {[
+              { t: "Share Details", d: "Event type, area, guest count, date, budget." },
+              { t: "We Shortlist", d: "3–5 handpicked Mumbai venues, vetted for corporate." },
+              { t: "Compare", d: "Photos, packages, pricing — side by side. Site visits on request." },
+              { t: "Finalize", d: "Pick your venue. Confirm in 30 minutes." },
+              { t: "We Coordinate", d: "Menu, DJ, decor, branding — handled until event day." },
+            ].map((s, i) => (
+              <div key={i} style={{ flex: "1 1 180px", textAlign: "center", transition: "transform 0.3s ease" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+                <div style={{ width: 52, height: 52, background: R, color: "#fff", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 800, margin: "0 auto 20px", boxShadow: "0 8px 20px rgba(192,57,43,0.15)" }}>
+                  {i + 1}
+                </div>
+                <h4 style={{ fontSize: 15.5, fontWeight: 700, margin: "0 0 10px", color: D, letterSpacing: "-0.2px" }}>{s.t}</h4>
+                <p style={{ fontSize: 13, color: G, lineHeight: 1.7, margin: "0 auto", padding: "0 5px", maxWidth: 170 }}>{s.d}</p>
               </div>
-              <p style={{ fontSize: 14.5, color: D, lineHeight: 1.7, margin: "0 0 20px", fontStyle: "italic" }}>
-                "{t.q}"
-              </p>
-              <div style={{ borderTop: `1px solid ${B}`, paddingTop: 16 }}>
-                <p style={{ fontSize: 13.5, color: D, margin: 0 }}><strong style={{ fontWeight: 700 }}>{t.n}</strong></p>
-                <p style={{ fontSize: 12, color: G, margin: "2px 0 0" }}>{t.r}, {t.a}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </Sec>
 
@@ -959,17 +999,20 @@ export default function BMCPLanding() {
               </p>
               
               {/* Social Media Icons */}
-              <div style={{ display: "flex", gap: 16 }}>
+              <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
                 {[
-                  { name: "Instagram", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg> },
-                  { name: "LinkedIn", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg> },
-                  { name: "Facebook", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg> },
-                  { name: "X", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z M4 20l6.768 -6.768 M12.456 11.544l7.544 -7.544"></path></svg> },
+                  { name: "Instagram", href: "https://www.instagram.com/bookmycorporateparty.INDIA/", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg> },
+                  { name: "LinkedIn", href: "https://www.linkedin.com/company/bookmycorporateparty", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg> },
+                  { name: "Facebook", href: "https://www.facebook.com/people/Book-My-Corporate-Party/61573909689565/", icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg> },
                 ].map((s, i) => (
-                  <a key={i} href="#" style={{ color: "rgba(255,255,255,0.7)", transition: "all 0.2s ease" }} onMouseEnter={e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.transform = "translateY(-2px)"; }} onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.7)"; e.currentTarget.style.transform = "none"; }}>
+                  <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.7)", transition: "all 0.2s ease" }} onMouseEnter={e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.transform = "translateY(-2px)"; }} onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.7)"; e.currentTarget.style.transform = "none"; }}>
                     {s.icon}
                   </a>
                 ))}
+                {/* WhatsApp — opens popup form */}
+                <button onClick={() => setShowWaPopup(true)} style={{ background: "none", border: "none", padding: 0, color: "rgba(255,255,255,0.7)", cursor: "pointer", transition: "all 0.2s ease", display: "flex", alignItems: "center" }} onMouseEnter={e => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.transform = "translateY(-2px)"; }} onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.7)"; e.currentTarget.style.transform = "none"; }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.555 4.197 1.608 6.02L0 24l6.128-1.608a11.847 11.847 0 0 0 5.922 1.583h.005c6.637 0 12.046-5.41 12.051-12.048a11.82 11.82 0 0 0-3.526-8.528"></path></svg>
+                </button>
               </div>
             </div>
 
@@ -978,14 +1021,14 @@ export default function BMCPLanding() {
               <div style={{ flex: "1 1 140px" }}>
                 <h4 style={{ color: "#fff", fontSize: 11, fontWeight: 800, marginBottom: 20, textTransform: "uppercase", letterSpacing: "1.5px", opacity: 0.9 }}>Venue Types</h4>
                 {["Lounges & Clubs", "Fine Dine", "Banquets", "Cafes", "Open Lawns", "Resorts & Villas", "Catering"].map(v => (
-                  <p key={v} style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 10px", cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{v}</p>
+                  <p key={v} onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })} style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 10px", cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{v}</p>
                 ))}
               </div>
 
               <div style={{ flex: "1 1 140px" }}>
                 <h4 style={{ color: "#fff", fontSize: 11, fontWeight: 800, marginBottom: 20, textTransform: "uppercase", letterSpacing: "1.5px", opacity: 0.9 }}>Mumbai Areas</h4>
                 {["Andheri", "BKC", "Lower Parel", "Powai", "Bandra", "Goregaon", "Navi Mumbai", "Thane"].map(v => (
-                  <p key={v} style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 10px", cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{v}</p>
+                  <p key={v} onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })} style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 10px", cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{v}</p>
                 ))}
               </div>
             </div>
@@ -995,7 +1038,7 @@ export default function BMCPLanding() {
               <h4 style={{ color: "#fff", fontSize: 11, fontWeight: 800, marginBottom: 24, textTransform: "uppercase", letterSpacing: "1.5px", opacity: 0.9 }}>Contact Us</h4>
               {[
                 { icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>, text: "+91 9333 74 9333" },
-                { icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 1 1-7.6-10.6 8.38 8.38 0 0 1 3.9.9L22 4z"></path></svg>, text: "WhatsApp Support" },
+                { icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.555 4.197 1.608 6.02L0 24l6.128-1.608a11.847 11.847 0 0 0 5.922 1.583h.005c6.637 0 12.046-5.41 12.051-12.048a11.82 11.82 0 0 0-3.526-8.528"></path></svg>, text: "WhatsApp Support" },
                 { icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>, text: "info@bookmycorporateparty.com" },
                 { icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>, text: "Kharghar, Navi Mumbai" },
               ].map((c, i) => (
@@ -1021,9 +1064,101 @@ export default function BMCPLanding() {
       </footer>
 
       {/* ===== FLOATING VIP CONCIERGE (WHATSAPP) ===== */}
-      <a href="https://wa.me/919333749333" target="_blank" rel="noopener noreferrer" className="whatsapp-fab" style={{ position: "fixed", bottom: 32, right: 32, width: 64, height: 64, background: R, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 10px 30px ${R}4D`, zIndex: 1000, transition: "transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)" }} onMouseEnter={e => e.currentTarget.style.transform = "scale(1.15) rotate(8deg)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+      <button onClick={() => setShowWaPopup(true)} className="whatsapp-fab" style={{ position: "fixed", bottom: 32, right: 32, width: 64, height: 64, background: R, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 10px 30px ${R}4D`, zIndex: 1000, transition: "transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)", border: "none", cursor: "pointer" }} onMouseEnter={e => e.currentTarget.style.transform = "scale(1.15) rotate(8deg)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
         <svg width="34" height="34" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.555 4.197 1.608 6.02L0 24l6.128-1.608a11.847 11.847 0 0 0 5.922 1.583h.005c6.637 0 12.046-5.41 12.051-12.048a11.82 11.82 0 0 0-3.526-8.528"></path></svg>
-      </a>
+      </button>
+
+      {/* ===== WHATSAPP POPUP MODAL ===== */}
+      {showWaPopup && (
+        <div onClick={() => setShowWaPopup(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.55)", zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 16, width: "100%", maxWidth: 420, boxShadow: "0 24px 60px rgba(0,0,0,0.25)", overflow: "hidden", fontFamily: "var(--font-dm-sans), sans-serif" }}>
+            {/* Modal header */}
+            <div style={{ background: R, padding: "20px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 40, height: 40, background: "rgba(255,255,255,0.15)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.555 4.197 1.608 6.02L0 24l6.128-1.608a11.847 11.847 0 0 0 5.922 1.583h.005c6.637 0 12.046-5.41 12.051-12.048a11.82 11.82 0 0 0-3.526-8.528"></path></svg>
+                </div>
+                <div>
+                  <p style={{ margin: 0, color: "#fff", fontWeight: 700, fontSize: 16 }}>Chat with Us on WhatsApp</p>
+                  <p style={{ margin: 0, color: "rgba(255,255,255,0.75)", fontSize: 12 }}>Quick venue options in 30 minutes</p>
+                </div>
+              </div>
+              <button onClick={() => setShowWaPopup(false)} style={{ background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", width: 32, height: 32, borderRadius: "50%", cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>✕</button>
+            </div>
+
+            {/* Modal body */}
+            <form onSubmit={handleWaSubmit} style={{ padding: "24px 24px 20px" }}>
+              <p style={{ margin: "0 0 20px", fontSize: 13.5, color: G, lineHeight: 1.6 }}>
+                Share a few quick details so our team can send you the right venue options right on WhatsApp.
+              </p>
+
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 5 }}>Your Name *</label>
+                <input
+                  required
+                  type="text"
+                  placeholder="e.g. Priya Sharma"
+                  value={waForm.name}
+                  onChange={e => setWaForm({ ...waForm, name: e.target.value })}
+                  style={{ width: "100%", padding: "10px 13px", border: `1px solid ${B}`, borderRadius: 8, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif" }}
+                  onFocus={e => e.target.style.borderColor = R}
+                  onBlur={e => e.target.style.borderColor = B}
+                />
+              </div>
+
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 5 }}>Phone / WhatsApp *</label>
+                <input
+                  required
+                  type="tel"
+                  placeholder="+91 98765 43210"
+                  value={waForm.phone}
+                  onChange={e => setWaForm({ ...waForm, phone: e.target.value })}
+                  style={{ width: "100%", padding: "10px 13px", border: `1px solid ${B}`, borderRadius: 8, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif" }}
+                  onFocus={e => e.target.style.borderColor = R}
+                  onBlur={e => e.target.style.borderColor = B}
+                />
+              </div>
+
+              <div style={{ marginBottom: 22 }}>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 5 }}>Event Type <span style={{ color: G, fontWeight: 400 }}>(optional)</span></label>
+                <select
+                  value={waForm.event}
+                  onChange={e => setWaForm({ ...waForm, event: e.target.value })}
+                  style={{ width: "100%", padding: "10px 13px", border: `1px solid ${B}`, borderRadius: 8, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif", background: "#fff", color: waForm.event ? D : G, appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center" }}
+                  onFocus={e => e.target.style.borderColor = R}
+                  onBlur={e => e.target.style.borderColor = B}
+                >
+                  <option value="">Select event type</option>
+                  <option value="Annual Office Party">Annual Office Party</option>
+                  <option value="Team Outing">Team Outing</option>
+                  <option value="R&R / Reward Night">R&R / Reward Night</option>
+                  <option value="Diwali / Festive Celebration">Diwali / Festive Celebration</option>
+                  <option value="Christmas / New Year Party">Christmas / New Year Party</option>
+                  <option value="Award Night">Award Night</option>
+                  <option value="Client Entertainment">Client Entertainment</option>
+                  <option value="Product Launch">Product Launch</option>
+                  <option value="Corporate Offsite">Corporate Offsite</option>
+                  <option value="Leadership Retreat">Leadership Retreat</option>
+                  <option value="Farewell Party">Farewell Party</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div style={{ display: "flex", gap: 10 }}>
+                <button type="button" onClick={() => setShowWaPopup(false)} style={{ flex: 1, padding: "12px 0", background: "#fff", color: D, border: `1px solid ${B}`, borderRadius: 9, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif" }}>
+                  Cancel
+                </button>
+                <button type="submit" style={{ flex: 2, padding: "12px 0", background: R, color: "#fff", border: "none", borderRadius: 9, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.555 4.197 1.608 6.02L0 24l6.128-1.608a11.847 11.847 0 0 0 5.922 1.583h.005c6.637 0 12.046-5.41 12.051-12.048a11.82 11.82 0 0 0-3.526-8.528"></path></svg>
+                  Chat on WhatsApp
+                </button>
+              </div>
+              <p style={{ fontSize: 10.5, color: "#bbb", textAlign: "center", margin: "12px 0 0" }}>Your details are kept private and never shared.</p>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
