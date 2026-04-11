@@ -109,6 +109,27 @@ export default function BMCPLanding() {
   const [formMsg, setFormMsg] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const userGeo = useGeoLocation();
+  const visitorTracked = useRef(false);
+
+  // Passive visitor analytics — fires once when geo resolves, zero UI impact
+  useEffect(() => {
+    if (!userGeo || visitorTracked.current) return;
+    visitorTracked.current = true;
+    fetch('/api/track-visitor', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ip:        userGeo.ip,
+        city:      userGeo.city,
+        region:    userGeo.region,
+        country:   userGeo.country,
+        pincode:   userGeo.pincode,
+        pageUrl:   window.location.href,
+        referrer:  document.referrer || 'Direct',
+        userAgent: navigator.userAgent,
+      }),
+    }).catch(() => {});
+  }, [userGeo]);
 
   const handleStep1 = (e: React.FormEvent) => {
     e.preventDefault();
