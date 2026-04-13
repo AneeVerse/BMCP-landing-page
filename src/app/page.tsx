@@ -55,11 +55,11 @@ type Venue = { name: string; img: string; tags: string[]; desc: string; capacity
 
 function VenueCard({ v }: { v: Venue }) {
   return (
-    <div style={{ 
-      background: "#fff", 
-      borderRadius: 12, 
-      overflow: "hidden", 
-      border: `1px solid ${B}`, 
+    <div style={{
+      background: "#fff",
+      borderRadius: 12,
+      overflow: "hidden",
+      border: `1px solid ${B}`,
       transition: "transform 0.2s",
       height: "100%",
       display: "flex",
@@ -84,12 +84,12 @@ function VenueCard({ v }: { v: Venue }) {
           <span style={{ color: "#5D5FEF", fontSize: 16 }}>👥</span>
           <span>Capacity: {v.capacity}</span>
         </div>
-        <button style={{ 
-          width: "100%", padding: "12px 0", 
-          background: "none", color: R, 
-          border: `1px solid ${R}`, borderRadius: 8, 
-          fontSize: 14, fontWeight: 700, 
-          cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif", 
+        <button style={{
+          width: "100%", padding: "12px 0",
+          background: "none", color: R,
+          border: `1px solid ${R}`, borderRadius: 8,
+          fontSize: 14, fontWeight: 700,
+          cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif",
           transition: "all 0.2s ease",
           flexShrink: 0
         }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; }} onMouseLeave={e => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = R; }} onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })}>
@@ -101,9 +101,9 @@ function VenueCard({ v }: { v: Venue }) {
 }
 
 export default function BMCPLanding() {
-  const MUMBAI_AREAS = ["Andheri", "BKC", "Lower Parel", "Powai", "Bandra", "Goregaon", "Navi Mumbai", "Thane", "Malad", "Vikhroli", "Worli", "Other"];
+  const LOCATIONS = ["Mumbai", "Navi Mumbai", "Thane", "Pune", "Goa", "Delhi", "Gurugram", "Noida", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Ahmedabad", "Jaipur", "Surat", "Chandigarh", "Kochi", "Indore", "Other"];
 
-  const [formData, setFormData] = useState({ event: "", city: "Mumbai", area: "", date: "", name: "", phone: "", whatsapp: true });
+  const [formData, setFormData] = useState({ booking: "", state: "", date: "", name: "", phone: "", whatsapp: true });
   const [formStep, setFormStep] = useState<1 | 2>(1);
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [formMsg, setFormMsg] = useState('');
@@ -121,16 +121,16 @@ export default function BMCPLanding() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        ip:        userGeo.ip,
-        city:      userGeo.city,
-        region:    userGeo.region,
-        country:   userGeo.country,
-        pincode:   userGeo.pincode,
-        pageUrl:   window.location.href,
-        referrer:  document.referrer || 'Direct',
+        ip: userGeo.ip,
+        city: userGeo.city,
+        region: userGeo.region,
+        country: userGeo.country,
+        pincode: userGeo.pincode,
+        pageUrl: window.location.href,
+        referrer: document.referrer || 'Direct',
         userAgent: navigator.userAgent,
       }),
-    }).catch(() => {});
+    }).catch(() => { });
   }, [userGeo]);
 
   const handleWaSubmit = (e: React.FormEvent) => {
@@ -156,7 +156,7 @@ export default function BMCPLanding() {
         userPincode: userGeo ? userGeo.pincode : 'Unknown',
         userIp: userGeo ? userGeo.ip : 'Unknown',
       }),
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   const handleStep1 = (e: React.FormEvent) => {
@@ -173,8 +173,14 @@ export default function BMCPLanding() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
-          location: `${formData.area}, ${formData.city}`,
+          name: formData.name,
+          phone: formData.phone,
+          event: formData.booking,
+          city: formData.state,
+          area: '',
+          location: formData.state,
+          date: formData.date,
+          whatsapp: formData.whatsapp,
           userLocation: userGeo ? `${userGeo.city}, ${userGeo.region}, ${userGeo.country}` : 'Unknown',
           userPincode: userGeo ? userGeo.pincode : 'Unknown',
           userIp: userGeo ? userGeo.ip : 'Unknown',
@@ -184,7 +190,7 @@ export default function BMCPLanding() {
       if (res.ok && data.success) {
         setFormStatus('success');
         setFormMsg(data.message || 'Enquiry submitted! We will contact you within 30 minutes.');
-        setFormData({ event: "", city: "Mumbai", area: "", date: "", name: "", phone: "", whatsapp: true });
+        setFormData({ booking: "", state: "", date: "", name: "", phone: "", whatsapp: true });
         setFormStep(1);
       } else {
         setFormStatus('error');
@@ -454,11 +460,15 @@ export default function BMCPLanding() {
             text-align: center !important;
             gap: 12px !important;
             padding-top: 20px !important;
+            align-items: center !important;
           }
           .footer-bottom-bar > div {
             justify-content: center !important;
             flex-wrap: wrap !important;
             gap: 16px !important;
+          }
+          .footer-bottom-bar > a {
+            justify-content: center !important;
           }
           .whatsapp-fab {
             bottom: 20px !important;
@@ -606,47 +616,31 @@ export default function BMCPLanding() {
                 <h3 style={{ margin: "0 0 2px", fontSize: 17, fontWeight: 700, color: D }}>Get Venue Options Free</h3>
                 <p style={{ margin: "0 0 14px", fontSize: 12, color: G }}>Free for HR & Admin teams. Options within 30 minutes.</p>
 
-                {/* Event / Occasion */}
+                {/* What to book */}
                 <div style={{ marginBottom: 10 }}>
-                  <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>Event / Occasion *</label>
-                  <select required value={formData.event} onChange={e => setFormData({ ...formData, event: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif", background: "#fff", color: formData.event ? D : G, appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center" }} onFocus={e => e.target.style.borderColor = R} onBlur={e => e.target.style.borderColor = B}>
-                    <option value="" disabled>Select event type</option>
-                    <option value="Annual Office Party">Annual Office Party</option>
-                    <option value="Team Outing">Team Outing</option>
-                    <option value="R&R / Reward Night">R&amp;R / Reward Night</option>
-                    <option value="Diwali / Festive Celebration">Diwali / Festive Celebration</option>
-                    <option value="Christmas / New Year Party">Christmas / New Year Party</option>
-                    <option value="Award Night">Award Night</option>
-                    <option value="Client Entertainment">Client Entertainment</option>
-                    <option value="Product Launch">Product Launch</option>
-                    <option value="Corporate Offsite">Corporate Offsite</option>
-                    <option value="Leadership Retreat">Leadership Retreat</option>
-                    <option value="Farewell Party">Farewell Party</option>
-                    <option value="Other">Other</option>
+                  <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>What u want to book? *</label>
+                  <select required value={formData.booking} onChange={e => setFormData({ ...formData, booking: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif", background: "#fff", color: formData.booking ? D : G, appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center" }} onFocus={e => e.target.style.borderColor = R} onBlur={e => e.target.style.borderColor = B}>
+                    <option value="" disabled>Select venue type</option>
+                    <option value="Nightclubs">Nightclubs</option>
+                    <option value="Villas">Villas</option>
+                    <option value="Resorts">Resorts</option>
+                    <option value="Banquets">Banquets</option>
+                    <option value="Caterers">Caterers</option>
                   </select>
                 </div>
 
-                {/* City — pre-selected Mumbai */}
+                {/* Location */}
                 <div style={{ marginBottom: 10 }}>
-                  <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>City</label>
-                  <div style={{ position: "relative" }}>
-                    <input readOnly value="Mumbai" style={{ width: "100%", padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif", background: "#FAFAFA", color: D, cursor: "default" }} />
-                    <span style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", fontSize: 10, color: "#16A34A", fontWeight: 700 }}>✓ Mumbai</span>
-                  </div>
-                </div>
-
-                {/* Preferred Area — dropdown */}
-                <div style={{ marginBottom: 10 }}>
-                  <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>Preferred Area *</label>
-                  <select required value={formData.area} onChange={e => setFormData({ ...formData, area: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif", background: "#fff", color: formData.area ? D : G, appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center" }} onFocus={e => e.target.style.borderColor = R} onBlur={e => e.target.style.borderColor = B}>
-                    <option value="" disabled>Select area in Mumbai</option>
-                    {MUMBAI_AREAS.map(a => <option key={a} value={a}>{a}</option>)}
+                  <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>Location *</label>
+                  <select required value={formData.state} onChange={e => setFormData({ ...formData, state: e.target.value })} style={{ width: "100%", padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif", background: "#fff", color: formData.state ? D : G, appearance: "none", backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center" }} onFocus={e => e.target.style.borderColor = R} onBlur={e => e.target.style.borderColor = B}>
+                    <option value="" disabled>Select your city</option>
+                    {LOCATIONS.map(l => <option key={l} value={l}>{l}</option>)}
                   </select>
                 </div>
 
-                {/* Event Date */}
+                {/* When to book */}
                 <div style={{ marginBottom: 10 }}>
-                  <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>Event Date</label>
+                  <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>When u want to book</label>
                   <input
                     type="date"
                     value={formData.date}
@@ -677,7 +671,7 @@ export default function BMCPLanding() {
 
                 {/* Summary pill */}
                 <div style={{ background: L, border: `1px solid ${B}`, borderRadius: 8, padding: "8px 12px", marginBottom: 14, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 12, color: D, fontWeight: 600 }}>📍 {formData.area}, {formData.city} · {formData.event}</span>
+                  <span style={{ fontSize: 12, color: D, fontWeight: 600 }}>📍 {formData.state} · {formData.booking}</span>
                   <button type="button" onClick={() => setFormStep(1)} style={{ background: "none", border: "none", color: R, fontSize: 11, fontWeight: 700, cursor: "pointer", padding: 0 }}>Edit</button>
                 </div>
 
@@ -744,7 +738,7 @@ export default function BMCPLanding() {
           {[...Array(2)].map((_, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 60, paddingRight: 60 }}>
               {[
-                "500+ Companies Served", "30-Min Venue Matching", "100% Free Service", 
+                "500+ Companies Served", "30-Min Venue Matching", "100% Free Service",
                 "DJ · Bar · AV Sorted", "Mumbai · Navi Mumbai · Thane", "Last-Minute Bookings"
               ].map((text, idx) => (
                 <div key={idx} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 11.5, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", color: "#fff" }}>
@@ -812,7 +806,7 @@ export default function BMCPLanding() {
           <Badge text="The Comparison" />
           <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "10px 0 0" }}>Why HRs Prefer Our <span style={{ color: R }}>Streamlined</span> Process</h2>
         </div>
-        
+
         <div className="comparison-board" style={{ width: "100%", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: 30 }}>
           {/* THE OLD WAY */}
           <div style={{ background: "#fff", borderRadius: 16, border: `1px solid ${B}`, padding: "40px", position: "relative", overflow: "hidden" }}>
@@ -905,7 +899,7 @@ export default function BMCPLanding() {
             <div style={{ padding: "20px 24px", background: "rgba(255,255,255,0.05)", textAlign: "center", color: "#fff" }}>BookMyCorporateParty</div>
             <div style={{ padding: "20px 24px", textAlign: "center", opacity: 0.6 }}>Other Sites</div>
           </div>
-          
+
           {[
             ["Audience Focus", "100% corporate events", "Weddings, birthdays, everything"],
             ["Shortlisting Speed", "Options in 30 minutes", "Browse listings yourself for days"],
@@ -917,7 +911,7 @@ export default function BMCPLanding() {
           ].map(([feat, ours, theirs], i) => (
             <div key={i} className="table-data-row" style={{ display: "grid", gridTemplateColumns: "1.2fr 1.5fr 1.5fr", background: i % 2 === 0 ? "#fff" : "#FAFAFA", borderBottom: i === 6 ? "none" : `1px solid ${B}` }}>
               <div style={{ padding: "16px 24px", fontWeight: 600, fontSize: 14, color: D, display: "flex", alignItems: "center" }}>{feat}</div>
-              
+
               {/* Our Column */}
               <div style={{ padding: "16px 24px", fontSize: 14, color: D, fontWeight: 700, background: "rgba(192,57,43,0.02)", borderLeft: `1px solid ${B}`, borderRight: `1px solid ${B}`, display: "flex", alignItems: "center", gap: 10 }}>
                 <div style={{ color: "#16A34A", flexShrink: 0 }}>
@@ -969,11 +963,11 @@ export default function BMCPLanding() {
             One enquiry. Curated Mumbai venues. Real pricing. <br />
             Shortlist and finalize everything in 30 minutes.
           </p>
-          
+
           <button onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: R, color: "#fff", border: "none", borderRadius: 12, padding: "20px 52px", fontSize: 18, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif", boxShadow: "0 12px 30px rgba(192,57,43,0.3)", transition: "transform 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
             GET VENUE OPTIONS FREE →
           </button>
-          
+
           <p style={{ fontSize: 13, color: G, marginTop: 18, marginBottom: 32 }}>
             Takes 60 seconds. Free for HR & Admin teams. No obligations.
           </p>
@@ -997,7 +991,7 @@ export default function BMCPLanding() {
               <p style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.8, margin: "0 0 28px", maxWidth: 320 }}>
                 India's premier corporate party booking platform. One enquiry, 30-minute shortlisting, and zero-hassle execution for your team celebrations.
               </p>
-              
+
               {/* Social Media Icons */}
               <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
                 {[
@@ -1054,11 +1048,17 @@ export default function BMCPLanding() {
             <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, margin: 0 }}>
               © 2026 BookMyCorporateParty. All rights reserved.
             </p>
+            {/* Center links */}
             <div style={{ display: "flex", gap: 30 }}>
               {["About Us", "Partner With Us", "Terms", "Privacy"].map(l => (
                 <span key={l} style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}>{l}</span>
               ))}
             </div>
+            {/* Right: Aneeverse credit */}
+            <a href="https://www.aneeverse.com/" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", color: "rgba(255,255,255,0.6)", fontSize: 12, transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.6)"}>
+              <span>Designed &amp; Managed by Aneeverse</span>
+              <img src="/aneeverse-logo (1).svg" alt="Aneeverse" style={{ height: 20, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.7 }} />
+            </a>
           </div>
         </div>
       </footer>
