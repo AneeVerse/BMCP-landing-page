@@ -14,8 +14,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata = {
-  title: "Mumbai's #1 Corporate Party Platform | BookMyCorporateParty",
-  description: "Tell us your team size, budget, and date. We shortlist the best lounges, banquets, and party venues in Mumbai within 30 minutes. Free for HR & Admin teams.",
+  title: "Book Corporate Party Venues in 30 Minutes | Free for HR Teams",
+  description: "Planning a corporate party? Submit one enquiry and get 3–5 curated venue options with pricing in 30 minutes. Free for HR and Admin teams. No cold calls.",
 };
 
 export default function RootLayout({ children }) {

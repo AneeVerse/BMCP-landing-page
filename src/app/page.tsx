@@ -112,6 +112,7 @@ export default function BMCPLanding() {
   const [waForm, setWaForm] = useState({ name: '', phone: '', event: '' });
   const userGeo = useGeoLocation();
   const visitorTracked = useRef(false);
+  const testimonialRowRef = useRef<HTMLDivElement>(null);
 
   // Passive visitor analytics — fires once when geo resolves, zero UI impact
   useEffect(() => {
@@ -347,6 +348,7 @@ export default function BMCPLanding() {
             gap: 16px !important;
           }
           .testimonials-row::-webkit-scrollbar { display: none; }
+          .testimonials-row { scrollbar-width: none; -ms-overflow-style: none; }
           .testimonials-row > div {
             width: 80% !important;
             min-width: 220px !important;
@@ -488,8 +490,8 @@ export default function BMCPLanding() {
       `}</style>
 
       {/* NAV */}
-      <nav className="main-nav" style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${B}`, padding: "12px clamp(100px, 8vw, 200px)" }}>
-        <div style={{ width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <nav className="main-nav" style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${B}`, padding: "0" }}>
+        <div style={{ maxWidth: 1400, margin: "0 auto", padding: "12px clamp(20px, 6vw, 160px)", display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", boxSizing: "border-box" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
             <div style={{ width: 42, height: 42, overflow: "hidden", display: "flex", alignItems: "center" }}>
               <img src="/images/logo-lg.png" alt="" style={{ height: 42, width: "auto", maxWidth: "none", objectFit: "cover", objectPosition: "left" }} />
@@ -565,11 +567,11 @@ export default function BMCPLanding() {
           <div className="hero-text" style={{ flex: "1 1 520px", paddingTop: 8 }}>
             <Badge text="Mumbai's #1 Corporate Party Platform" />
             <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(32px, 4.8vw, 54px)", fontWeight: 700, color: "#fff", lineHeight: 1.15, margin: "16px 0 14px" }}>
-              Corporate Party in Mumbai?{" "}
-              <span style={{ color: "#FF5252" }}>Get Venue Options in 30 Minutes.</span>
+              Stop Calling 20 Venues.{" "}
+              <span style={{ color: "#FF5252" }}>Book Your Corporate Party in One Click.</span>
             </h1>
             <p style={{ fontSize: 17, color: "#E0E0E0", lineHeight: 1.65, margin: "0 0 24px", maxWidth: 520 }}>
-              Tell us your team size, budget, and date. We shortlist the best lounges, banquets, and party venues in Mumbai — so you don't have to call 20 places.
+              Tell us your team size, budget, and date. Get curated venue options, packages, and pricing — without chasing a single vendor.
             </p>
             <div className="hero-badges" style={{ display: "flex", gap: 20, marginTop: 8, alignItems: "center", flexWrap: "wrap" }}>
               {[
@@ -712,10 +714,10 @@ export default function BMCPLanding() {
         </div>
         <div className="features-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
           {[
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>, title: "100% Corporate Focus", desc: "Not a wedding directory. Every venue vetted for office events." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>, title: "30-Minute Turnaround", desc: "Get 3–5 handpicked venues with pricing in 30 minutes." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>, title: "Negotiated Rates", desc: "We negotiate directly. Better pricing than booking on your own." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>, title: "Full Coordination", desc: "DJ, food, decor, branding, activities — one contact, start to finish." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>, title: "100% Corporate Focus", desc: "Not a wedding or birthday directory. Every venue on our platform is vetted specifically for office events." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>, title: "30-Minute Turnaround", desc: "Share your requirements. Get 3–5 handpicked venue options with pricing within 30 minutes." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>, title: "Negotiated Corporate Rates", desc: "We negotiate directly with venues so you get better pricing than booking on your own." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>, title: "Full Event Coordination", desc: "DJ, food, decor, branding, team-building activities — one point of contact from start to finish." },
           ].map((b, i) => (
             <div key={i} style={{ background: "#fff", borderRadius: 14, padding: "24px 16px", border: `1px solid ${B}`, textAlign: "center", transition: "transform 0.2s, box-shadow 0.2s" }} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.05)"; }} onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
               <div style={{ color: R, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
@@ -738,8 +740,8 @@ export default function BMCPLanding() {
           {[...Array(2)].map((_, i) => (
             <div key={i} style={{ display: "flex", alignItems: "center", gap: 60, paddingRight: 60 }}>
               {[
-                "500+ Companies Served", "30-Min Venue Matching", "100% Free Service",
-                "DJ · Bar · AV Sorted", "Mumbai · Navi Mumbai · Thane", "Last-Minute Bookings"
+                "500+ Companies Served", "30-Min Venue Matching", "Free for HR Teams",
+                "DJ · Bar · AV Sorted", "Last-Minute Bookings OK", "Site Visits Arranged"
               ].map((text, idx) => (
                 <div key={idx} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 11.5, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", color: "#fff" }}>
                   <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 9 }}>◆</span>
@@ -758,46 +760,102 @@ export default function BMCPLanding() {
           <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "14px 0 8px" }}>
             Corporate Party Venues in <span style={{ color: R }}>Mumbai</span>
           </h2>
-          <p style={{ fontSize: 15, color: G, maxWidth: 480, margin: "0 auto" }}>
-            Choose your venue type and submit your requirements. We'll shortlist the best options for your team.
+          <p style={{ fontSize: 15, color: G, maxWidth: 520, margin: "0 auto" }}>
+            Choose your venue type and submit your requirements. We'll shortlist the best options with pricing for your team.
           </p>
         </div>
         <div className="venue-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 22 }}>
           {venues.map((v, i) => <VenueCard key={i} v={v} />)}
         </div>
         <p style={{ textAlign: "center", color: G, fontSize: 13, marginTop: 28 }}>
-          📍 Andheri · BKC · Lower Parel · Powai · Bandra · Goregaon · Navi Mumbai · Thane
+          📍 Mumbai · Navi Mumbai · Thane · Pune · Goa · Delhi · Bangalore · Hyderabad · Chennai
         </p>
       </Sec>
 
-      {/* ===== 4. TESTIMONIALS (PEARL GRAY) ===== */}
+      {/* ===== 4. TESTIMONIALS — GOOGLE REVIEWS ===== */}
       <Sec bg="#F5F5F7">
-        <div style={{ textAlign: "center", marginBottom: 30 }}>
-          <Badge text="Reviews" />
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "10px 0 0" }}>Trusted by <span style={{ color: R }}>500+ Companies</span></h2>
+        {/* Centered header */}
+        <div style={{ textAlign: "center", marginBottom: 24 }}>
+          <Badge text="Google Reviews" />
+          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "10px 0 12px" }}>Trusted by <span style={{ color: R }}>500+ Companies</span></h2>
+          {/* Google rating summary */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", border: `1px solid ${B}`, borderRadius: 30, padding: "6px 16px" }}>
+            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            <span style={{ fontWeight: 800, fontSize: 14, color: D }}>4.8</span>
+            <div style={{ display: "flex", gap: 2 }}>{[1,2,3,4,5].map(s => <svg key={s} width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>)}</div>
+            <span style={{ fontSize: 11, color: G }}>Google Reviews</span>
+          </div>
         </div>
-        <div className="testimonials-row" style={{ display: "flex", gap: 20, flexWrap: "wrap", justifyContent: "center" }}>
+
+        {/* Carousel wrapper with absolute prev/next buttons */}
+        <div style={{ position: "relative" }}>
+          {/* Prev button */}
+          <button onClick={() => testimonialRowRef.current?.scrollBy({ left: -300, behavior: 'smooth' })} style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", border: `1px solid ${B}`, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: D, transition: "all 0.2s", fontSize: 22, boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = R; }} onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = D; e.currentTarget.style.borderColor = B; }}>‹</button>
+          {/* Next button */}
+          <button onClick={() => testimonialRowRef.current?.scrollBy({ left: 300, behavior: 'smooth' })} style={{ position: "absolute", right: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", border: `1px solid ${B}`, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: D, transition: "all 0.2s", fontSize: 22, boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = R; }} onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = D; e.currentTarget.style.borderColor = B; }}>›</button>
+
+          <div ref={testimonialRowRef} className="testimonials-row" style={{ display: "flex", gap: 16, flexWrap: "nowrap", overflowX: "auto", paddingBottom: 8, scrollSnapType: "x mandatory", msOverflowStyle: "none", scrollbarWidth: "none" as const }}>
           {[
-            { q: "We needed a lounge in Andheri for 80 people with DJ and bar. BMCP sent 5 options the same day. Finalized in one call.", n: "Priya S.", r: "HR Manager, SaaS Company", a: "Andheri" },
-            { q: "Our annual party used to take 3 weeks. This year — 3 days. They handled venue, food, DJ, everything.", n: "Rohan M.", r: "Admin Lead, Fintech Startup", a: "Navi Mumbai" },
-            { q: "Sent one WhatsApp message. Got 4 venue options with pricing by evening. Booked a banquet in Powai for 200 people.", n: "Sneha K.", r: "People Ops, IT Services", a: "BKC" },
+            {
+              name: "Namrata Kadam", meta: "Local Guide · 13 reviews", time: "a month ago",
+              img: "/images/google reviews/Namrata Kadam.png", initial: null, color: null,
+              q: "I have worked with the bookmycorporateparty team for more than 5 events, and i highly recommend their services. They manage the entire coordination process and ensure seamless execution every time. Their pricing is reasonable, and the team's support allows you to focus on other priorities without worrying about event logistics.",
+            },
+            {
+              name: "Sonali Ramaiya", meta: "Local Guide · 13 reviews", time: "a month ago",
+              img: null, initial: "S", color: "#4CAF50",
+              q: "We wanted to have our company's new year celebration and needed a venue around Mumbai. We not only got the right pricing and a good venue, but a lot of our requirements were taken care of by Book My Corporate Party team. We would recommend their service to all small businesses and corporates.",
+            },
+            {
+              name: "Esha Kamble", meta: "Local Guide · 38 reviews", time: "a month ago",
+              img: null, initial: "E", color: "#F44336",
+              q: "They planned our corporate outing, it was really well planned and executed.",
+            },
+            {
+              name: "Manish Shinde", meta: "5 reviews · 19 photos", time: "4 weeks ago",
+              img: "/images/google reviews/manish.png", initial: null, color: null,
+              q: "The entire event was beautifully curated by Book My Corporate Party.com. Sachin Jawale and his team guided us through every detail — finalizing the venue, planning the event flow, entertainment, games, and food. The atmosphere was warm and joyful, executed with professionalism and care. Highly recommended for reliable, creative, and stress-free event management.",
+            },
+            {
+              name: "Rakshavati Poojari", meta: "4 reviews", time: "4 weeks ago",
+              img: null, initial: "R", color: "#9C27B0",
+              q: "We have had a wonderful experience working with Sachin and Pradeep for our corporate events. Their professionalism and seamless coordination has made our events smooth and successful, and saved a lot of our time on logistics. Highly recommend them for planning your corporate events.",
+            },
           ].map((t, i) => (
-            <div key={i} style={{ flex: "1 1 300px", background: "#fff", border: `1px solid ${B}`, borderRadius: 16, padding: "32px 28px", maxWidth: 380, boxShadow: "0 4px 12px rgba(0,0,0,0.03)" }}>
-              <div style={{ display: "flex", gap: 4, marginBottom: 16 }}>
-                {[1, 2, 3, 4, 5].map(s => (
-                  <svg key={s} width="14" height="14" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                ))}
+            <div key={i} style={{ flex: "0 0 270px", width: 270, background: "#fff", border: `1px solid ${B}`, borderRadius: 14, padding: "14px 16px", boxShadow: "0 4px 12px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: 0, scrollSnapAlign: "start" }}>
+              {/* Top row: avatar + name + Google logo */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  {t.img ? (
+                    <img src={t.img} alt={t.name} style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+                  ) : (
+                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: t.color!, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 700, color: "#fff", flexShrink: 0 }}>
+                      {t.initial}
+                    </div>
+                  )}
+                  <div>
+                    <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: D }}>{t.name}</p>
+                    <p style={{ margin: "1px 0 0", fontSize: 10, color: G }}>{t.meta}</p>
+                  </div>
+                </div>
+                {/* Google G */}
+                <svg width="20" height="20" viewBox="0 0 24 24" style={{ flexShrink: 0 }}><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
               </div>
-              <p style={{ fontSize: 14.5, color: D, lineHeight: 1.7, margin: "0 0 20px", fontStyle: "italic" }}>
-                "{t.q}"
+              {/* Stars + time */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                <div style={{ display: "flex", gap: 2 }}>
+                  {[1,2,3,4,5].map(s => <svg key={s} width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>)}
+                </div>
+                <span style={{ fontSize: 11, color: G }}>{t.time}</span>
+              </div>
+              {/* Review text */}
+              <p style={{ fontSize: 12.5, color: D, lineHeight: 1.65, margin: 0, flex: 1 }}>
+                {t.q}
               </p>
-              <div style={{ borderTop: `1px solid ${B}`, paddingTop: 16 }}>
-                <p style={{ fontSize: 13.5, color: D, margin: 0 }}><strong style={{ fontWeight: 700 }}>{t.n}</strong></p>
-                <p style={{ fontSize: 12, color: G, margin: "2px 0 0" }}>{t.r}, {t.a}</p>
-              </div>
             </div>
           ))}
         </div>
+        </div>{/* end carousel wrapper */}
       </Sec>
 
       {/* ===== 5. THE COMPARISON BOARD (WHITE) ===== */}
@@ -818,10 +876,10 @@ export default function BMCPLanding() {
               <h3 style={{ fontSize: 16, fontWeight: 800, color: "#6B7280", margin: 0, letterSpacing: "1px", textTransform: "uppercase" }}>The Old Way</h3>
             </div>
             {[
-              "Google 'corporate party venues Mumbai' — 50 random listings mixed with weddings",
-              "Call each venue. Half don't pick up. Half don't do corporate.",
+              "Google 'corporate party venues' — get 50 random listings mixed with weddings and birthdays.",
+              "Call each venue. Half don't pick up. Half don't do corporate events.",
               "Compare pricing on WhatsApp, Excel, and sticky notes.",
-              "Spend 2–3 weeks. Boss asks for cost breakdown — you don't have one."
+              "Spend 2–3 weeks. Boss asks for a cost breakdown. You don't have one."
             ].map((text, i) => (
               <div key={i} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
                 <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#D1D5DB", marginTop: 7, flexShrink: 0 }} />
@@ -843,7 +901,7 @@ export default function BMCPLanding() {
               "Share event details — team size, budget, vibe, date.",
               "Get 3–5 handpicked venues with pricing in 30 minutes.",
               "Compare side by side. Schedule a site visit if needed.",
-              "Finalize fast. We coordinate until your event is done."
+              "Finalize fast. We coordinate everything until your event is done."
             ].map((text, i) => (
               <div key={i} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
                 <div style={{ color: R, marginTop: 3, flexShrink: 0 }}>
@@ -868,11 +926,11 @@ export default function BMCPLanding() {
           <div className="steps-line" style={{ position: "absolute", top: 26, left: "10%", right: "10%", height: 0, borderTop: `2px dashed ${B}`, zIndex: 0 }} />
           <div className="steps-container" style={{ display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap", position: "relative", zIndex: 1 }}>
             {[
-              { t: "Share Details", d: "Event type, area, guest count, date, budget." },
-              { t: "We Shortlist", d: "3–5 handpicked Mumbai venues, vetted for corporate." },
-              { t: "Compare", d: "Photos, packages, pricing — side by side. Site visits on request." },
-              { t: "Finalize", d: "Pick your venue. Confirm in 30 minutes." },
-              { t: "We Coordinate", d: "Menu, DJ, decor, branding — handled until event day." },
+              { t: "Share Your Details", d: "Event type, preferred area, guest count, date, and budget. Takes 60 seconds." },
+              { t: "We Shortlist the Best", d: "3–5 handpicked venues from our curated network — all vetted for corporate events." },
+              { t: "Compare Packages", d: "Venue photos, capacity, inclusions, per-person pricing. Side-by-side. Site visits on request." },
+              { t: "Finalize Your Venue", d: "Pick your venue. Confirm the package. Done in 30 minutes." },
+              { t: "We Coordinate Until Your Event", d: "Menu, DJ, decor, branding, team activities — all handled. You just bring your team." },
             ].map((s, i) => (
               <div key={i} style={{ flex: "1 1 180px", textAlign: "center", transition: "transform 0.3s ease" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
                 <div style={{ width: 52, height: 52, background: R, color: "#fff", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 800, margin: "0 auto 20px", boxShadow: "0 8px 20px rgba(192,57,43,0.15)" }}>
@@ -939,13 +997,12 @@ export default function BMCPLanding() {
           <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 28, margin: "10px 0 0" }}>Frequently Asked Questions</h2>
         </div>
         <div style={{ width: "100%" }}>
-          <FAQItem q="Is there any charge for using BookMyCorporateParty?" a="No. Our service is completely free for HR and Admin teams. We earn through venue partnerships — you pay the venue directly. No middleman markup on your bill." />
-          <FAQItem q="How fast can I finalize a corporate party venue in Mumbai?" a="In most cases, you can finalize within 30 minutes after reviewing our shortlisted options. For last-minute or urgent bookings, we provide priority support — subject to venue availability." />
-          <FAQItem q="What types of corporate events can I book?" a="Annual office parties, team outings, R&R events, corporate offsites, Diwali and Christmas celebrations, award nights, client entertainment, product launches, startup celebrations, farewell get-togethers, and leadership retreats. If it's a corporate occasion, we cover it." />
-          <FAQItem q="Can I book for a small team of 15–20 people?" a="Absolutely. Whether you're a 20-member startup or a 2,000+ employee company, we customize venue options to match your team size and budget. Cafes, lounges, and private dining rooms work perfectly for smaller teams." />
-          <FAQItem q="What kind of venues do you have in Mumbai?" a="Lounges and nightclubs, fine dine restaurants, banquet halls, open lawns, rooftop spaces, cafes, resorts, and villas. Across areas like Andheri, BKC, Lower Parel, Powai, Bandra, Goregaon, Navi Mumbai, and Thane." />
-          <FAQItem q="Do you only handle venue booking or full event planning?" a="Both. Apart from venue booking, we assist with food and beverage management, DJ and entertainment, stage setup, corporate branding, team-building activities, and end-to-end vendor coordination. One point of contact for everything." />
-          <FAQItem q="Can I visit the venue before confirming?" a="Yes. We arrange site visits for corporate clients before you finalize the booking. Just let us know and we'll coordinate it." />
+          <FAQItem q="How fast can I finalize a corporate party venue?" a="Within 30 minutes after reviewing our shortlisted options. For last-minute bookings, we provide priority support — subject to availability." />
+          <FAQItem q="What types of corporate events can I book?" a="Annual parties, team outings, R&R events, offsites, Diwali and Christmas celebrations, award nights, client dinners, product launches, startup celebrations, farewell parties, and leadership retreats." />
+          <FAQItem q="Can I book for a small team of 15–20 people?" a="Absolutely. Cafes, lounges, and private dining rooms work great for smaller groups. We customize options for 20-member startups to 2,000+ employee companies." />
+          <FAQItem q="Do you handle full event planning or just venue booking?" a="Both. Food and beverage, DJ, stage, branding, team-building activities, vendor coordination — all managed. One contact for everything." />
+          <FAQItem q="Can I visit the venue before confirming?" a="Yes. We arrange site visits for corporate clients before finalizing. Just let us know." />
+          <FAQItem q="What cities do you cover?" a="Mumbai, Pune, Navi Mumbai, Thane, Goa, Hyderabad, Bangalore, Chennai, and Delhi NCR. We're expanding continuously." />
         </div>
       </Sec>
 
@@ -960,8 +1017,8 @@ export default function BMCPLanding() {
             <span style={{ color: R }}>You Deserve an Easy Booking.</span>
           </h2>
           <p className="cta-subtitle" style={{ fontSize: 18, color: G, margin: "0 auto 40px", lineHeight: 1.7, maxWidth: 640 }}>
-            One enquiry. Curated Mumbai venues. Real pricing. <br />
-            Shortlist and finalize everything in 30 minutes.
+            One enquiry. Curated venues. Real pricing. No cold calls. <br />
+            Finalize in 30 minutes.
           </p>
 
           <button onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: R, color: "#fff", border: "none", borderRadius: 12, padding: "20px 52px", fontSize: 18, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif", boxShadow: "0 12px 30px rgba(192,57,43,0.3)", transition: "transform 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
@@ -1020,8 +1077,8 @@ export default function BMCPLanding() {
               </div>
 
               <div style={{ flex: "1 1 140px" }}>
-                <h4 style={{ color: "#fff", fontSize: 11, fontWeight: 800, marginBottom: 20, textTransform: "uppercase", letterSpacing: "1.5px", opacity: 0.9 }}>Mumbai Areas</h4>
-                {["Andheri", "BKC", "Lower Parel", "Powai", "Bandra", "Goregaon", "Navi Mumbai", "Thane"].map(v => (
+                <h4 style={{ color: "#fff", fontSize: 11, fontWeight: 800, marginBottom: 20, textTransform: "uppercase", letterSpacing: "1.5px", opacity: 0.9 }}>Cities</h4>
+                {["Mumbai", "Pune", "Navi Mumbai", "Thane", "Goa", "Hyderabad", "Bangalore", "Chennai", "Delhi NCR"].map(v => (
                   <p key={v} onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })} style={{ color: "rgba(255,255,255,0.7)", fontSize: 13, margin: "0 0 10px", cursor: "pointer", transition: "color 0.2s" }} onMouseEnter={e => e.currentTarget.style.color = "#fff"} onMouseLeave={e => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}>{v}</p>
                 ))}
               </div>
@@ -1034,7 +1091,7 @@ export default function BMCPLanding() {
                 { icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>, text: "+91 9333 74 9333" },
                 { icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.555 4.197 1.608 6.02L0 24l6.128-1.608a11.847 11.847 0 0 0 5.922 1.583h.005c6.637 0 12.046-5.41 12.051-12.048a11.82 11.82 0 0 0-3.526-8.528"></path></svg>, text: "WhatsApp Support" },
                 { icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>, text: "info@bookmycorporateparty.com" },
-                { icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>, text: "Kharghar, Navi Mumbai" },
+                { icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>, text: "Kamdhenu Commerz, Kharghar, Navi Mumbai" },
               ].map((c, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}>
                   <div style={{ color: "rgba(255,255,255,0.9)", flexShrink: 0 }}>{c.icon}</div>
@@ -1046,7 +1103,7 @@ export default function BMCPLanding() {
 
           <div className="footer-bottom-bar" style={{ borderTop: "1px solid rgba(255,255,255,0.15)", paddingTop: 30, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 20 }}>
             <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, margin: 0 }}>
-              © 2026 BookMyCorporateParty. All rights reserved.
+              © 2025 BookMyCorporateParty.com. All rights reserved.
             </p>
             {/* Center links */}
             <div style={{ display: "flex", gap: 30 }}>
