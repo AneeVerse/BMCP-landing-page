@@ -565,7 +565,7 @@ export default function BMCPLanding() {
         <div style={{ position: "absolute", top: -120, right: -80, width: 420, height: 420, background: `radial-gradient(circle, rgba(192,57,43,0.12) 0%, transparent 70%)`, borderRadius: "50%" }} />
         <div className="hero-container" style={{ width: "100%", padding: "0 clamp(100px, 8vw, 200px)", display: "flex", gap: 48, alignItems: "flex-start", flexWrap: "wrap", boxSizing: "border-box" }}>
           <div className="hero-text" style={{ flex: "1 1 520px", paddingTop: 8 }}>
-            <Badge text="Mumbai's #1 Corporate Party Platform" />
+            <Badge text="Corporate Party Platform" />
             <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(32px, 4.8vw, 54px)", fontWeight: 700, color: "#fff", lineHeight: 1.15, margin: "16px 0 14px" }}>
               Stop Calling 20 Venues.{" "}
               <span style={{ color: "#FF5252" }}>Book Your Corporate Party in One Click.</span>
@@ -758,7 +758,7 @@ export default function BMCPLanding() {
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <Badge text="Explore venue types" />
           <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "14px 0 8px" }}>
-            Corporate Party Venues in <span style={{ color: R }}>Mumbai</span>
+            Corporate Party <span style={{ color: R }}>Venue Types</span>
           </h2>
           <p style={{ fontSize: 15, color: G, maxWidth: 520, margin: "0 auto" }}>
             Choose your venue type and submit your requirements. We'll shortlist the best options with pricing for your team.
@@ -1010,7 +1010,7 @@ export default function BMCPLanding() {
       <section className="cta-section" style={{ background: "#fff", padding: "60px clamp(100px, 8vw, 200px)", textAlign: "center", position: "relative", borderTop: `1px solid ${B}` }}>
         <div style={{ width: "100%", position: "relative", zIndex: 1 }}>
           <div style={{ display: "inline-block", background: L, padding: "7px 18px", borderRadius: 30, color: R, fontSize: 11, fontWeight: 800, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 26, border: `1px solid ${B}` }}>
-            The Mumbai Corporate Choice
+            The Corporate Party Experts
           </div>
           <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(34px, 5.5vw, 48px)", color: D, margin: "0 0 24px", lineHeight: 1.1, letterSpacing: "-0.5px" }}>
             Your Team Deserves a Great Party.<br />
@@ -1046,7 +1046,7 @@ export default function BMCPLanding() {
                 <img src="/images/logo-lg.png" alt="BookMyCorporateParty" style={{ height: 52, width: "auto" }} />
               </div>
               <p style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.8, margin: "0 0 28px", maxWidth: 320 }}>
-                India's premier corporate party booking platform. One enquiry, 30-minute shortlisting, and zero-hassle execution for your team celebrations.
+                The premier corporate party booking platform. One enquiry, 30-minute shortlisting, and zero-hassle execution for your team celebrations.
               </p>
 
               {/* Social Media Icons */}
