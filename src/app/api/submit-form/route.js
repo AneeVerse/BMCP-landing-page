@@ -33,7 +33,7 @@ export async function POST(req) {
 
     if (!name || !phone || !event) {
       return Response.json(
-        { error: 'Name, phone, and event type are required.' },
+        { error: 'Name, phone, and venue type are required.' },
         { status: 400 }
       );
     }

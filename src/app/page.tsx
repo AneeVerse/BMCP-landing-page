@@ -8,7 +8,7 @@ const D = "#1A1A1A";
 const L = "#FDF0EF";
 const G = "#6B7280";
 const B = "#E5E7EB";
-const WA = "https://wa.me/919333749333";
+const WA = "https://wa.me/917304672801";
 
 function useFadeIn() {
   const ref = useRef<HTMLElement>(null);
@@ -595,7 +595,7 @@ export default function BMCPLanding() {
                 {[1, 2].map(s => (
                   <div key={s} style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <div style={{ width: 22, height: 22, borderRadius: "50%", background: formStep >= s ? R : B, color: formStep >= s ? "#fff" : G, fontSize: 11, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", transition: "background 0.3s" }}>{s}</div>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: formStep >= s ? D : G }}>{s === 1 ? "Event Details" : "Your Contact"}</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: formStep >= s ? D : G }}>{s === 1 ? "Venue Details" : "Your Contact"}</span>
                     {s === 1 && <div style={{ width: 28, height: 1, background: formStep === 2 ? R : B, marginLeft: 2, transition: "background 0.3s" }} />}
                   </div>
                 ))}
@@ -926,7 +926,7 @@ export default function BMCPLanding() {
           <div className="steps-line" style={{ position: "absolute", top: 26, left: "10%", right: "10%", height: 0, borderTop: `2px dashed ${B}`, zIndex: 0 }} />
           <div className="steps-container" style={{ display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap", position: "relative", zIndex: 1 }}>
             {[
-              { t: "Share Your Details", d: "Event type, preferred area, guest count, date, and budget. Takes 60 seconds." },
+              { t: "Share Your Details", d: "Venue type, preferred area, guest count, date, and budget. Takes 60 seconds." },
               { t: "We Shortlist the Best", d: "3–5 handpicked venues from our curated network — all vetted for corporate events." },
               { t: "Compare Packages", d: "Venue photos, capacity, inclusions, per-person pricing. Side-by-side. Site visits on request." },
               { t: "Finalize Your Venue", d: "Pick your venue. Confirm the package. Done in 30 minutes." },
@@ -1178,7 +1178,7 @@ export default function BMCPLanding() {
               </div>
 
               <div style={{ marginBottom: 22 }}>
-                <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 5 }}>Event Type <span style={{ color: G, fontWeight: 400 }}>(optional)</span></label>
+                <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 5 }}>Venue Type <span style={{ color: G, fontWeight: 400 }}>(optional)</span></label>
                 <select
                   value={waForm.event}
                   onChange={e => setWaForm({ ...waForm, event: e.target.value })}
@@ -1186,7 +1186,7 @@ export default function BMCPLanding() {
                   onFocus={e => e.target.style.borderColor = R}
                   onBlur={e => e.target.style.borderColor = B}
                 >
-                  <option value="">Select event type</option>
+                  <option value="">Select venue type</option>
                   <option value="Annual Office Party">Annual Office Party</option>
                   <option value="Team Outing">Team Outing</option>
                   <option value="R&R / Reward Night">R&R / Reward Night</option>
