@@ -767,10 +767,57 @@ export default function BMCPLanding() {
         <div className="venue-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 22 }}>
           {venues.map((v, i) => <VenueCard key={i} v={v} />)}
         </div>
-        <p style={{ textAlign: "center", color: G, fontSize: 13, marginTop: 28 }}>
-          📍 Mumbai · Navi Mumbai · Thane · Pune · Goa · Delhi · Bangalore · Hyderabad · Chennai
+        <p style={{ textAlign: "center", color: G, fontSize: 13, marginTop: 28, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, flexWrap: "wrap" }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={R} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          Mumbai · Navi Mumbai · Thane · Pune · Goa · Delhi · Bangalore · Hyderabad · Chennai
         </p>
       </Sec>
+
+      {/* ===== TRUSTED BY LEADING CORPORATES ===== */}
+      <section style={{ background: R, position: "relative", overflow: "hidden", padding: "60px clamp(100px, 8vw, 200px)" }}>
+        <div style={{ textAlign: "center", marginBottom: 44 }}>
+          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 38px)", fontWeight: 800, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.5px", lineHeight: 1.15, textTransform: "uppercase" }}>
+            Trusted by Leading{" "}
+            <span style={{ color: "#FFD700" }}>Corporates</span>
+          </h2>
+          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", margin: 0 }}>
+            500+ companies across India rely on us for their team celebrations
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, width: "100%" }}>
+          {[
+            ["We Work", "Indus Valley", "Morgan Stanley"],
+            ["Hyundai", "JP Morgan", "KPMG"],
+            ["Mphasis", "Naukri.com", "Hindustan Unilever"],
+            ["Red Hat", "Amazon", "BNY Mellon"],
+            ["JSW", "Cisco", "IBM"],
+            ["Mphasis", "InfoBeans", "Cybage"],
+            ["Suzlon", "Info Edge", "Guidepoint"],
+            ["WNS", "Lupin", ""],
+          ].map((row, ri) =>
+            row.map((company, ci) =>
+              company ? (
+                <div key={`${ri}-${ci}`} style={{
+                  padding: "16px 24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  borderBottom: ri < 7 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                  borderRight: ci < 2 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                }}>
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" style={{ flexShrink: 0 }}>
+                    <path d={ci === 0 ? "M1 4L4 1L7 4L4 7Z" : ci === 1 ? "M4 0L8 4L4 8L0 4Z" : "M0 4L4 0L8 4L4 8Z"} fill="#FFD700" opacity="0.85" />
+                  </svg>
+                  <span style={{ color: "rgba(255,255,255,0.92)", fontSize: 14.5, fontWeight: 600, letterSpacing: "0.3px" }}>{company}</span>
+                </div>
+              ) : (
+                <div key={`${ri}-${ci}`} style={{ padding: "16px 24px", borderRight: ci < 2 ? "1px solid rgba(255,255,255,0.08)" : "none" }} />
+              )
+            )
+          )}
+        </div>
+      </section>
 
       {/* ===== 4. TESTIMONIALS — GOOGLE REVIEWS ===== */}
       <Sec bg="#F5F5F7">
