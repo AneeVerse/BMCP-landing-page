@@ -1,4 +1,5 @@
 import { DM_Sans, Playfair_Display } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -24,6 +25,18 @@ export default function RootLayout({ children }) {
       <body style={{ fontFamily: "var(--font-dm-sans), sans-serif", margin: 0 }}>
         {children}
       </body>
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-Z4D7SK0ZCF"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-Z4D7SK0ZCF');
+        `}
+      </Script>
     </html>
   );
 }
