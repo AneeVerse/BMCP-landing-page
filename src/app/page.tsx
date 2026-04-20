@@ -479,6 +479,25 @@ export default function BMCPLanding() {
             width: 52px !important;
             height: 52px !important;
           }
+
+          /* Trusted by Leading Corporates - 2 column grid on mobile */
+          .trusted-section {
+            padding: 40px 16px !important;
+          }
+          .trusted-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .trusted-grid > div {
+            padding: 14px 12px !important;
+            border-right: none !important;
+            border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+          }
+          .trusted-grid > div:nth-child(2n-1) {
+            border-right: 1px solid rgba(255,255,255,0.08) !important;
+          }
+          .trusted-grid > div:nth-last-child(-n+2) {
+            border-bottom: none !important;
+          }
         }
         @keyframes mobileMenuSlide {
           from { opacity: 0; transform: translateY(-100%); }
@@ -775,7 +794,7 @@ export default function BMCPLanding() {
       </Sec>
 
       {/* ===== TRUSTED BY LEADING CORPORATES ===== */}
-      <section style={{ background: R, position: "relative", overflow: "hidden", padding: "60px clamp(100px, 8vw, 200px)" }}>
+      <section className="trusted-section" style={{ background: R, position: "relative", overflow: "hidden", padding: "60px clamp(100px, 8vw, 200px)" }}>
         <div style={{ textAlign: "center", marginBottom: 44 }}>
           <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 38px)", fontWeight: 800, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.5px", lineHeight: 1.15, textTransform: "uppercase" }}>
             Trusted by Leading{" "}
@@ -786,7 +805,7 @@ export default function BMCPLanding() {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, width: "100%" }}>
+        <div className="trusted-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, width: "100%" }}>
           {[
             ["We Work", "Indus Valley", "Morgan Stanley"],
             ["Hyundai", "JP Morgan", "KPMG"],
