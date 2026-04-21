@@ -29,12 +29,13 @@ export default function RootLayout({ children }) {
         src="https://www.googletagmanager.com/gtag/js?id=G-Z4D7SK0ZCF"
         strategy="afterInteractive"
       />
-      <Script id="google-analytics" strategy="afterInteractive">
+      <Script id="google-tags" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'G-Z4D7SK0ZCF');
+          gtag('config', 'AW-17399689995');
         `}
       </Script>
     </html>
