@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import useGeoLocation from "../hooks/useGeoLocation";
 
 const R = "#80281F";
@@ -102,6 +103,7 @@ function VenueCard({ v }: { v: Venue }) {
 }
 
 export default function BMCPLanding() {
+  const router = useRouter();
   const LOCATIONS = ["Mumbai", "Navi Mumbai", "Thane", "Pune", "Goa", "Delhi", "Gurugram", "Noida", "Bangalore", "Hyderabad", "Chennai", "Kolkata", "Ahmedabad", "Jaipur", "Surat", "Chandigarh", "Kochi", "Indore", "Other"];
 
   const [formData, setFormData] = useState({ booking: "", state: "", date: "", name: "", phone: "", whatsapp: true });
@@ -137,12 +139,9 @@ export default function BMCPLanding() {
 
   const handleWaSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Open WhatsApp immediately — must stay synchronous to avoid browser popup blocker
-    window.open(WA, '_blank', 'noopener,noreferrer');
     setShowWaPopup(false);
     const snapshot = { ...waForm };
     setWaForm({ name: '', phone: '', event: '' });
-    // Fire-and-forget lead capture in background
     fetch('/api/submit-form', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -159,6 +158,7 @@ export default function BMCPLanding() {
         userIp: userGeo ? userGeo.ip : 'Unknown',
       }),
     }).catch(() => { });
+    router.push('/thank-you?chat=1');
   };
 
   const handleStep1 = (e: React.FormEvent) => {
@@ -190,10 +190,9 @@ export default function BMCPLanding() {
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        setFormStatus('success');
-        setFormMsg(data.message || 'Enquiry submitted! We will contact you within 30 minutes.');
         setFormData({ booking: "", state: "", date: "", name: "", phone: "", whatsapp: true });
         setFormStep(1);
+        router.push('/thank-you');
       } else {
         setFormStatus('error');
         setFormMsg(data.message || 'Something went wrong. Please try again.');
