@@ -1,6 +1,64 @@
 import nodemailer from 'nodemailer';
 import { sendToGoogleSheets } from '../../../lib/googleSheetsClient';
 
+const ODOO_URL = process.env.ODOO_URL;
+const ODOO_DB = process.env.ODOO_DB;
+const ODOO_USERNAME = process.env.ODOO_USERNAME;
+const ODOO_API_KEY = process.env.ODOO_API_KEY;
+
+function xmlRpc(endpoint, method, params) {
+  const toXml = (val) => {
+    if (val === null || val === undefined) return '<value><boolean>0</boolean></value>';
+    if (typeof val === 'boolean') return `<value><boolean>${val ? 1 : 0}</boolean></value>`;
+    if (typeof val === 'number' && Number.isInteger(val)) return `<value><int>${val}</int></value>`;
+    if (typeof val === 'string') return `<value><string>${val.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</string></value>`;
+    if (Array.isArray(val)) return `<value><array><data>${val.map(toXml).join('')}</data></array></value>`;
+    if (typeof val === 'object') {
+      const members = Object.entries(val).map(([k, v]) => `<member><name>${k}</name>${toXml(v)}</member>`).join('');
+      return `<value><struct>${members}</struct></value>`;
+    }
+    return `<value><string>${val}</string></value>`;
+  };
+  const body = `<?xml version="1.0"?><methodCall><methodName>${method}</methodName><params>${params.map(p => `<param>${toXml(p)}</param>`).join('')}</params></methodCall>`;
+  return fetch(`${ODOO_URL}${endpoint}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/xml', 'Accept': 'text/xml' },
+    body,
+  }).then(async r => {
+    const text = await r.text();
+    const intMatch = text.match(/<int>(\d+)<\/int>/);
+    if (intMatch) return parseInt(intMatch[1], 10);
+    const strMatch = text.match(/<string>([\s\S]*?)<\/string>/);
+    if (strMatch) return strMatch[1];
+    return null;
+  });
+}
+
+async function pushToOdoo({ name, phone, event, city, date, whatsapp, userLocation }) {
+  try {
+    const uid = await xmlRpc('/xmlrpc/2/common', 'authenticate', [ODOO_DB, ODOO_USERNAME, ODOO_API_KEY, {}]);
+    if (!uid) return;
+    const leadName = `${event || 'Venue Enquiry'} — ${city || 'Mumbai'}`;
+    const notes = [
+      `Phone: ${phone}`,
+      `Event: ${event || 'Not specified'}`,
+      `City: ${city || 'Mumbai'}`,
+      `Date: ${date || 'Not specified'}`,
+      `WhatsApp: ${whatsapp ? 'Yes' : 'No'}`,
+      `Location: ${userLocation || 'Unknown'}`,
+      `Source: Website Form`,
+    ].join('\n');
+    await xmlRpc('/xmlrpc/2/object', 'execute_kw', [
+      ODOO_DB, uid, ODOO_API_KEY,
+      'crm.lead', 'create',
+      [{ name: leadName, contact_name: name, phone, mobile: phone, description: notes, city: city || 'Mumbai' }],
+      {},
+    ]);
+  } catch {
+    // Non-blocking — don't fail the form if Odoo is down
+  }
+}
+
 const getIndianTime = () => {
   const now = new Date();
   const istTime = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
@@ -88,7 +146,10 @@ export async function POST(req) {
       text: `New enquiry from ${name} (${phone}). Event: ${event}. Area: ${venueLocation}. Date: ${date || 'N/A'}. User Location: ${userLocation || 'Unknown'}. IP: ${userIp || 'Unknown'}. Submitted: ${indianTime}`,
     });
 
-    // 2. Send to Google Sheets
+    // 2. Push to Odoo CRM (fire-and-forget)
+    pushToOdoo({ name, phone, event, city, date, whatsapp, userLocation });
+
+    // 3. Send to Google Sheets
     await sendToGoogleSheets(
       {
         name,
