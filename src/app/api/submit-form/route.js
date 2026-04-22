@@ -1,10 +1,10 @@
 import nodemailer from 'nodemailer';
 import { sendToGoogleSheets } from '../../../lib/googleSheetsClient';
 
-const ODOO_URL = process.env.ODOO_URL;
-const ODOO_DB = process.env.ODOO_DB;
-const ODOO_USERNAME = process.env.ODOO_USERNAME;
-const ODOO_API_KEY = process.env.ODOO_API_KEY;
+const ODOO_URL = process.env.ODOO_URL || 'https://adsbookmycorporateparty1.odoo.com';
+const ODOO_DB = process.env.ODOO_DB || 'adsbookmycorporateparty1';
+const ODOO_USERNAME = process.env.ODOO_USERNAME || 'team.bookmycorporateparty@gmail.com';
+const ODOO_API_KEY = process.env.ODOO_API_KEY || '9634d0e70ef1d64b715bc44e679cd93f637f768d';
 
 function xmlRpc(endpoint, method, params) {
   const toXml = (val) => {
