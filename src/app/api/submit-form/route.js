@@ -26,7 +26,11 @@ function xmlRpc(endpoint, method, params) {
     body,
   }).then(async r => {
     const text = await r.text();
-    const intMatch = text.match(/<int>(\d+)<\/int>/);
+    if (text.includes('<fault>')) {
+      const faultStr = text.match(/<name>faultString<\/name>[\s\S]*?<string>([\s\S]*?)<\/string>/);
+      throw new Error(`Odoo fault: ${faultStr ? faultStr[1] : text}`);
+    }
+    const intMatch = text.match(/<value><int>(\d+)<\/int><\/value>/);
     if (intMatch) return parseInt(intMatch[1], 10);
     const strMatch = text.match(/<string>([\s\S]*?)<\/string>/);
     if (strMatch) return strMatch[1];
@@ -51,11 +55,11 @@ async function pushToOdoo({ name, phone, event, city, date, whatsapp, userLocati
     await xmlRpc('/xmlrpc/2/object', 'execute_kw', [
       ODOO_DB, uid, ODOO_API_KEY,
       'crm.lead', 'create',
-      [{ name: leadName, contact_name: name, phone, mobile: phone, description: notes, city: city || 'Mumbai' }],
+      [{ name: leadName, contact_name: name, phone, description: notes, city: city || 'Mumbai', type: 'opportunity' }],
       {},
     ]);
-  } catch {
-    // Non-blocking — don't fail the form if Odoo is down
+  } catch (err) {
+    console.error('[Odoo] Error:', err);
   }
 }
 
