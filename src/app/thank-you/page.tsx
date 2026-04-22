@@ -4,12 +4,29 @@ import { useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
+declare global {
+  interface Window {
+    gtag: (...args: unknown[]) => void;
+  }
+}
+
 const WA = "https://wa.me/917304672801";
 const R = "#80281F";
 
 function ThankYouContent() {
   const params = useSearchParams();
   const isChat = params.get("chat") === "1";
+
+  useEffect(() => {
+    // Fire Google Ads conversion for every lead (both form and WhatsApp)
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "conversion", {
+        send_to: "AW-17399689995/wQ54CMLrsqAcEIvm6OhA",
+        value: 1.0,
+        currency: "INR",
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (isChat) {
