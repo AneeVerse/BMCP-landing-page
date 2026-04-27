@@ -6,6 +6,12 @@ const ODOO_DB = process.env.ODOO_DB || 'dream-big-event-management-pvt';
 const ODOO_USERNAME = process.env.ODOO_USERNAME || 'info@bookmycorporateparty.com';
 const ODOO_API_KEY = process.env.ODOO_API_KEY || '358e433cc6ce125fa09a04e47f5573401bdd73cd';
 
+const VENUE_LABEL = {
+  villa: 'Villa / Resort',
+  lounge: 'Lounge',
+  banquet: 'Banquet',
+};
+
 function xmlRpc(endpoint, method, params) {
   const toXml = (val) => {
     if (val === null || val === undefined) return '<value><boolean>0</boolean></value>';
@@ -38,24 +44,92 @@ function xmlRpc(endpoint, method, params) {
   });
 }
 
-async function pushToOdoo({ name, phone, event, city, date, whatsapp, userLocation }) {
+function venueDetailsLines(p) {
+  const t = p.formType;
+  if (t === 'villa') {
+    const lines = [
+      `Check-In: ${p.checkInDate || '—'}`,
+      `Check-Out: ${p.checkOutDate || '—'}`,
+      `Total Pax: ${p.totalPax || '—'}`,
+      `Total Kids: ${p.totalKids || '0'}`,
+    ];
+    if (parseInt(p.totalKids || '0', 10) > 0) lines.push(`Kids Age: ${p.kidsAge || '—'}`);
+    lines.push(`Food: ${p.food || '—'}`);
+    lines.push(`Pricing Confirmed: ${p.pricingAccepted ? 'Yes' : 'No'}`);
+    return lines;
+  }
+  if (t === 'lounge') {
+    return [
+      `Date: ${p.date || '—'}`,
+      `Day: ${p.day || '—'}`,
+      `No. of People: ${p.noOfPeople || '—'}`,
+      `Location: ${p.location || '—'}`,
+      `Budget (Food only): ₹${p.budgetOnlyFood || '—'}`,
+      `Budget (With Drinks): ₹${p.budgetWithDrinks || '—'}`,
+      `Type of Meal: ${p.typeOfMeal || '—'}`,
+    ];
+  }
+  if (t === 'banquet') {
+    return [
+      `Date: ${p.date || '—'}`,
+      `Day: ${p.day || '—'}`,
+      `No. of People: ${p.noOfPeople || '—'}`,
+      `Location: ${p.location || '—'}`,
+      `Food Type: ${p.foodType || '—'}`,
+      `Budget: ₹${p.budget || '—'}`,
+    ];
+  }
+  // Legacy fallback (WA popup)
+  return [
+    `Event: ${p.event || 'Not specified'}`,
+    `City: ${p.city || 'Mumbai'}`,
+    `Date: ${p.date || p.venueDate || 'Not specified'}`,
+  ];
+}
+
+function venueDetailsHtml(p) {
+  return venueDetailsLines(p)
+    .map(line => {
+      const idx = line.indexOf(':');
+      if (idx < 0) return `<p style="margin: 0 0 8px;">${line}</p>`;
+      const label = line.slice(0, idx);
+      const value = line.slice(idx + 1).trim();
+      return `<p style="margin: 0 0 8px;"><strong>${label}:</strong> ${value}</p>`;
+    })
+    .join('');
+}
+
+async function pushToOdoo(p) {
   try {
+    const venueLabel = VENUE_LABEL[p.formType] || p.event || 'Venue Enquiry';
     const uid = await xmlRpc('/xmlrpc/2/common', 'authenticate', [ODOO_DB, ODOO_USERNAME, ODOO_API_KEY, {}]);
     if (!uid) return;
-    const leadName = `${event || 'Venue Enquiry'} — ${city || 'Mumbai'}`;
+    const leadName = `${venueLabel} — ${p.city || 'Mumbai'}`;
     const notes = [
-      `Phone: ${phone}`,
-      `Event: ${event || 'Not specified'}`,
-      `City: ${city || 'Mumbai'}`,
-      `Date: ${date || 'Not specified'}`,
-      `WhatsApp: ${whatsapp ? 'Yes' : 'No'}`,
-      `Location: ${userLocation || 'Unknown'}`,
-      `Source: Website Form`,
+      `Phone: ${p.phone}`,
+      `Email: ${p.email || '—'}`,
+      `Source (Heard via): ${p.source || '—'}`,
+      `Venue Type: ${venueLabel}`,
+      ...venueDetailsLines(p),
+      `WhatsApp Updates: ${p.whatsapp ? 'Yes' : 'No'}`,
+      `User Location: ${p.userLocation || 'Unknown'}`,
+      `Submitted via: Website Form`,
     ].join('\n');
+
+    const leadFields = {
+      name: leadName,
+      contact_name: p.name,
+      phone: p.phone,
+      description: notes,
+      city: p.city || 'Mumbai',
+      type: 'opportunity',
+    };
+    if (p.email) leadFields.email_from = p.email;
+
     await xmlRpc('/xmlrpc/2/object', 'execute_kw', [
       ODOO_DB, uid, ODOO_API_KEY,
       'crm.lead', 'create',
-      [{ name: leadName, contact_name: name, phone, description: notes, city: city || 'Mumbai', type: 'opportunity' }],
+      [leadFields],
       {},
     ]);
   } catch (err) {
@@ -79,29 +153,42 @@ const getIndianTime = () => {
 
 export async function POST(req) {
   try {
+    const payload = await req.json();
     const {
       name,
       phone,
+      email,
+      source,
+      formType,
       event,
       city,
-      area,
-      location,
       date,
       whatsapp,
       userLocation,
       userPincode,
       userIp,
-    } = await req.json();
+    } = payload;
 
-    if (!name || !phone || !event) {
+    if (!name || !phone) {
       return Response.json(
-        { error: 'Name, phone, and venue type are required.' },
+        { error: 'Name and phone are required.' },
+        { status: 400 }
+      );
+    }
+    if (formType && (!email || !source)) {
+      return Response.json(
+        { error: 'Email and source are required.' },
+        { status: 400 }
+      );
+    }
+    if (!formType && !event) {
+      return Response.json(
+        { error: 'Venue type is required.' },
         { status: 400 }
       );
     }
 
-    const venueLocation = area && city ? `${area}, ${city}` : (location || 'Not specified');
-
+    const venueLabel = VENUE_LABEL[formType] || event || 'Venue Enquiry';
     const indianTime = getIndianTime();
 
     // 1. Send email
@@ -116,20 +203,19 @@ export async function POST(req) {
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
         <div style="background: #80281F; padding: 24px 32px;">
-          <h2 style="color: #fff; margin: 0; font-size: 20px;">New Venue Enquiry — BookMyCorporateParty</h2>
+          <h2 style="color: #fff; margin: 0; font-size: 20px;">New ${venueLabel} Enquiry — BookMyCorporateParty</h2>
           <p style="color: rgba(255,255,255,0.8); margin: 6px 0 0; font-size: 13px;">Received at ${indianTime}</p>
         </div>
         <div style="padding: 28px 32px; background: #fff;">
           <h3 style="color: #80281F; margin: 0 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Contact Details</h3>
           <p style="margin: 0 0 8px;"><strong>Name:</strong> ${name}</p>
-          <p style="margin: 0 0 8px;"><strong>Phone / WhatsApp:</strong> ${phone}</p>
+          <p style="margin: 0 0 8px;"><strong>WhatsApp Number:</strong> ${phone}</p>
+          <p style="margin: 0 0 8px;"><strong>Email:</strong> ${email || '—'}</p>
+          <p style="margin: 0 0 8px;"><strong>Heard About Us Via:</strong> ${source || '—'}</p>
           <p style="margin: 0 0 8px;"><strong>WhatsApp Updates:</strong> ${whatsapp ? 'Yes' : 'No'}</p>
 
-          <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Event Details</h3>
-          <p style="margin: 0 0 8px;"><strong>Event / Occasion:</strong> ${event}</p>
-          <p style="margin: 0 0 8px;"><strong>City:</strong> ${city || 'Mumbai'}</p>
-          <p style="margin: 0 0 8px;"><strong>Preferred Area:</strong> ${area || 'Not specified'}</p>
-          <p style="margin: 0 0 8px;"><strong>Event Date:</strong> ${date || 'Not specified'}</p>
+          <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">${venueLabel} Details</h3>
+          ${venueDetailsHtml(payload)}
 
           <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">User Location (Auto-Detected)</h3>
           <p style="margin: 0 0 8px;"><strong>Location:</strong> ${userLocation || 'Unknown'}</p>
@@ -142,36 +228,54 @@ export async function POST(req) {
       </div>
     `;
 
+    const textSummary = venueDetailsLines(payload).join(' | ');
     await transporter.sendMail({
       from: `"BookMyCorporateParty Enquiry" <${process.env.NEXT_PUBLIC_EMAIL_USER}>`,
       to: process.env.NEXT_PUBLIC_EMAIL_RECEIVER,
-      subject: `New Venue Enquiry from ${name} — ${event}`,
+      subject: `New ${venueLabel} Enquiry from ${name}`,
       html: emailHtml,
-      text: `New enquiry from ${name} (${phone}). Event: ${event}. Area: ${venueLocation}. Date: ${date || 'N/A'}. User Location: ${userLocation || 'Unknown'}. IP: ${userIp || 'Unknown'}. Submitted: ${indianTime}`,
+      text: `New ${venueLabel} enquiry from ${name} (${phone}, ${email || 'no-email'}). Source: ${source || '—'}. ${textSummary}. User Location: ${userLocation || 'Unknown'}. IP: ${userIp || 'Unknown'}. Submitted: ${indianTime}`,
     });
 
     // 2. Push to Odoo CRM (fire-and-forget)
-    pushToOdoo({ name, phone, event, city, date, whatsapp, userLocation });
+    pushToOdoo(payload);
 
     // 3. Send to Google Sheets
     await sendToGoogleSheets(
       {
+        formType: venueLabel,
         name,
         phone,
-        event,
-        city: city || 'Mumbai',
-        area: area || '',
-        location: venueLocation,
-        date: date || '',
+        email: email || '',
+        source: source || '',
+        venueDetails: venueDetailsLines(payload).join(' | '),
+        contactCity: city || payload.location || 'Mumbai',
+        date: date || payload.checkInDate || '',
+        day: payload.day || '',
         whatsapp: whatsapp ? 'Yes' : 'No',
+        // Individual venue-specific keys (Apps Script can pick whichever it needs)
+        checkInDate: payload.checkInDate || '',
+        checkOutDate: payload.checkOutDate || '',
+        totalPax: payload.totalPax || '',
+        totalKids: payload.totalKids || '',
+        kidsAge: payload.kidsAge || '',
+        food: payload.food || '',
+        pricingAccepted: payload.pricingAccepted ? 'Yes' : 'No',
+        noOfPeople: payload.noOfPeople || '',
+        location: payload.location || '',
+        budgetOnlyFood: payload.budgetOnlyFood || '',
+        budgetWithDrinks: payload.budgetWithDrinks || '',
+        typeOfMeal: payload.typeOfMeal || '',
+        foodType: payload.foodType || '',
+        budget: payload.budget || '',
+        // Auto-detected
         userLocation: userLocation || '',
         userPincode: userPincode || '',
         userIp: userIp || '',
         submittedAt: indianTime,
-        pageSource: 'Hero Form',
-        formType: 'Venue Enquiry Form',
+        pageSource: formType ? 'Hero Form (Dynamic)' : 'WhatsApp Popup',
       },
-      'venue enquiry form'
+      formType ? `${formType} enquiry` : 'wa popup enquiry'
     );
 
     return Response.json({ success: true, message: 'Enquiry submitted! We will contact you within 30 minutes.' });
