@@ -105,12 +105,21 @@ async function pushToOdoo(p) {
     const uid = await xmlRpc('/xmlrpc/2/common', 'authenticate', [ODOO_DB, ODOO_USERNAME, ODOO_API_KEY, {}]);
     if (!uid) return;
     const leadName = `${venueLabel} — ${p.city || 'Mumbai'}`;
+    const utmLines = [];
+    if (p.utmSource)   utmLines.push(`UTM Source: ${p.utmSource}`);
+    if (p.utmMedium)   utmLines.push(`UTM Medium: ${p.utmMedium}`);
+    if (p.utmCampaign) utmLines.push(`UTM Campaign: ${p.utmCampaign}`);
+    if (p.utmTerm)     utmLines.push(`UTM Term: ${p.utmTerm}`);
+    if (p.utmContent)  utmLines.push(`UTM Content: ${p.utmContent}`);
+    if (p.gclid)       utmLines.push(`GCLID: ${p.gclid}`);
+
     const notes = [
       `Phone: ${p.phone}`,
       `Email: ${p.email || '—'}`,
       `Source (Heard via): ${p.source || '—'}`,
       `Venue Type: ${venueLabel}`,
       ...venueDetailsLines(p),
+      ...(utmLines.length ? ['--- Ad Tracking ---', ...utmLines] : []),
       `WhatsApp Updates: ${p.whatsapp ? 'Yes' : 'No'}`,
       `User Location: ${p.userLocation || 'Unknown'}`,
       `Submitted via: Website Form`,
@@ -167,7 +176,15 @@ export async function POST(req) {
       userLocation,
       userPincode,
       userIp,
+      utmSource,
+      utmMedium,
+      utmCampaign,
+      utmTerm,
+      utmContent,
+      gclid,
     } = payload;
+
+    const hasUtm = !!(utmSource || utmMedium || utmCampaign || gclid);
 
     if (!name || !phone) {
       return Response.json(
@@ -216,6 +233,16 @@ export async function POST(req) {
 
           <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">${venueLabel} Details</h3>
           ${venueDetailsHtml(payload)}
+
+          ${hasUtm ? `
+          <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Ad / UTM Tracking</h3>
+          <p style="margin: 0 0 8px;"><strong>UTM Source:</strong> ${utmSource || '—'}</p>
+          <p style="margin: 0 0 8px;"><strong>UTM Medium:</strong> ${utmMedium || '—'}</p>
+          <p style="margin: 0 0 8px;"><strong>UTM Campaign:</strong> ${utmCampaign || '—'}</p>
+          <p style="margin: 0 0 8px;"><strong>UTM Term (keyword):</strong> ${utmTerm || '—'}</p>
+          <p style="margin: 0 0 8px;"><strong>UTM Content (ad):</strong> ${utmContent || '—'}</p>
+          ${gclid ? `<p style="margin: 0 0 8px;"><strong>GCLID:</strong> ${gclid}</p>` : ''}
+          ` : ''}
 
           <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">User Location (Auto-Detected)</h3>
           <p style="margin: 0 0 8px;"><strong>Location:</strong> ${userLocation || 'Unknown'}</p>
@@ -272,6 +299,13 @@ export async function POST(req) {
         userLocation: userLocation || '',
         userPincode: userPincode || '',
         userIp: userIp || '',
+        // UTM / ad tracking
+        utmSource:   utmSource   || '',
+        utmMedium:   utmMedium   || '',
+        utmCampaign: utmCampaign || '',
+        utmTerm:     utmTerm     || '',
+        utmContent:  utmContent  || '',
+        gclid:       gclid       || '',
         submittedAt: indianTime,
         pageSource: formType ? 'Hero Form (Dynamic)' : 'WhatsApp Popup',
       },

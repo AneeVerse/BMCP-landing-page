@@ -149,6 +149,14 @@ export default function BMCPLanding() {
     email: '',
     source: '',
   });
+  const [utmData, setUtmData] = useState({
+    utmSource: '',
+    utmMedium: '',
+    utmCampaign: '',
+    utmTerm: '',
+    utmContent: '',
+    gclid: '',
+  });
   const [formStep, setFormStep] = useState<1 | 2>(1);
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [formMsg, setFormMsg] = useState('');
@@ -158,6 +166,35 @@ export default function BMCPLanding() {
   const userGeo = useGeoLocation();
   const visitorTracked = useRef(false);
   const testimonialRowRef = useRef<HTMLDivElement>(null);
+
+  // Capture UTM parameters from URL on mount and auto-fill Source dropdown
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const src = p.get('utm_source') || '';
+    const captured = {
+      utmSource:   src,
+      utmMedium:   p.get('utm_medium')   || '',
+      utmCampaign: p.get('utm_campaign') || '',
+      utmTerm:     p.get('utm_term')     || '',
+      utmContent:  p.get('utm_content')  || '',
+      gclid:       p.get('gclid')        || '',
+    };
+    setUtmData(captured);
+
+    // Map utm_source to the Source dropdown value
+    const srcLower = src.toLowerCase();
+    const mapped =
+      srcLower.includes('google')    ? 'Google'    :
+      srcLower.includes('instagram') ? 'Instagram' :
+      srcLower.includes('facebook')  ? 'Facebook'  :
+      srcLower.includes('whatsapp')  ? 'WhatsApp'  :
+      srcLower.includes('friend') || srcLower.includes('referral') ? 'Friend' :
+      src ? 'Other' : '';
+
+    if (mapped) {
+      setFormData(prev => ({ ...prev, source: mapped }));
+    }
+  }, []);
 
   // Passive visitor analytics — fires once when geo resolves, zero UI impact
   useEffect(() => {
@@ -198,6 +235,7 @@ export default function BMCPLanding() {
         userLocation: userGeo ? `${userGeo.city}, ${userGeo.region}, ${userGeo.country}` : 'Unknown',
         userPincode: userGeo ? userGeo.pincode : 'Unknown',
         userIp: userGeo ? userGeo.ip : 'Unknown',
+        ...utmData,
       }),
     }).catch(() => { });
     router.push('/thank-you?chat=1');
@@ -272,7 +310,7 @@ export default function BMCPLanding() {
           typeOfMeal: f.typeOfMeal,
           foodType: f.foodType,
           budget: f.budget,
-          // Backwards-compat keys (used by older Odoo/Email/Sheets paths)
+          // Backwards-compat keys
           event: venueLabel,
           city: cityForServer,
           area: '',
@@ -280,6 +318,8 @@ export default function BMCPLanding() {
           userLocation: userGeo ? `${userGeo.city}, ${userGeo.region}, ${userGeo.country}` : 'Unknown',
           userPincode: userGeo ? userGeo.pincode : 'Unknown',
           userIp: userGeo ? userGeo.ip : 'Unknown',
+          // UTM / ad tracking
+          ...utmData,
         }),
       });
       const data = await res.json();
