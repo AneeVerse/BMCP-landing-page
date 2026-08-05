@@ -140,18 +140,58 @@ export default function BMCPLanding() {
   const [otpSent, setOtpSent] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [otpVerified, setOtpVerified] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpError, setOtpError] = useState('');
 
   const isValidPhone = (p: string) => p.replace(/\D/g, '').length >= 10;
 
-  const handleSendOtp = () => {
-    setOtpSent(true);
-    setOtpVerified(false);
-    setOtpCode('');
+  const handleSendOtp = async () => {
+    if (!isValidPhone(formData.whatsappNumber) || otpLoading) return;
+    setOtpLoading(true);
+    setOtpError('');
+    try {
+      const res = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: formData.whatsappNumber }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setOtpSent(true);
+        setOtpVerified(false);
+        setOtpCode('');
+      } else {
+        setOtpError(data.message || 'Failed to send OTP');
+      }
+    } catch {
+      setOtpError('Network error sending OTP');
+    } finally {
+      setOtpLoading(false);
+    }
   };
 
-  const handleVerifyOtp = () => {
-    if (otpCode.length >= 4) {
-      setOtpVerified(true);
+  const handleVerifyOtp = async () => {
+    if (!otpCode || otpVerifying) return;
+    setOtpVerifying(true);
+    setOtpError('');
+    try {
+      const res = await fetch('/api/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: formData.whatsappNumber, otp: otpCode }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setOtpVerified(true);
+        setOtpError('');
+      } else {
+        setOtpError(data.message || 'Invalid OTP');
+      }
+    } catch {
+      setOtpError('Network error verifying OTP');
+    } finally {
+      setOtpVerifying(false);
     }
   };
 
@@ -1174,8 +1214,8 @@ export default function BMCPLanding() {
                     <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>WhatsApp Number *</label>
                     <div style={{ display: "flex", gap: 6 }}>
                       <input required type="tel" placeholder="e.g. 9876543210" value={formData.whatsappNumber} onChange={e => setFormData({ ...formData, whatsappNumber: e.target.value })} style={{ flex: 1, padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif" }} onFocus={e => e.target.style.borderColor = R} onBlur={e => e.target.style.borderColor = B} />
-                      <button type="button" onClick={handleSendOtp} disabled={!isValidPhone(formData.whatsappNumber) || otpSent} style={{ background: (isValidPhone(formData.whatsappNumber) && !otpSent) ? R : "#F3F4F6", color: (isValidPhone(formData.whatsappNumber) && !otpSent) ? "#fff" : "#9CA3AF", border: `1px solid ${(isValidPhone(formData.whatsappNumber) && !otpSent) ? R : "#E5E7EB"}`, borderRadius: 7, padding: "0 12px", fontSize: 11, fontWeight: 700, cursor: (isValidPhone(formData.whatsappNumber) && !otpSent) ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
-                        {otpSent ? "Sent" : "OTP"}
+                      <button type="button" onClick={handleSendOtp} disabled={!isValidPhone(formData.whatsappNumber) || otpSent || otpLoading} style={{ background: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#F3F4F6", color: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "#fff" : "#9CA3AF", border: `1px solid ${(isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#E5E7EB"}`, borderRadius: 7, padding: "0 12px", fontSize: 11, fontWeight: 700, cursor: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
+                        {otpLoading ? "Sending..." : otpSent ? "Sent" : "OTP"}
                       </button>
                     </div>
 
@@ -1185,7 +1225,7 @@ export default function BMCPLanding() {
                         <input 
                           type="text" 
                           maxLength={6} 
-                          placeholder="Enter OTP (Optional)" 
+                          placeholder="Enter OTP Code" 
                           value={otpCode} 
                           onChange={e => setOtpCode(e.target.value)} 
                           style={{ 
@@ -1204,31 +1244,32 @@ export default function BMCPLanding() {
                         <button 
                           type="button" 
                           onClick={handleVerifyOtp} 
-                          disabled={otpVerified || !otpCode} 
+                          disabled={otpVerified || !otpCode || otpVerifying} 
                           style={{ 
-                            background: (otpVerified || !otpCode) ? "#F3F4F6" : "#16A34A", 
-                            color: (otpVerified || !otpCode) ? "#9CA3AF" : "#fff", 
-                            border: `1px solid ${(otpVerified || !otpCode) ? "#E5E7EB" : "#16A34A"}`, 
+                            background: (otpVerified || !otpCode || otpVerifying) ? "#F3F4F6" : "#16A34A", 
+                            color: (otpVerified || !otpCode || otpVerifying) ? "#9CA3AF" : "#fff", 
+                            border: `1px solid ${(otpVerified || !otpCode || otpVerifying) ? "#E5E7EB" : "#16A34A"}`, 
                             borderRadius: 7, 
                             padding: "8px 12px", 
                             fontSize: 11, 
                             fontWeight: 700, 
-                            cursor: (otpVerified || !otpCode) ? "default" : "pointer",
+                            cursor: (otpVerified || !otpCode || otpVerifying) ? "default" : "pointer",
                             transition: "all 0.2s"
                           }}
                         >
-                          {otpVerified ? "✓" : "Verify"}
+                          {otpVerifying ? "..." : otpVerified ? "✓" : "Verify"}
                         </button>
                         <button 
                           type="button" 
-                          onClick={() => setOtpSent(false)} 
+                          onClick={handleSendOtp} 
+                          disabled={otpLoading}
                           style={{ 
                             background: "none", 
                             border: "none", 
                             color: R, 
                             fontSize: 10, 
                             fontWeight: 600, 
-                            cursor: "pointer", 
+                            cursor: otpLoading ? "not-allowed" : "pointer", 
                             padding: 0,
                             textDecoration: "underline",
                             whiteSpace: "nowrap"
@@ -1238,8 +1279,11 @@ export default function BMCPLanding() {
                         </button>
                       </div>
                     )}
+                    {otpError && (
+                      <span style={{ display: "block", color: "#DC2626", fontSize: 10, fontWeight: 600, marginTop: 4 }}>{otpError}</span>
+                    )}
                     {otpVerified && (
-                      <span style={{ display: "block", color: "#16A34A", fontSize: 10, fontWeight: 600, marginTop: 4 }}>✓ Verified</span>
+                      <span style={{ display: "block", color: "#16A34A", fontSize: 10, fontWeight: 600, marginTop: 4 }}>✓ Phone Verified</span>
                     )}
                   </div>
                 </div>
