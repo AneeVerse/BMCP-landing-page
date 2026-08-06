@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 const EventsSection = dynamic(() => import("../components/EventsSection"), { ssr: false });
 const InstagramWidget = dynamic(() => import("../components/InstagramWidget"), { ssr: false });
 const CompanyLogoSlider = dynamic(() => import("../components/CompanyLogoSlider"), { ssr: false });
+const DeliverSlider = dynamic(() => import("../components/DeliverSlider"), { ssr: false });
 
 const R = "#80281F";
 const D = "#1A1A1A";
@@ -379,6 +380,7 @@ export default function BMCPLanding() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        isWaInquiry: true,
         name: snapshot.name,
         phone: snapshot.phone,
         event: snapshot.event || 'WhatsApp Inquiry',
@@ -521,12 +523,14 @@ export default function BMCPLanding() {
   };
 
   const venues: Venue[] = [
-    { name: "Lounges & Clubs", img: "/images/687e0608c0d8f.jpg", tags: ["DJ & Music", "Bar Setup"], desc: "High-energy venues with DJ, bar, and dance floor — ideal for team parties, R&R nights, and celebrations.", capacity: "30–150 guests" },
-    { name: "Banquet Halls", img: "/images/69d0ec17600a2.jpg", tags: ["Large Events", "AV Setup"], desc: "Spacious halls with stage, AV, and flexible seating — perfect for annual parties and award nights.", capacity: "100–1000+ guests" },
-    { name: "Fine Dine", img: "/images/6878994b943ac.jpg", tags: ["Premium", "Client Dinners"], desc: "Elegant restaurants for leadership meets, client entertainment, and intimate corporate dinners.", capacity: "20–80 guests" },
-    { name: "Cafes", img: "/images/687ddcbbb03f3.jpg", tags: ["Casual", "Budget-Friendly"], desc: "Relaxed spaces for team lunches, farewell parties, and casual get-togethers with small groups.", capacity: "15–50 guests" },
-    { name: "Open Lawns", img: "/images/6884fe622ce3c.jpg", tags: ["Outdoor", "Team Activities"], desc: "Open-air venues for team outings, fun days, and large events with space for games and stages.", capacity: "50–500+ guests" },
-    { name: "Resorts & Villas", img: "/images/69882f2f67edd.jpeg", tags: ["Offsites", "Weekend Getaway"], desc: "Destination venues near Mumbai for offsites, leadership retreats, and team-building stays.", capacity: "20–200 guests" },
+    { name: "Nightclubs", img: "/images/what-you-can-book/nightclubs.png", tags: ["DJ & Music", "Bar Setup"], desc: "High-energy venues with DJ, bar, and dance floor — ideal for team parties, R&R nights, and celebrations.", capacity: "30–200+ guests" },
+    { name: "Water Parks", img: "/images/what-you-can-book/water-parks.png", tags: ["Outdoor Fun", "Team Outing"], desc: "Thrill-filled day outings with water slides, wave pools, and team-building activities.", capacity: "50–1000+ guests" },
+    { name: "Villas", img: "/images/what-you-can-book/villas.png", tags: ["Offsites", "Weekend Getaway"], desc: "Luxury private villas and resorts for offsites, leadership retreats, and overnight stays.", capacity: "20–150 guests" },
+    { name: "Banquets", img: "/images/what-you-can-book/banquets.png", tags: ["Large Events", "AV Setup"], desc: "Spacious banquet halls with stage, AV, and flexible seating — perfect for annual parties and award nights.", capacity: "100–2000+ guests" },
+    { name: "Sports Bars", img: "/images/what-you-can-book/sports-bars.png", tags: ["Arcade & Games", "Bar Setup"], desc: "Interactive venues with bowling, arcade games, screens, and craft beers for casual team hangouts.", capacity: "25–150 guests" },
+    { name: "Yacht", img: "/images/what-you-can-book/private-YACHT.png", tags: ["Exclusive", "Sunset Cruise"], desc: "Luxury private yacht charter for executive retreats, client entertainment, and milestone celebrations.", capacity: "20–100 guests" },
+    { name: "Caterings", img: "/images/what-you-can-book/catering.png", tags: ["Live Counters", "Custom Menu"], desc: "Full-service corporate catering with multi-cuisine menus, live food stations, and bar service.", capacity: "50–2000+ guests" },
+    { name: "Open Lawn", img: "/images/what-you-can-book/open-lawn.png", tags: ["Outdoor", "Large Gatherings"], desc: "Expansive open-air lawns for corporate sports days, annual galas, and mega team celebrations.", capacity: "100–2000+ guests" },
   ];
 
   return (
@@ -1369,18 +1373,49 @@ export default function BMCPLanding() {
         </div>
       </div>
 
-      {/* ===== 3. VENUE CARDS ===== */}
-      <Sec id="venues">
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <Badge text="Explore venue types" />
+      {/* ===== WHAT WE DELIVER FOR CORPORATES ===== */}
+      <Sec id="deliver" style={{ padding: "32px 0" }}>
+        <div style={{ textAlign: "center", marginBottom: 32, padding: "0 20px" }}>
+          <Badge text="What We Deliver For Corporates" />
           <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "14px 0 8px" }}>
-            Corporate Party <span style={{ color: R }}>Venue Types</span>
+            What We Deliver For <span style={{ color: R }}>Corporates</span>
           </h2>
-          <p style={{ fontSize: 15, color: G, maxWidth: 520, margin: "0 auto" }}>
-            Choose your venue type and submit your requirements. We'll shortlist the best options with pricing for your team.
+          <p style={{ fontSize: 15, color: G, maxWidth: 580, margin: "0 auto" }}>
+            Explore how we bring corporate celebrations to life with curated venues, grand setups, and seamless execution.
           </p>
         </div>
-        <div className="venue-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 22 }}>
+        <DeliverSlider />
+      </Sec>
+
+      {/* ===== 3. VENUE CARDS ===== */}
+      <Sec id="venues">
+        <style>{`
+          .venue-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+          }
+          @media (max-width: 1024px) {
+            .venue-grid {
+              grid-template-columns: repeat(2, 1fr);
+            }
+          }
+          @media (max-width: 640px) {
+            .venue-grid {
+              grid-template-columns: 1fr;
+            }
+          }
+        `}</style>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <Badge text="WHAT YOU CAN BOOK?" />
+          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "14px 0 8px" }}>
+            www.BookMyCorporateParty.com
+          </h2>
+          <p style={{ fontSize: 15, color: G, maxWidth: 520, margin: "0 auto" }}>
+            From 20 to 2000+ guests
+          </p>
+        </div>
+        <div className="venue-grid">
           {venues.map((v, i) => <VenueCard key={i} v={v} />)}
         </div>
         <p style={{ textAlign: "center", color: G, fontSize: 13, marginTop: 28, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, flexWrap: "wrap" }}>

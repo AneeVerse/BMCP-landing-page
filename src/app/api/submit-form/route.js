@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import path from 'path';
 import { sendToGoogleSheets } from '../../../lib/googleSheetsClient';
 
 const ODOO_URL = process.env.ODOO_URL || 'https://dream-big-event-management-pvt.odoo.com';
@@ -219,6 +220,7 @@ export async function POST(req) {
       );
     }
 
+    const isWaInquiry = !!(payload.isWaInquiry || (!formType && (event === 'WhatsApp Inquiry' || !email)));
     const venueLabel = VENUE_LABEL[formType] || event || 'Venue Enquiry';
     const indianTime = getIndianTime();
     const statusSuffix = isPartial ? ' (Partial Lead)' : '';
@@ -232,56 +234,136 @@ export async function POST(req) {
       },
     });
 
-    const emailHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
-        <div style="background: #80281F; padding: 24px 32px;">
-          <h2 style="color: #fff; margin: 0; font-size: 20px; font-weight: bold;">🎉 Congratulations on your new lead!</h2>
-          <p style="color: rgba(255,255,255,0.8); margin: 6px 0 0; font-size: 13px;">Received at ${indianTime} via ${subdomainSource}</p>
-        </div>
-        <div style="padding: 28px 32px; background: #fff;">
-          <div style="margin-bottom: 20px; padding: 12px 16px; background: #F9FAFB; border-left: 4px solid #80281F; border-radius: 4px; font-size: 14px; font-weight: bold; color: #374151;">
-            New ${venueLabel} Enquiry${statusSuffix} — BookMyCorporateParty [${subdomainSource}]
+    const attachments = [];
+    if (isWaInquiry) {
+      const waLogoPath = path.join(process.cwd(), 'public/images/whatsapp-icon-transparent.png');
+      attachments.push({
+        filename: 'whatsapp-icon.png',
+        path: waLogoPath,
+        cid: 'whatsapplogo',
+      });
+    }
+
+    let emailHtml = '';
+
+    if (isWaInquiry) {
+      const venueTypeText = event && event !== 'WhatsApp Inquiry' ? event : 'Not specified';
+      emailHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <style>
+            @media only screen and (max-width: 600px) {
+              .email-container { width: 100% !important; max-width: 100% !important; border-radius: 0 !important; }
+              .header-padding { padding: 20px 16px !important; }
+              .body-padding { padding: 22px 16px !important; }
+              .title-text { font-size: 17px !important; line-height: 1.3 !important; }
+              .logo-img { width: 34px !important; height: 34px !important; }
+              .logo-td { width: 36px !important; }
+              .title-td { padding-left: 4px !important; }
+            }
+          </style>
+        </head>
+        <body style="margin: 0; padding: 10px; background-color: #f3f4f6; font-family: Arial, sans-serif;">
+          <div class="email-container" style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            
+            <div class="header-padding" style="background: #25D366; padding: 24px 28px;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
+                <tr>
+                  <td class="logo-td" style="vertical-align: middle; width: 36px;">
+                    <img class="logo-img" src="cid:whatsapplogo" alt="WhatsApp" style="width: 28px; height: 28px; display: block; background: transparent; border: 0;" />
+                  </td>
+                  <td class="title-td" style="vertical-align: middle; padding-left: 8px;">
+                    <h2 class="title-text" style="color: #ffffff; margin: 0; font-size: 19px; font-weight: bold; line-height: 1.3; font-family: Arial, sans-serif;">
+                      New WhatsApp Inquiry — BookMyCorporateParty
+                    </h2>
+                  </td>
+                </tr>
+              </table>
+              <p style="color: rgba(255,255,255,0.92); margin: 8px 0 0; font-size: 12.5px; font-family: Arial, sans-serif;">
+                Received at ${indianTime} via ${subdomainSource}
+              </p>
+            </div>
+
+            <div class="body-padding" style="padding: 28px 28px; background: #ffffff;">
+              <h3 style="color: #128C7E; margin: 0 0 18px; font-size: 16px; border-bottom: 2px solid #E8F5E9; padding-bottom: 10px; font-family: Arial, sans-serif;">
+                WhatsApp Inquiry Details
+              </h3>
+              <p style="margin: 0 0 12px; font-size: 15px; color: #1F2937; line-height: 1.5; font-family: Arial, sans-serif;">
+                <strong>Your Name:</strong> ${name}
+              </p>
+              <p style="margin: 0 0 12px; font-size: 15px; color: #1F2937; line-height: 1.5; font-family: Arial, sans-serif;">
+                <strong>Phone / WhatsApp:</strong> ${phone}
+              </p>
+              <p style="margin: 0 0 12px; font-size: 15px; color: #1F2937; line-height: 1.5; font-family: Arial, sans-serif;">
+                <strong>Venue Type:</strong> ${venueTypeText}
+              </p>
+            </div>
+
+            <div style="background: #f9fafb; padding: 16px 24px; text-align: center; font-size: 12px; color: #9CA3AF; border-top: 1px solid #f3f4f6; font-family: Arial, sans-serif;">
+              BookMyCorporateParty · Mumbai's #1 Corporate Party Platform
+            </div>
+
           </div>
-          <h3 style="color: #80281F; margin: 0 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Contact Details</h3>
-          <p style="margin: 0 0 8px;"><strong>Name:</strong> ${name}</p>
-          <p style="margin: 0 0 8px;"><strong>WhatsApp Number:</strong> ${phone}</p>
-          <p style="margin: 0 0 8px;"><strong>Email:</strong> ${email || '—'}</p>
-          <p style="margin: 0 0 8px;"><strong>Heard About Us Via:</strong> ${source || '—'}</p>
-          <p style="margin: 0 0 8px;"><strong>Domain Source:</strong> ${subdomainSource}</p>
-          <p style="margin: 0 0 8px;"><strong>WhatsApp Updates:</strong> ${whatsapp ? 'Yes' : 'No'}</p>
+        </body>
+        </html>
+      `;
+    } else {
+      emailHtml = `
+        <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; border: 1px solid #eee; border-radius: 10px; overflow: hidden;">
+          <div style="background: #80281F; padding: 24px 32px;">
+            <h2 style="color: #fff; margin: 0; font-size: 20px; font-weight: bold;">🎉 Congratulations on your new lead!</h2>
+            <p style="color: rgba(255,255,255,0.8); margin: 6px 0 0; font-size: 13px;">Received at ${indianTime} via ${subdomainSource}</p>
+          </div>
+          <div style="padding: 28px 32px; background: #fff;">
+            <div style="margin-bottom: 20px; padding: 12px 16px; background: #F9FAFB; border-left: 4px solid #80281F; border-radius: 4px; font-size: 14px; font-weight: bold; color: #374151;">
+              New ${venueLabel} Enquiry${statusSuffix} — BookMyCorporateParty [${subdomainSource}]
+            </div>
+            <h3 style="color: #80281F; margin: 0 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Contact Details</h3>
+            <p style="margin: 0 0 8px;"><strong>Name:</strong> ${name}</p>
+            <p style="margin: 0 0 8px;"><strong>WhatsApp Number:</strong> ${phone}</p>
+            <p style="margin: 0 0 8px;"><strong>Email:</strong> ${email || '—'}</p>
+            <p style="margin: 0 0 8px;"><strong>Heard About Us Via:</strong> ${source || '—'}</p>
+            <p style="margin: 0 0 8px;"><strong>Domain Source:</strong> ${subdomainSource}</p>
+            <p style="margin: 0 0 8px;"><strong>WhatsApp Updates:</strong> ${whatsapp ? 'Yes' : 'No'}</p>
 
-          <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">${venueLabel} Details</h3>
-          ${venueDetailsHtml(payload)}
+            <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">${venueLabel} Details</h3>
+            ${venueDetailsHtml(payload)}
 
-          ${hasUtm ? `
-          <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Ad / UTM Tracking</h3>
-          <p style="margin: 0 0 8px;"><strong>UTM Source:</strong> ${utmSource || '—'}</p>
-          <p style="margin: 0 0 8px;"><strong>UTM Medium:</strong> ${utmMedium || '—'}</p>
-          <p style="margin: 0 0 8px;"><strong>UTM Campaign:</strong> ${utmCampaign || '—'}</p>
-          <p style="margin: 0 0 8px;"><strong>UTM Term (keyword):</strong> ${utmTerm || '—'}</p>
-          <p style="margin: 0 0 8px;"><strong>UTM Content (ad):</strong> ${utmContent || '—'}</p>
-          ${gclid ? `<p style="margin: 0 0 8px;"><strong>GCLID:</strong> ${gclid}</p>` : ''}
-          ` : ''}
+            ${hasUtm ? `
+            <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Ad / UTM Tracking</h3>
+            <p style="margin: 0 0 8px;"><strong>UTM Source:</strong> ${utmSource || '—'}</p>
+            <p style="margin: 0 0 8px;"><strong>UTM Medium:</strong> ${utmMedium || '—'}</p>
+            <p style="margin: 0 0 8px;"><strong>UTM Campaign:</strong> ${utmCampaign || '—'}</p>
+            <p style="margin: 0 0 8px;"><strong>UTM Term (keyword):</strong> ${utmTerm || '—'}</p>
+            <p style="margin: 0 0 8px;"><strong>UTM Content (ad):</strong> ${utmContent || '—'}</p>
+            ${gclid ? `<p style="margin: 0 0 8px;"><strong>GCLID:</strong> ${gclid}</p>` : ''}
+            ` : ''}
 
-          <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">User Location (Auto-Detected)</h3>
-          <p style="margin: 0 0 8px;"><strong>Location:</strong> ${userLocation || 'Unknown'}</p>
-          <p style="margin: 0 0 8px;"><strong>Pincode:</strong> ${userPincode || 'Unknown'}</p>
-          <p style="margin: 0 0 8px;"><strong>IP Address:</strong> ${userIp || 'Unknown'}</p>
+            <h3 style="color: #80281F; margin: 24px 0 16px; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 10px;">User Location (Auto-Detected)</h3>
+            <p style="margin: 0 0 8px;"><strong>Location:</strong> ${userLocation || 'Unknown'}</p>
+            <p style="margin: 0 0 8px;"><strong>Pincode:</strong> ${userPincode || 'Unknown'}</p>
+            <p style="margin: 0 0 8px;"><strong>IP Address:</strong> ${userIp || 'Unknown'}</p>
+          </div>
+          <div style="background: #f9f9f9; padding: 16px 32px; text-align: center; font-size: 12px; color: #999;">
+            BookMyCorporateParty · Mumbai's #1 Corporate Party Platform
+          </div>
         </div>
-        <div style="background: #f9f9f9; padding: 16px 32px; text-align: center; font-size: 12px; color: #999;">
-          BookMyCorporateParty · Mumbai's #1 Corporate Party Platform
-        </div>
-      </div>
-    `;
+      `;
+    }
 
     const textSummary = venueDetailsLines(payload).join(' | ');
     try {
       await transporter.sendMail({
         from: `"BookMyCorporateParty Enquiry" <${process.env.NEXT_PUBLIC_EMAIL_USER}>`,
         to: process.env.NEXT_PUBLIC_EMAIL_RECEIVER,
-        subject: `🎉 Congratulations on your new lead! - ${name}`,
+        subject: isWaInquiry ? `💬 New WhatsApp Inquiry from ${name}` : `🎉 Congratulations on your new lead! - ${name}`,
         html: emailHtml,
-        text: `[Source: ${subdomainSource}] New ${venueLabel} enquiry${statusSuffix} from ${name} (${phone}, ${email || 'no-email'}). Source: ${source || '—'}. ${textSummary}. User Location: ${userLocation || 'Unknown'}. IP: ${userIp || 'Unknown'}. Submitted: ${indianTime}`,
+        text: isWaInquiry
+          ? `New WhatsApp Inquiry from ${name} (${phone}). Venue Type: ${event && event !== 'WhatsApp Inquiry' ? event : 'Not specified'}. Received at: ${indianTime}`
+          : `[Source: ${subdomainSource}] New ${venueLabel} enquiry${statusSuffix} from ${name} (${phone}, ${email || 'no-email'}). Source: ${source || '—'}. ${textSummary}. User Location: ${userLocation || 'Unknown'}. IP: ${userIp || 'Unknown'}. Submitted: ${indianTime}`,
+        attachments,
       });
       console.log('[Submit Form API] ✅ Lead notification email sent successfully.');
     } catch (mailError) {
