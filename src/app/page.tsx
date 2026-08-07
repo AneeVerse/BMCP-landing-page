@@ -147,8 +147,8 @@ export default function BMCPLanding() {
 
   const isValidPhone = (p: string) => p.replace(/\D/g, '').length >= 10;
 
-  const handleSendOtp = async () => {
-    if (!isValidPhone(formData.whatsappNumber) || otpLoading) return;
+  const handleSendOtp = async (): Promise<boolean> => {
+    if (!isValidPhone(formData.whatsappNumber) || otpLoading) return false;
     setOtpLoading(true);
     setOtpError('');
     try {
@@ -162,35 +162,42 @@ export default function BMCPLanding() {
         setOtpSent(true);
         setOtpVerified(false);
         setOtpCode('');
+        return true;
       } else {
         setOtpError(data.message || 'Failed to send OTP');
+        return false;
       }
     } catch {
       setOtpError('Network error sending OTP');
+      return false;
     } finally {
       setOtpLoading(false);
     }
   };
 
-  const handleVerifyOtp = async () => {
-    if (!otpCode || otpVerifying) return;
+  const handleVerifyOtp = async (codeToVerify?: string): Promise<boolean> => {
+    const targetOtp = typeof codeToVerify === 'string' ? codeToVerify : otpCode;
+    if (!targetOtp || !targetOtp.trim() || otpVerifying) return false;
     setOtpVerifying(true);
     setOtpError('');
     try {
       const res = await fetch('/api/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: formData.whatsappNumber, otp: otpCode }),
+        body: JSON.stringify({ phone: formData.whatsappNumber, otp: targetOtp }),
       });
       const data = await res.json();
       if (res.ok && data.success) {
         setOtpVerified(true);
         setOtpError('');
+        return true;
       } else {
         setOtpError(data.message || 'Invalid OTP');
+        return false;
       }
     } catch {
       setOtpError('Network error verifying OTP');
+      return false;
     } finally {
       setOtpVerifying(false);
     }
@@ -444,6 +451,21 @@ export default function BMCPLanding() {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     if (!isStep1Valid()) return;
+
+    if (!otpVerified) {
+      if (otpSent) {
+        if (!otpCode || !otpCode.trim()) {
+          setOtpError('Please enter the OTP code sent to your WhatsApp number.');
+          return;
+        }
+        const verified = await handleVerifyOtp(otpCode);
+        if (!verified) return;
+      } else {
+        setOtpError('Please send and verify OTP for your WhatsApp number.');
+        handleSendOtp();
+        return;
+      }
+    }
 
     isSubmittedRef.current = true;
     if (timerRef.current) {
@@ -1211,7 +1233,13 @@ export default function BMCPLanding() {
                   <div style={{ flex: 1 }}>
                     <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>WhatsApp Number *</label>
                     <div style={{ display: "flex", gap: 6 }}>
-                      <input required type="tel" placeholder="e.g. 9876543210" value={formData.whatsappNumber} onChange={e => setFormData({ ...formData, whatsappNumber: e.target.value })} style={{ flex: 1, padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif" }} onFocus={e => e.target.style.borderColor = R} onBlur={e => e.target.style.borderColor = B} />
+                      <input required type="tel" placeholder="e.g. 9876543210" value={formData.whatsappNumber} onChange={e => {
+                        setFormData({ ...formData, whatsappNumber: e.target.value });
+                        setOtpSent(false);
+                        setOtpVerified(false);
+                        setOtpCode('');
+                        setOtpError('');
+                      }} style={{ flex: 1, padding: "9px 12px", border: `1px solid ${B}`, borderRadius: 7, fontSize: 13, outline: "none", boxSizing: "border-box", fontFamily: "var(--font-dm-sans), sans-serif" }} onFocus={e => e.target.style.borderColor = R} onBlur={e => e.target.style.borderColor = B} />
                       <button type="button" onClick={handleSendOtp} disabled={!isValidPhone(formData.whatsappNumber) || otpSent || otpLoading} style={{ background: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#F3F4F6", color: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "#fff" : "#9CA3AF", border: `1px solid ${(isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#E5E7EB"}`, borderRadius: 7, padding: "0 12px", fontSize: 11, fontWeight: 700, cursor: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "pointer" : "not-allowed", transition: "all 0.2s" }}>
                         {otpLoading ? "Sending..." : otpSent ? "Sent" : "OTP"}
                       </button>
@@ -1241,7 +1269,7 @@ export default function BMCPLanding() {
                         />
                         <button 
                           type="button" 
-                          onClick={handleVerifyOtp} 
+                          onClick={() => handleVerifyOtp()} 
                           disabled={otpVerified || !otpCode || otpVerifying} 
                           style={{ 
                             background: (otpVerified || !otpCode || otpVerifying) ? "#F3F4F6" : "#16A34A", 
