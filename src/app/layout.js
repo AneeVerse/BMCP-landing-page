@@ -24,7 +24,9 @@ export const metadata = {
   title: "Book Corporate Party Venues in 30 Minutes | Free for HR Teams",
   description: "Planning a corporate party? Submit one enquiry and get 3–5 curated venue options with pricing in 30 minutes. Free for HR and Admin teams. No cold calls.",
   icons: {
-    icon: "/images/logo-lg.png",
+    icon: "/icon.png",
+    shortcut: "/favicon.ico",
+    apple: "/icon.png",
   },
 };
 

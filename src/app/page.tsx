@@ -861,15 +861,9 @@ export default function BMCPLanding() {
       {/* NAV */}
       <nav className="main-nav" style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(255,255,255,0.97)", backdropFilter: "blur(12px)", borderBottom: `1px solid ${B}`, padding: "0" }}>
         <div style={{ maxWidth: 1400, margin: "0 auto", padding: "12px clamp(20px, 6vw, 160px)", display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", boxSizing: "border-box" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <div style={{ width: 42, height: 42, overflow: "hidden", display: "flex", alignItems: "center" }}>
-              <img src="/images/logo-lg.png" alt="" style={{ height: 42, width: "auto", maxWidth: "none", objectFit: "cover", objectPosition: "left" }} />
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
-              <span style={{ fontWeight: 800, fontSize: 16, color: "#000", letterSpacing: "-0.5px", fontFamily: "'DM Sans', sans-serif" }}>BOOK MY CORPORATE</span>
-              <span style={{ fontWeight: 800, fontSize: 16, color: "#000", letterSpacing: "-0.5px", fontFamily: "'DM Sans', sans-serif" }}>PARTY.COM</span>
-            </div>
-          </div>
+          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+            <img src="/images/bmcp-logo-img.png" alt="Book My Corporate Party" style={{ height: 42, width: "auto", objectFit: "contain" }} />
+          </Link>
           <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
             <div style={{ display: "flex", gap: 24, marginRight: 20 }} className="nav-links">
               {[
@@ -1749,7 +1743,9 @@ export default function BMCPLanding() {
             {/* Logo & About */}
             <div style={{ flex: "2 1 300px" }}>
               <div style={{ marginBottom: 24 }}>
-                <img src="/images/logo-lg.png" alt="BookMyCorporateParty" style={{ height: 52, width: "auto" }} />
+                <Link href="/" style={{ display: "inline-block" }}>
+                  <img src="/images/bmcp-logo-footer.png" alt="Book My Corporate Party" style={{ height: 48, width: "auto", objectFit: "contain" }} />
+                </Link>
               </div>
               <p style={{ fontSize: 13.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.8, margin: "0 0 28px", maxWidth: 320 }}>
                 The premier corporate party booking platform. One enquiry, 30-minute shortlisting, and zero-hassle execution for your team celebrations.

@@ -48,6 +48,11 @@ function ThankYouContent() {
 
   return (
     <main style={{ minHeight: "100vh", background: "#FDF0EF", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 20px", fontFamily: "var(--font-dm-sans), sans-serif" }}>
+      {/* Brand Logo */}
+      <Link href="/" style={{ marginBottom: 28 }}>
+        <img src="/images/bmcp-logo-img.png" alt="Book My Corporate Party" style={{ height: 48, width: "auto", objectFit: "contain" }} />
+      </Link>
+
       {/* Checkmark */}
       <div style={{ width: 72, height: 72, borderRadius: "50%", background: R, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24 }}>
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

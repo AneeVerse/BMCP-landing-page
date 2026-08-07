@@ -143,7 +143,12 @@ export default function TermsPage() {
       </div>
 
       {/* Footer */}
-      <footer style={{ background: R, padding: "28px clamp(20px, 6vw, 160px)", textAlign: "center" }}>
+      <footer style={{ background: R, padding: "36px clamp(20px, 6vw, 160px)", textAlign: "center" }}>
+        <div style={{ marginBottom: 16 }}>
+          <Link href="/">
+            <img src="/images/bmcp-logo-footer.png" alt="Book My Corporate Party" style={{ height: 40, width: "auto" }} />
+          </Link>
+        </div>
         <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 12, margin: 0 }}>
           © 2025 BookMyCorporateParty.com. All rights reserved. |{" "}
           <Link href="/privacy" style={{ color: "rgba(255,255,255,0.8)", textDecoration: "none" }}>Privacy Policy</Link>
