@@ -1,42 +1,72 @@
 [
   {
-    "id": 1,
-    "localPath": "/images/instagram/post-1.jpg"
+    "img": "/images/instagram/post-1.jpg",
+    "alt": "A little corporate event vocabulary lesson because smiling a",
+    "postUrl": "https://www.instagram.com/p/Dc8oSx2k97z/",
+    "likes": "450",
+    "caption": "A little corporate event vocabulary lesson because smiling and nodding can only take you so far. &#x1f602;"
   },
   {
-    "id": 2,
-    "localPath": "/images/instagram/post-2.jpg"
+    "img": "/images/instagram/post-2.jpg",
+    "alt": "From building businesses to making headlines &#x2014; Featur",
+    "postUrl": "https://www.instagram.com/p/Dc3VD-XDGuX/",
+    "likes": "80",
+    "caption": "From building businesses to making headlines &#x2014; Featured in Forbes India!"
   },
   {
-    "id": 3,
-    "localPath": "/images/instagram/post-3.jpg"
+    "img": "/images/instagram/post-3.jpg",
+    "alt": "The party should be memorable. The planning? Not so much.",
+    "postUrl": "https://www.instagram.com/p/DcyeUPgk_yd/",
+    "likes": "450",
+    "caption": "The party should be memorable. The planning? Not so much."
   },
   {
-    "id": 4,
-    "localPath": "/images/instagram/post-4.jpg"
+    "img": "/images/instagram/post-4.jpg",
+    "alt": "From &#x201c;How will we manage this?&#x201d; to &#x201c;Tha",
+    "postUrl": "https://www.instagram.com/p/DcqkiDkk-Xz/",
+    "likes": "450",
+    "caption": "From &#x201c;How will we manage this?&#x201d; to &#x201c;That went perfectly.&#x201d; We handle everything in between."
   },
   {
-    "id": 5,
-    "localPath": "/images/instagram/post-5.jpg"
+    "img": "/images/instagram/post-5.jpg",
+    "alt": "Skip the vendor chaos,",
+    "postUrl": "https://www.instagram.com/p/Dcn0G6tRoou/",
+    "likes": "450",
+    "caption": "Skip the vendor chaos,"
   },
   {
-    "id": 6,
-    "localPath": "/images/instagram/post-6.jpg"
+    "img": "/images/instagram/post-6.jpg",
+    "alt": "Swipe through to see what turns an ordinary company party in",
+    "postUrl": "https://www.instagram.com/p/DcYf2QDE0yN/",
+    "likes": "450",
+    "caption": "Swipe through to see what turns an ordinary company party into the event of the year &#x27a1;&#xfe0f;"
   },
   {
-    "id": 7,
-    "localPath": "/images/instagram/post-7.jpg"
+    "img": "/images/instagram/post-7.jpg",
+    "alt": "Every HR can relate to this &#x1f62d;",
+    "postUrl": "https://www.instagram.com/p/DcTT0lgznJR/",
+    "likes": "15",
+    "caption": "Every HR can relate to this &#x1f62d;"
   },
   {
-    "id": 8,
-    "localPath": "/images/instagram/post-8.jpg"
+    "img": "/images/instagram/post-8.jpg",
+    "alt": "You're actually enjoying the office party instead of managin",
+    "postUrl": "https://www.instagram.com/p/DcXvaTgRIF_/",
+    "likes": "450",
+    "caption": "You're actually enjoying the office party instead of managing it. &#x1f60c;"
   },
   {
-    "id": 9,
-    "localPath": "/images/instagram/post-9.jpg"
+    "img": "/images/instagram/post-9.jpg",
+    "alt": "HR has enough on their plate. Party planning doesn't need to",
+    "postUrl": "https://www.instagram.com/p/Dcdsd5EE2I_/",
+    "likes": "6",
+    "caption": "HR has enough on their plate. Party planning doesn't need to be one more thing."
   },
   {
-    "id": 10,
-    "localPath": "/images/instagram/post-10.jpg"
+    "img": "/images/instagram/post-10.jpg",
+    "alt": "Let your team enjoy the event, we'll handle the chaos behind",
+    "postUrl": "https://www.instagram.com/p/DcQ-1-CE3Hy/",
+    "likes": "450",
+    "caption": "Let your team enjoy the event, we'll handle the chaos behind it."
   }
 ]

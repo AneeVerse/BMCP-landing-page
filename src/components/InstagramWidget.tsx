@@ -11,78 +11,89 @@ interface InstaPost {
   postUrl: string;
   likes: string;
   caption: string;
+  isVideo?: boolean;
 }
 
 const posts: InstaPost[] = [
   {
-    img: "/images/instagram/post-1.jpg",
-    alt: "Premium lounge setup for corporate dinner",
-    postUrl: "https://www.instagram.com/p/Da4g1-9C_Fr/",
-    likes: "342",
-    caption: "Exclusive lounge setup for a 100-pax corporate dinner 🍷✨"
+    img: "/instagram-widget/post1.jpg",
+    alt: "A little corporate event vocabulary lesson",
+    postUrl: "https://www.instagram.com/p/Dc8oSx2k97z/?img_index=1",
+    likes: "450",
+    caption: "A little corporate event vocabulary lesson because smiling and nodding can only take you so far 🍷✨",
+    isVideo: false
   },
   {
-    img: "/images/instagram/post-2.jpg",
-    alt: "Rooftop corporate dinner party",
-    postUrl: "https://www.instagram.com/p/Da3RlqtDhnq/",
-    likes: "518",
-    caption: "Candlelit rooftop dinner for leadership team 🌃🥂"
+    img: "/instagram-widget/post2.jpg",
+    alt: "Featured in Forbes India - Book My Corporate Party",
+    postUrl: "https://www.instagram.com/p/Dc3VD-XDGuX/?img_index=1",
+    likes: "580",
+    caption: "From building businesses to making headlines — Featured in Forbes India! 📰🚀",
+    isVideo: false
   },
   {
-    img: "/images/instagram/post-3.jpg",
-    alt: "Luxury banquet hall event",
-    postUrl: "https://www.instagram.com/p/DazWpRRJunj/",
-    likes: "276",
-    caption: "Stunning banquet setup for annual gala night 🎊"
+    img: "/instagram-widget/post3.jpg",
+    alt: "Corporate party planning made effortless",
+    postUrl: "https://www.instagram.com/p/DcyeUPgk_yd/?img_index=1",
+    likes: "412",
+    caption: "The party should be memorable. The planning? Not so much. From venue to vibe, we curate it all 🎉",
+    isVideo: false
   },
   {
-    img: "/images/instagram/post-4.jpg",
-    alt: "Corporate team building outing",
-    postUrl: "https://www.instagram.com/p/Das0ZZHi2u0/",
-    likes: "431",
-    caption: "Team outing vibes at a beach resort 🏖️💪"
-  },
-  {
-    img: "/images/instagram/post-5.jpg",
-    alt: "Open lawn corporate event",
-    postUrl: "https://www.instagram.com/p/DarGk7Vi6uk/",
+    img: "/instagram-widget/post4.jpg",
+    alt: "Flawless corporate event execution",
+    postUrl: "https://www.instagram.com/p/DcqkiDkk-Xz/?img_index=1",
     likes: "389",
-    caption: "Open lawn party with live music and buffet 🌿🎶"
+    caption: "From \"How will we manage this?\" to \"That went perfectly.\" We handle every detail ✨",
+    isVideo: false
   },
   {
-    img: "/images/instagram/post-6.jpg",
-    alt: "Corporate DJ night party",
-    postUrl: "https://www.instagram.com/p/DaqFgHSM_mX/",
-    likes: "624",
-    caption: "DJ night that had 200+ employees on the floor 🎧🔥"
+    img: "/instagram-widget/post5.jpg",
+    alt: "Skip the vendor chaos with BookMyCorporateParty",
+    postUrl: "https://www.instagram.com/p/Dcn0G6tRoou/",
+    likes: "620",
+    caption: "Skip the vendor chaos! One team, one point of contact, and everything handled 🔥",
+    isVideo: true
   },
   {
-    img: "/images/instagram/post-7.jpg",
-    alt: "Poolside corporate retreat",
-    postUrl: "https://www.instagram.com/p/DapnmrvOL4S/",
-    likes: "453",
-    caption: "Poolside networking evening for senior leaders 🏊‍♂️"
+    img: "/instagram-widget/post6.jpg",
+    alt: "Turn ordinary company parties into the event of the year",
+    postUrl: "https://www.instagram.com/p/DcYf2QDE0yN/?img_index=1",
+    likes: "475",
+    caption: "Swipe through to see what turns an ordinary company party into the event of the year ➡️🎊",
+    isVideo: false
   },
   {
-    img: "/images/instagram/post-8.jpg",
-    alt: "Corporate award ceremony",
-    postUrl: "https://www.instagram.com/p/DamhaERCAyY/",
-    likes: "712",
-    caption: "Employee of the Year award ceremony 🏆🎉"
+    img: "/instagram-widget/post7.jpg",
+    alt: "HR party planning made easy",
+    postUrl: "https://www.instagram.com/p/DcTT0lgznJR/",
+    likes: "512",
+    caption: "Every HR can relate to this 😭 This time, let's make your job easier. Plan your next corporate party with us! 💼",
+    isVideo: true
   },
   {
-    img: "/images/instagram/post-9.jpg",
-    alt: "Festive corporate celebration",
-    postUrl: "https://www.instagram.com/p/DamOA0NIooe/",
-    likes: "567",
-    caption: "Diwali gala with custom themes and live counters 🪔✨"
+    img: "/instagram-widget/post8.jpg",
+    alt: "Enjoying the office party instead of managing it",
+    postUrl: "https://www.instagram.com/p/DcXvaTgRIF_/",
+    likes: "430",
+    caption: "You're actually enjoying the office party instead of managing it. That's the BMCP promise 🥂",
+    isVideo: true
   },
   {
-    img: "/images/instagram/post-10.jpg",
-    alt: "Café team gathering",
-    postUrl: "https://www.instagram.com/p/DamMBe7oLHI/",
-    likes: "198",
-    caption: "Cozy café gathering for a farewell lunch 🍕☕"
+    img: "/instagram-widget/post9.jpg",
+    alt: "HR has enough on their plate - corporate party planning",
+    postUrl: "https://www.instagram.com/p/Dcdsd5EE2I_/?img_index=1",
+    likes: "395",
+    caption: "HR has enough on their plate. Party planning doesn't need to be one more thing. You bring the team, we do the rest 🌟",
+    isVideo: false
+  },
+  {
+    img: "/instagram-widget/post10.jpg",
+    alt: "Team celebration without the chaos",
+    postUrl: "https://www.instagram.com/p/DcQ-1-CE3Hy/?img_index=1",
+    likes: "460",
+    caption: "Let your team enjoy the event, we'll handle the chaos behind it 🏆🥳",
+    isVideo: false
   }
 ];
 
@@ -282,35 +293,41 @@ const InstagramWidget: React.FC = () => {
           display: block;
           margin: 0 2px;
           box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+          position: relative;
         }
         .insta-post-card:hover {
           transform: translateY(-8px);
-          box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.22);
         }
         .insta-post-img-wrap {
           position: relative;
           width: 100%;
           aspect-ratio: 4 / 5;
           overflow: hidden;
+          background: #000;
         }
         .insta-post-img-wrap img {
           width: 100%;
           height: 100%;
           object-fit: cover;
+          display: block;
           transition: filter 0.4s ease, transform 0.4s ease;
         }
         .insta-post-card:hover .insta-post-img-wrap img {
-          filter: brightness(0.55) blur(1.5px);
+          filter: brightness(0.65) blur(1px);
         }
+
         /* Bottom gradient bar — always visible */
         .insta-post-bottom {
           position: absolute;
           bottom: 0; left: 0; right: 0;
-          padding: 40px 16px 14px;
-          background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0) 100%);
+          padding: 30px 14px 12px;
+          background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0) 100%);
           display: flex;
           align-items: flex-end;
           justify-content: space-between;
+          z-index: 2;
+          pointer-events: none;
         }
         .insta-post-handle {
           display: flex;
@@ -493,6 +510,7 @@ const InstagramWidget: React.FC = () => {
             >
               <div className="insta-post-img-wrap">
                 <img src={post.img} alt={post.alt} loading="lazy" draggable={false} />
+
                 {/* Bottom gradient bar with handle */}
                 <div className="insta-post-bottom">
                   <div className="insta-post-handle">
@@ -505,6 +523,7 @@ const InstagramWidget: React.FC = () => {
                     bookmycorporateparty.india
                   </div>
                 </div>
+
                 {/* Center hover overlay */}
                 <div className="insta-hover-overlay">
                   <div className="insta-hover-pill">
@@ -513,7 +532,7 @@ const InstagramWidget: React.FC = () => {
                       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                       <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                     </svg>
-                    View Post
+                    View on Instagram
                   </div>
                 </div>
               </div>

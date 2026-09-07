@@ -9,22 +9,11 @@ fetch(url, {
   .then(text => {
     console.log("HTML length:", text.length);
     
-    // Search for og:image
-    const match = text.match(/<meta[^>]*property=["']og:image["'][^>]*content=["']([^"']+)["']/i) ||
-                  text.match(/<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:image["']/i);
-    if (match) {
-      console.log("Found og:image:", match[1]);
-    } else {
-      console.log("og:image not found.");
-      // Search for any meta tags
-      const metas = [];
-      const regex = /<meta[^>]+>/g;
-      let m;
-      while ((m = regex.exec(text)) !== null) {
-        metas.push(m[0]);
-      }
-      console.log("Sample meta tags:\n", metas.slice(0, 15).join("\n"));
-    }
+    const titleMatch = text.match(/<meta[^>]*property=["']og:title["'][^>]*content=["']([^"']+)["']/i);
+    const descMatch = text.match(/<meta[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["']/i);
+    console.log("Title:", titleMatch ? titleMatch[1] : "not found");
+    console.log("Desc:", descMatch ? descMatch[1] : "not found");
+
   })
   .catch(err => {
     console.error("Error:", err);
