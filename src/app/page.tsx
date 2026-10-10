@@ -623,17 +623,47 @@ export default function BMCPLanding() {
   const [showFloatingActions, setShowFloatingActions] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (typeof window !== "undefined") {
-        // Show buttons as soon as hero is scrolled (80px)
-        setShowFloatingActions(window.scrollY > 80);
+    const updateFloatingVisibility = () => {
+      if (typeof window === "undefined") return;
+
+      const scrollY = window.scrollY;
+      // Hide in hero section (first 80px)
+      if (scrollY <= 80) {
+        setShowFloatingActions(false);
+        return;
       }
+
+      // Check if user is currently inside the lead form section
+      const formSection = document.getElementById("enquiry-cta-section") || document.getElementById("hero-form");
+      if (formSection) {
+        const rect = formSection.getBoundingClientRect();
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+
+        // Hide floating actions ONLY while inside the form section:
+        // - rect.top <= windowHeight - 40 (form has reached the floating buttons area)
+        // - rect.bottom >= 60 (form has not yet scrolled past off the top)
+        const isInsideFormSection = rect.top <= windowHeight - 40 && rect.bottom >= 60;
+        if (isInsideFormSection) {
+          setShowFloatingActions(false);
+          return;
+        }
+      }
+
+      setShowFloatingActions(true);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    window.addEventListener("scroll", updateFloatingVisibility, { passive: true });
+    window.addEventListener("resize", updateFloatingVisibility, { passive: true });
+    window.addEventListener("focusin", updateFloatingVisibility, { passive: true });
+    window.addEventListener("focusout", updateFloatingVisibility, { passive: true });
+    updateFloatingVisibility();
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", updateFloatingVisibility);
+      window.removeEventListener("resize", updateFloatingVisibility);
+      window.removeEventListener("focusin", updateFloatingVisibility);
+      window.removeEventListener("focusout", updateFloatingVisibility);
+    };
   }, []);
 
   useEffect(() => {
