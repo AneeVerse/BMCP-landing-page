@@ -42,7 +42,61 @@ const Sec = ({ children, bg = "transparent", id, style }: { children: React.Reac
 };
 
 function Badge({ text }: { text: string }) {
-  return <span style={{ display: "inline-block", background: L, color: R, fontSize: 12, fontWeight: 700, padding: "5px 14px", borderRadius: 20, letterSpacing: 0.8, textTransform: "uppercase" }}>{text}</span>;
+  return <span style={{ display: "inline-block", background: R, color: "#fff", fontSize: 12, fontWeight: 700, padding: "5px 14px", borderRadius: 20, letterSpacing: 0.8, textTransform: "uppercase", boxShadow: "0 2px 8px rgba(128, 40, 31, 0.2)", border: "1px solid rgba(255, 255, 255, 0.15)" }}>{text}</span>;
+}
+
+function SectionCTA({ text = "GET VENUE OPTIONS FREE →", subtext = "Takes 30 seconds • Free for HR & Admin teams • No obligation", style }: { text?: string; subtext?: string; style?: React.CSSProperties }) {
+  return (
+    <div className="section-cta-wrap" style={{ textAlign: "center", marginTop: 40, ...style }}>
+      <button
+        type="button"
+        className="section-cta-btn"
+        onClick={() => {
+          const formEl = document.getElementById('hero-form');
+          if (formEl) {
+            formEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const occasionEl = document.getElementById('hero-occasion') as HTMLSelectElement | null;
+            if (occasionEl) {
+              occasionEl.focus();
+              try {
+                if (typeof (occasionEl as any).showPicker === 'function') (occasionEl as any).showPicker();
+              } catch {}
+            }
+          }
+        }}
+        style={{
+          background: R,
+          color: "#fff",
+          border: "none",
+          borderRadius: 10,
+          padding: "16px 36px",
+          fontSize: 15,
+          fontWeight: 800,
+          cursor: "pointer",
+          fontFamily: "var(--font-dm-sans), sans-serif",
+          boxShadow: "0 8px 24px rgba(128,40,31,0.28)",
+          transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 10,
+          letterSpacing: "0.3px"
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.transform = "translateY(-2px)";
+          e.currentTarget.style.boxShadow = "0 12px 28px rgba(128,40,31,0.42)";
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.transform = "none";
+          e.currentTarget.style.boxShadow = "0 8px 24px rgba(128,40,31,0.28)";
+        }}
+      >
+        <span>{text}</span>
+      </button>
+      <p className="section-cta-subtext" style={{ fontSize: 12.5, color: G, marginTop: 10, marginBottom: 0, fontStyle: "italic" }}>
+        {subtext}
+      </p>
+    </div>
+  );
 }
 
 function FAQItem({ q, a }: { q: string; a: string }) {
@@ -967,6 +1021,19 @@ export default function BMCPLanding() {
             gap: 18px !important;
           }
         }
+        .matrix-scroll-hint {
+          display: none;
+        }
+        @media (min-width: 1025px) {
+          .section-single-line-title {
+            white-space: nowrap !important;
+          }
+        }
+        @media (min-width: 1200px) {
+          .section-single-line-ref {
+            white-space: nowrap !important;
+          }
+        }
         @media (max-width: 768px) {
           .nav-links, .nav-actions { display: none !important; }
           .hamburger-btn { display: flex !important; }
@@ -976,9 +1043,11 @@ export default function BMCPLanding() {
             padding: 0 16px !important;
             gap: 20px !important;
             flex-direction: column !important;
-            align-items: stretch !important;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+            text-align: left !important;
           }
-          .hero-text { min-width: 0 !important; flex: 1 1 100% !important; }
+          .hero-text { min-width: 0 !important; flex: 1 1 100% !important; text-align: left !important; }
           .hero-form-card { flex: 1 1 100% !important; max-width: 100% !important; }
           .hero-badges { flex-wrap: wrap !important; gap: 8px !important; }
           .hero-badges > div { font-size: 11px !important; }
@@ -1120,41 +1189,261 @@ export default function BMCPLanding() {
           }
 
           /* Comparison Matrix - Horizontal scroll with sticky entity column on mobile */
+          #comparison {
+            padding: 36px 12px !important;
+          }
+          .matrix-card {
+            border-radius: 16px !important;
+          }
           .matrix-scroll-hint {
-            display: flex !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 11.5px !important;
+            font-weight: 700;
+            color: #80281F !important;
+            background: #FFF1F0 !important;
+            border: 1px solid rgba(128, 40, 31, 0.16) !important;
+            padding: 6px 14px !important;
+            border-radius: 99px !important;
+            margin: 0 auto 14px !important;
+            width: fit-content !important;
+            box-shadow: 0 1px 4px rgba(128, 40, 31, 0.06) !important;
           }
           .matrix-scroll-wrap {
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch !important;
+            touch-action: pan-x pan-y !important;
+            overscroll-behavior-x: contain !important;
+          }
+          .matrix-inner {
+            min-width: 1010px !important;
+          }
+          .matrix-grid-row {
+            grid-template-columns: 135px repeat(7, 125px) !important;
+          }
+          .matrix-col-sticky {
+            width: 135px !important;
+            min-width: 135px !important;
+            max-width: 135px !important;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.08) !important;
+            border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+          }
+          .matrix-sticky-header {
+            gap: 8px !important;
+            padding: 14px 10px !important;
+          }
+          .matrix-sticky-header-text {
+            font-size: 9.5px !important;
+            letter-spacing: 0.8px !important;
+            line-height: 1.2 !important;
+            display: block !important;
+          }
+          .matrix-sticky-icon svg {
+            width: 16px !important;
+            height: 16px !important;
+          }
+          .matrix-sticky-bmcp,
+          .matrix-sticky-other {
+            gap: 8px !important;
+            padding: 14px 10px !important;
+          }
+          .matrix-entity-logo {
+            width: 26px !important;
+            height: 26px !important;
+          }
+          .matrix-other-icon {
+            width: 26px !important;
+            height: 26px !important;
+          }
+          .matrix-other-icon svg {
+            width: 20px !important;
+            height: 20px !important;
+          }
+          .matrix-entity-title {
+            font-size: 11.5px !important;
+            line-height: 1.25 !important;
+            word-break: break-word !important;
+          }
+          .matrix-desc {
+            display: none !important;
+          }
+          .matrix-header-cell {
+            padding: 12px 6px !important;
+            font-size: 9.5px !important;
+            letter-spacing: 0.6px !important;
+            line-height: 1.25 !important;
+          }
+          .matrix-bmcp-cell,
+          .matrix-other-cell {
+            padding: 14px 6px !important;
+          }
+          .matrix-check-circle,
+          .matrix-cross-circle {
+            width: 26px !important;
+            height: 26px !important;
+          }
+          .matrix-check-circle svg,
+          .matrix-cross-circle svg {
+            width: 13px !important;
+            height: 13px !important;
+          }
+          .matrix-cell-text {
+            font-size: 11px !important;
+            margin-top: 6px !important;
+            line-height: 1.25 !important;
           }
 
-          /* CTA section */
-          .cta-section {
-            padding: 50px 16px !important;
+          /* Single-Line Responsive CTA Buttons (Mobile Only) */
+          .section-cta-wrap {
+            margin-top: 26px !important;
+            padding: 0 4px !important;
+            text-align: center !important;
           }
-          .cta-section h2 {
-            font-size: clamp(26px, 7vw, 34px) !important;
-            line-height: 1.2 !important;
-            margin-bottom: 16px !important;
-          }
-          .cta-section h2 br { display: none; }
-          .cta-section .cta-subtitle {
-            font-size: 15px !important;
-            margin-bottom: 28px !important;
-          }
-          .cta-section .cta-subtitle br { display: none; }
-          .cta-section button {
-            padding: 16px 32px !important;
-            font-size: 15px !important;
-            border-radius: 10px !important;
-            width: 100% !important;
-            max-width: 340px !important;
-          }
-          .cta-section .cta-trust {
-            flex-direction: row !important;
-            gap: 20px !important;
-            flex-wrap: wrap !important;
+          .section-cta-btn,
+          .hero-cta-btn {
+            white-space: nowrap !important;
+            font-size: clamp(10.5px, 2.95vw, 13px) !important;
+            padding: 12px clamp(10px, 2.8vw, 18px) !important;
+            max-width: calc(100vw - 28px) !important;
+            box-sizing: border-box !important;
+            display: inline-flex !important;
+            align-items: center !important;
             justify-content: center !important;
+            letter-spacing: 0.15px !important;
+            line-height: 1 !important;
+            gap: 7px !important;
+            border-radius: 9px !important;
+          }
+          .section-cta-btn span,
+          .hero-cta-btn span {
+            white-space: nowrap !important;
+            display: inline-block !important;
+          }
+          .hero-cta-wrapper {
+            width: 100% !important;
+            align-items: flex-start !important;
+          }
+          .hero-cta-btn svg {
+            width: 15px !important;
+            height: 15px !important;
+            flex-shrink: 0 !important;
+          }
+          .section-cta-subtext {
+            font-size: clamp(10px, 2.6vw, 11.5px) !important;
+            line-height: 1.35 !important;
+            margin-top: 7px !important;
+            padding: 0 4px !important;
+            max-width: 340px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+          .hero-cta-subtext {
+            font-size: clamp(10px, 2.6vw, 11.5px) !important;
+            line-height: 1.35 !important;
+            margin-top: 6px !important;
+          }
+
+          /* CTA section & Lead Form Responsive Mobile Styles */
+          .cta-section {
+            padding: 32px 14px 44px !important;
+          }
+          .cta-merge-container {
+            flex-direction: column !important;
+            gap: 0 !important;
+            width: 100% !important;
+            max-width: 500px !important;
+            margin: 0 auto !important;
+          }
+          /* Hide the text above the form on mobile */
+          .cta-left {
+            display: none !important;
+          }
+          .cta-right {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            flex: 1 1 100% !important;
+            margin: 0 auto !important;
+          }
+          .hero-form-card {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 22px 16px !important;
+            box-sizing: border-box !important;
+            border-radius: 14px !important;
+          }
+          /* Phone & OTP row responsive alignment */
+          .hero-otp-row {
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 8px !important;
+            align-items: stretch !important;
+            width: 100% !important;
+          }
+          .hero-otp-input {
+            flex: 1 1 auto !important;
+            min-width: 0 !important;
+            width: 100% !important;
+            height: 42px !important;
+            padding: 9px 12px !important;
+            font-size: 13.5px !important;
+            box-sizing: border-box !important;
+          }
+          .hero-otp-btn {
+            flex: 0 0 94px !important;
+            width: 94px !important;
+            min-width: 94px !important;
+            max-width: 94px !important;
+            height: 42px !important;
+            padding: 0 4px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            white-space: nowrap !important;
+            box-sizing: border-box !important;
+            border-radius: 7px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          .hero-submit-btn {
+            width: 100% !important;
+            max-width: 100% !important;
+            height: 46px !important;
+            padding: 12px 16px !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            border-radius: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+          }
+          .hero-resend-otp-btn {
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+            width: auto !important;
+            height: auto !important;
+            min-width: 0 !important;
+            max-width: none !important;
+            font-size: 10.5px !important;
+            line-height: 14px !important;
+            color: #80281F !important;
+          }
+
+          @media (max-width: 360px) {
+            .hero-form-card {
+              padding: 18px 12px !important;
+            }
+            .hero-otp-btn {
+              flex: 0 0 84px !important;
+              width: 84px !important;
+              min-width: 84px !important;
+              max-width: 84px !important;
+              font-size: 11px !important;
+            }
           }
 
           /* Navbar */
@@ -1271,7 +1560,7 @@ export default function BMCPLanding() {
             { name: "Process", href: "#how-it-works" },
             { name: "FAQ", href: "#faq" }
           ].map((link, i) => (
-            <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)} style={{ fontSize: 28, fontWeight: 700, color: D, textDecoration: "none", padding: "24px 0", width: "80%", textAlign: "center", borderBottom: `1px solid ${B}`, animation: `mobileMenuFade 0.5s ${0.1 * (i + 1)}s both`, fontFamily: "var(--font-playfair), serif" }}>{link.name}</a>
+            <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)} style={{ fontSize: 26, fontWeight: 800, color: D, textDecoration: "none", padding: "24px 0", width: "80%", textAlign: "center", borderBottom: `1px solid ${B}`, animation: `mobileMenuFade 0.5s ${0.1 * (i + 1)}s both`, fontFamily: "var(--font-dm-sans), sans-serif", letterSpacing: "-0.4px" }}>{link.name}</a>
           ))}
           <div style={{ marginTop: 48, animation: "mobileMenuFade 0.5s 0.5s both" }}>
             <button onClick={() => { setMenuOpen(false); setTimeout(() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' }), 300); }} style={{ background: R, color: "#fff", border: "none", borderRadius: 12, padding: "18px 52px", fontSize: 17, fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif" }}>Get Started →</button>
@@ -1285,7 +1574,7 @@ export default function BMCPLanding() {
 
       {/* ===== 1. HERO + FORM ===== */}
       <section className="hero-section" style={{
-        background: `linear-gradient(RGBA(0, 0, 0, 0.4), RGBA(0, 0, 0, 0.4)), url('/images/home_banner.png')`,
+        background: `linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.52) 48%, rgba(0, 0, 0, 0.22) 100%), url('/images/home_banner.png')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "calc(100vh - 60px)",
@@ -1296,20 +1585,66 @@ export default function BMCPLanding() {
         overflow: "hidden"
       }}>
         <div style={{ position: "absolute", top: -120, right: -80, width: 420, height: 420, background: `radial-gradient(circle, rgba(192,57,43,0.12) 0%, transparent 70%)`, borderRadius: "50%", pointerEvents: "none" }} />
-        <div className="hero-container" style={{ position: "relative", zIndex: 2, width: "100%", padding: "0 clamp(100px, 8vw, 200px)", display: "flex", gap: 48, alignItems: "flex-start", flexWrap: "wrap", boxSizing: "border-box" }}>
-          <div className="hero-text" style={{ flex: "1 1 520px", paddingTop: 8 }}>
-            <Badge text="STOP CHASING VENUES." />
-            <h1 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(32px, 4.8vw, 54px)", fontWeight: 700, color: "#fff", lineHeight: 1.15, margin: "16px 0 14px" }}>
-              Get 5 Corporate Party Quotes{" "}
-              <span style={{ color: "#FF5252" }}>in 30 Minutes.</span>
+        <div className="hero-container" style={{
+          position: "relative",
+          zIndex: 2,
+          width: "100%",
+          padding: "0 clamp(32px, 7vw, 160px)",
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          textAlign: "left",
+          boxSizing: "border-box"
+        }}>
+          <div className="hero-text" style={{
+            maxWidth: 680,
+            width: "100%",
+            paddingTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            textAlign: "left"
+          }}>
+            <Badge text="CORPORATE PARTY PLATFORM" />
+            <h1 style={{
+              fontFamily: "var(--font-dm-sans), sans-serif",
+              fontSize: "clamp(34px, 5.2vw, 58px)",
+              fontWeight: 800,
+              color: "#fff",
+              lineHeight: 1.12,
+              letterSpacing: "-0.5px",
+              margin: "18px 0 16px",
+              textAlign: "left"
+            }}>
+              Stop Calling 20 Venues.<br />
+              <span style={{ color: "#FF5252" }}>Book Your Corporate Party in One Click.</span>
             </h1>
-            <p style={{ fontSize: 17, color: "#E0E0E0", lineHeight: 1.65, margin: "0 0 20px", maxWidth: 540 }}>
+            <p style={{
+              fontSize: 17,
+              color: "#E0E0E0",
+              lineHeight: 1.65,
+              margin: "0 0 20px",
+              maxWidth: 540,
+              textAlign: "left"
+            }}>
               Tell us your event requirement. We’ll shortlist suitable venues, packages &amp; pricing for you.
             </p>
             
-            {/* Occasions List (Clean natural text, not card-like) */}
-            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px 12px", margin: "0 0 16px", fontSize: 15, color: "#E2E8F0", fontWeight: 600, letterSpacing: "0.2px" }}>
-              {["Annual Day", "Team Offsite", "Diwali Party", "Family Day", "R&R"].map((occ, i, arr) => (
+            {/* Occasions List (Clean natural text, left-aligned) */}
+            <div style={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              gap: "6px 12px",
+              margin: "0 0 18px",
+              fontSize: 15,
+              color: "#E2E8F0",
+              fontWeight: 600,
+              letterSpacing: "0.2px",
+              textAlign: "left"
+            }}>
+              {["Annual Day", "Cocktail Party", "Team Offsite", "Diwali Party", "Family Day", "R&R"].map((occ, i, arr) => (
                 <span key={occ} style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
                   <span>{occ}</span>
                   {i < arr.length - 1 && <span style={{ color: "#FF5252", fontSize: 13, opacity: 0.9 }}>•</span>}
@@ -1317,12 +1652,13 @@ export default function BMCPLanding() {
               ))}
             </div>
 
-            {/* Stats Line (Clean natural inline text with dividers, not card-like) */}
+            {/* Stats Line (Clean natural inline text with dividers, left-aligned) */}
             <div style={{
               display: "flex",
               alignItems: "center",
+              justifyContent: "flex-start",
               gap: 16,
-              margin: "0 0 24px",
+              margin: "0 0 26px",
               flexWrap: "wrap",
               color: "#fff",
               fontSize: 14.5,
@@ -1332,6 +1668,11 @@ export default function BMCPLanding() {
               <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF5252" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3M9 9h1M9 13h1M9 17h1"/></svg>
                 <span>1000+ Venues</span>
+              </div>
+              <span style={{ color: "rgba(255, 255, 255, 0.4)", fontWeight: 400 }}>|</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF5252" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span>10+ Cities</span>
               </div>
               <span style={{ color: "rgba(255, 255, 255, 0.4)", fontWeight: 400 }}>|</span>
               <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
@@ -1346,9 +1687,10 @@ export default function BMCPLanding() {
             </div>
 
             {/* Left CTA Action */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8 }}>
+            <div className="hero-cta-wrapper" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8 }}>
               <button
                 type="button"
+                className="hero-cta-btn"
                 onClick={() => {
                   const formEl = document.getElementById('hero-form');
                   if (formEl) {
@@ -1370,8 +1712,8 @@ export default function BMCPLanding() {
                   color: "#fff",
                   border: "1px solid rgba(255, 255, 255, 0.22)",
                   borderRadius: 10,
-                  padding: "14px 26px",
-                  fontSize: 14,
+                  padding: "16px 34px",
+                  fontSize: 15,
                   fontWeight: 800,
                   letterSpacing: "0.35px",
                   cursor: "pointer",
@@ -1396,169 +1738,92 @@ export default function BMCPLanding() {
                 </svg>
                 <span>GET 5 FREE QUOTES ON WHATSAPP →</span>
               </button>
-              <div style={{ fontSize: 12, color: "rgba(255, 255, 255, 0.8)", fontStyle: "italic", paddingLeft: 2 }}>
-                Free for HR &amp; Admin teams • Takes 60 seconds • No obligation
+              <div className="hero-cta-subtext" style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.85)", fontStyle: "italic", paddingLeft: 2, textAlign: "left" }}>
+                Free for HR &amp; Admin teams • Takes 30 seconds • No obligation
               </div>
             </div>
           </div>
-          {/* Form */}
-          <div id="hero-form" className="hero-form-card" style={{ position: "relative", zIndex: 10, flex: "1 1 360px", background: "#fff", borderRadius: 14, padding: "22px 20px", boxShadow: "0 24px 48px rgba(0,0,0,0.15)" }}>
+          {/* Form (Hidden in hero, preserved for future use) */}
+          {false && (
+            <div id="hero-form-backup" className="hero-form-card" style={{ position: "relative", zIndex: 10, flex: "1 1 360px", background: "#fff", borderRadius: 14, padding: "22px 20px", boxShadow: "0 24px 48px rgba(0,0,0,0.15)" }}>
 
-            {formStatus === 'success' ? (
-              <div style={{ textAlign: "center", padding: "28px 0" }}>
-                <div style={{ width: 60, height: 60, background: "#F0FDF4", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              {formStatus === 'success' ? (
+                <div style={{ textAlign: "center", padding: "28px 0" }}>
+                  <div style={{ width: 60, height: 60, background: "#F0FDF4", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </div>
+                  <h3 style={{ margin: "0 0 8px", fontSize: 19, fontWeight: 700, color: D }}>Request Received!</h3>
+                  <p style={{ fontSize: 13.5, color: G, lineHeight: 1.6, margin: "0 0 22px" }}>{formMsg || "Thank you! Our corporate party expert will reach out within 30 minutes with curated options."}</p>
+                  <button onClick={() => { setFormStatus('idle'); }} style={{ background: "none", color: R, border: `1px solid ${R}`, borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Submit Another</button>
                 </div>
-                <h3 style={{ margin: "0 0 8px", fontSize: 19, fontWeight: 700, color: D }}>Request Received!</h3>
-                <p style={{ fontSize: 13.5, color: G, lineHeight: 1.6, margin: "0 0 22px" }}>{formMsg || "Thank you! Our corporate party expert will reach out within 30 minutes with curated options."}</p>
-                <button onClick={() => { setFormStatus('idle'); }} style={{ background: "none", color: R, border: `1px solid ${R}`, borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Submit Another</button>
-              </div>
-            ) : (
-              <form key="hero-form" onSubmit={handleSubmit}>
-                <h3 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 700, color: D, fontFamily: "var(--font-playfair), serif" }}>
-                  Get Venue Options Free
-                </h3>
-                <p style={{ margin: "0 0 16px", fontSize: 12, color: G }}>
-                  Free for HR &amp; Admin teams. Options within 30 minutes.
-                </p>
+              ) : (
+                <form key="hero-form-backup" onSubmit={handleSubmit}>
+                  <h3 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 800, color: D, fontFamily: "var(--font-dm-sans), sans-serif", letterSpacing: "-0.3px" }}>
+                    Get Venue Options Free
+                  </h3>
+                  <p style={{ margin: "0 0 16px", fontSize: 12, color: G }}>
+                    Free for HR &amp; Admin teams. Options within 30 minutes.
+                  </p>
 
-                {/* 1. What u want to book? */}
-                <div style={{ marginBottom: 12 }}>
-                  <label
-                    htmlFor="hero-occasion"
-                    onClick={() => {
-                      const sel = document.getElementById('hero-occasion') as HTMLSelectElement | null;
-                      if (sel) {
-                        sel.focus();
-                        try {
-                          if (typeof (sel as any).showPicker === 'function') (sel as any).showPicker();
-                        } catch {}
-                      }
-                    }}
-                    style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4, cursor: "pointer" }}
-                  >
-                    What u want to book? *
-                  </label>
-                  <div style={{ position: "relative", width: "100%" }}>
-                    <select
-                      id="hero-occasion"
-                      required
-                      value={formData.occasion}
-                      onChange={e => setFormData({ ...formData, occasion: e.target.value })}
-                      style={{
-                        width: "100%",
-                        padding: "10px 36px 10px 12px",
-                        border: `1px solid ${formData.occasion ? R : B}`,
-                        borderRadius: 7,
-                        fontSize: 13,
-                        outline: "none",
-                        boxSizing: "border-box",
-                        fontFamily: "var(--font-dm-sans), sans-serif",
-                        background: "#fff",
-                        color: formData.occasion ? D : "#9CA3AF",
-                        WebkitAppearance: "none",
-                        MozAppearance: "none",
-                        appearance: "none",
-                        cursor: "pointer",
-                        position: "relative",
-                        zIndex: 2,
-                        transition: "border-color 0.2s"
-                      }}
-                      onFocus={e => e.target.style.borderColor = R}
-                      onBlur={e => e.target.style.borderColor = formData.occasion ? R : B}
+                  {/* 1. What u want to book? */}
+                  <div style={{ marginBottom: 12 }}>
+                    <label
+                      htmlFor="hero-occasion-backup"
+                      style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4, cursor: "pointer" }}
                     >
-                      <option value="" disabled hidden>Select venue type</option>
-                      {OCCASIONS.map((occ) => (
-                        <option key={occ} value={occ} style={{ color: D }}>{occ}</option>
-                      ))}
-                    </select>
-                    <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 3, display: "flex", alignItems: "center", color: "#6B7280" }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                      What u want to book? *
+                    </label>
+                    <div style={{ position: "relative", width: "100%" }}>
+                      <select
+                        id="hero-occasion-backup"
+                        required
+                        value={formData.occasion}
+                        onChange={e => setFormData({ ...formData, occasion: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "10px 36px 10px 12px",
+                          border: `1px solid ${formData.occasion ? R : B}`,
+                          borderRadius: 7,
+                          fontSize: 13,
+                          outline: "none",
+                          boxSizing: "border-box",
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          background: "#fff",
+                          color: formData.occasion ? D : "#9CA3AF",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                          appearance: "none",
+                          cursor: "pointer",
+                          position: "relative",
+                          zIndex: 2,
+                          transition: "border-color 0.2s"
+                        }}
+                      >
+                        <option value="" disabled hidden>Select venue type</option>
+                        {OCCASIONS.map((occ) => (
+                          <option key={occ} value={occ} style={{ color: D }}>{occ}</option>
+                        ))}
+                      </select>
+                      <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 3, display: "flex", alignItems: "center", color: "#6B7280" }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* 2. NAME */}
-                <div style={{ marginBottom: 12 }}>
-                  <label htmlFor="hero-name" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
-                    Name *
-                  </label>
-                  <input
-                    id="hero-name"
-                    required
-                    type="text"
-                    placeholder="e.g. Priya Sharma"
-                    value={formData.name}
-                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                    style={{
-                      width: "100%",
-                      padding: "9px 12px",
-                      border: `1px solid ${B}`,
-                      borderRadius: 7,
-                      fontSize: 13,
-                      outline: "none",
-                      boxSizing: "border-box",
-                      fontFamily: "var(--font-dm-sans), sans-serif",
-                      transition: "border-color 0.2s"
-                    }}
-                    onFocus={e => e.target.style.borderColor = R}
-                    onBlur={e => e.target.style.borderColor = B}
-                  />
-                </div>
-
-                {/* 3. EMAIL */}
-                <div style={{ marginBottom: 12 }}>
-                  <label htmlFor="hero-email" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
-                    Email *
-                  </label>
-                  <input
-                    id="hero-email"
-                    required
-                    type="email"
-                    placeholder="you@company.com"
-                    value={formData.email}
-                    onChange={e => setFormData({ ...formData, email: e.target.value })}
-                    style={{
-                      width: "100%",
-                      padding: "9px 12px",
-                      border: `1px solid ${B}`,
-                      borderRadius: 7,
-                      fontSize: 13,
-                      outline: "none",
-                      boxSizing: "border-box",
-                      fontFamily: "var(--font-dm-sans), sans-serif",
-                      transition: "border-color 0.2s"
-                    }}
-                    onFocus={e => e.target.style.borderColor = R}
-                    onBlur={e => e.target.style.borderColor = B}
-                  />
-                </div>
-
-                {/* 4. NUMBER (WhatsApp / Phone) */}
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, minHeight: 14 }}>
-                    <label htmlFor="hero-phone" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, lineHeight: "14px" }}>
-                      Number *
+                  {/* 2. NAME */}
+                  <div style={{ marginBottom: 12 }}>
+                    <label htmlFor="hero-name-backup" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                      Name *
                     </label>
-                  </div>
-                  <div style={{ display: "flex", gap: 8, alignItems: "stretch" }}>
                     <input
-                      id="hero-phone"
+                      id="hero-name-backup"
                       required
-                      type="tel"
-                      placeholder="e.g. 9876543210"
-                      value={formData.whatsappNumber}
-                      onChange={e => {
-                        setFormData({ ...formData, whatsappNumber: e.target.value });
-                        setOtpSent(false);
-                        setOtpVerified(false);
-                        setOtpCode('');
-                        setOtpError('');
-                      }}
+                      type="text"
+                      placeholder="e.g. Priya Sharma"
+                      value={formData.name}
+                      onChange={e => setFormData({ ...formData, name: e.target.value })}
                       style={{
-                        flex: 1,
-                        minWidth: 0,
-                        height: 40,
+                        width: "100%",
                         padding: "9px 12px",
                         border: `1px solid ${B}`,
                         borderRadius: 7,
@@ -1568,450 +1833,239 @@ export default function BMCPLanding() {
                         fontFamily: "var(--font-dm-sans), sans-serif",
                         transition: "border-color 0.2s"
                       }}
-                      onFocus={e => e.target.style.borderColor = R}
-                      onBlur={e => e.target.style.borderColor = B}
                     />
-                    <button
-                      type="button"
-                      id="hero-send-otp-btn"
-                      onClick={handleSendOtp}
-                      disabled={!isValidPhone(formData.whatsappNumber) || otpSent || otpLoading}
-                      style={{
-                        width: 96,
-                        minWidth: 96,
-                        maxWidth: 96,
-                        flexShrink: 0,
-                        height: 40,
-                        background: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#F3F4F6",
-                        color: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "#fff" : "#9CA3AF",
-                        border: `1px solid ${(isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#E5E7EB"}`,
-                        borderRadius: 7,
-                        padding: 0,
-                        fontSize: 12,
-                        fontWeight: 700,
-                        cursor: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "pointer" : "not-allowed",
-                        transition: "all 0.2s",
-                        whiteSpace: "nowrap",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxSizing: "border-box"
-                      }}
-                    >
-                      {otpLoading ? "Sending..." : otpSent ? "Sent ✓" : "Send OTP"}
-                    </button>
                   </div>
-                </div>
 
-                {/* 5. OTP */}
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, minHeight: 14 }}>
-                    <label htmlFor="hero-otp" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, lineHeight: "14px" }}>
-                      OTP *
+                  {/* 3. EMAIL */}
+                  <div style={{ marginBottom: 12 }}>
+                    <label htmlFor="hero-email-backup" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                      Email *
                     </label>
-                    {otpSent && !otpVerified && (
-                      <button
-                        type="button"
-                        onClick={handleSendOtp}
-                        disabled={otpLoading}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          color: R,
-                          fontSize: 10.5,
-                          fontWeight: 600,
-                          cursor: otpLoading ? "not-allowed" : "pointer",
-                          padding: 0,
-                          textDecoration: "underline",
-                          lineHeight: "14px"
-                        }}
-                      >
-                        Resend OTP
-                      </button>
-                    )}
-                  </div>
-                  <div style={{ display: "flex", gap: 8, alignItems: "stretch" }}>
                     <input
-                      id="hero-otp"
-                      type="text"
-                      maxLength={6}
-                      placeholder={otpSent ? "Enter 6-digit OTP" : "Enter number & click Send OTP"}
-                      value={otpCode}
-                      onChange={e => setOtpCode(e.target.value)}
-                      disabled={otpVerified}
+                      id="hero-email-backup"
+                      required
+                      type="email"
+                      placeholder="you@company.com"
+                      value={formData.email}
+                      onChange={e => setFormData({ ...formData, email: e.target.value })}
                       style={{
-                        flex: 1,
-                        minWidth: 0,
-                        height: 40,
+                        width: "100%",
                         padding: "9px 12px",
-                        border: `1px solid ${otpVerified ? "#16A34A" : B}`,
+                        border: `1px solid ${B}`,
                         borderRadius: 7,
                         fontSize: 13,
                         outline: "none",
                         boxSizing: "border-box",
                         fontFamily: "var(--font-dm-sans), sans-serif",
-                        background: otpVerified ? "#F0FDF4" : "#fff",
-                        color: otpVerified ? "#166534" : D,
                         transition: "border-color 0.2s"
                       }}
-                      onFocus={e => e.target.style.borderColor = otpVerified ? "#16A34A" : R}
-                      onBlur={e => e.target.style.borderColor = otpVerified ? "#16A34A" : B}
                     />
-                    <button
-                      type="button"
-                      id="hero-verify-otp-btn"
-                      onClick={() => handleVerifyOtp()}
-                      disabled={otpVerified || !otpCode || otpVerifying}
-                      style={{
-                        width: 96,
-                        minWidth: 96,
-                        maxWidth: 96,
-                        flexShrink: 0,
-                        height: 40,
-                        background: otpVerified ? "#16A34A" : (!otpCode || otpVerifying) ? "#F3F4F6" : "#16A34A",
-                        color: (otpVerified || (otpCode && !otpVerifying)) ? "#fff" : "#9CA3AF",
-                        border: `1px solid ${(otpVerified || otpCode) ? "#16A34A" : "#E5E7EB"}`,
-                        borderRadius: 7,
-                        padding: 0,
-                        fontSize: 12,
-                        fontWeight: 700,
-                        cursor: (otpVerified || !otpCode || otpVerifying) ? "default" : "pointer",
-                        transition: "all 0.2s",
-                        whiteSpace: "nowrap",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxSizing: "border-box"
-                      }}
-                    >
-                      {otpVerifying ? "..." : otpVerified ? "Verified ✓" : "Verify"}
-                    </button>
                   </div>
-                  {otpError && (
-                    <span style={{ display: "block", color: "#DC2626", fontSize: 11, fontWeight: 600, marginTop: 4 }}>{otpError}</span>
-                  )}
-                  {otpVerified && (
-                    <span style={{ display: "block", color: "#16A34A", fontSize: 11, fontWeight: 600, marginTop: 4 }}>✓ Phone Verified</span>
-                  )}
-                </div>
 
-                {formStatus === 'error' && (
-                  <p style={{ fontSize: 12, color: "#DC2626", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 6, padding: "9px 12px", margin: "0 0 10px" }}>{formMsg}</p>
-                )}
+                  {/* 4. NUMBER (WhatsApp / Phone) */}
+                  <div style={{ marginBottom: 12 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, minHeight: 14 }}>
+                      <label htmlFor="hero-phone-backup" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, lineHeight: "14px" }}>
+                        Number *
+                      </label>
+                    </div>
+                    <div style={{ display: "flex", gap: 8, alignItems: "stretch" }}>
+                      <input
+                        id="hero-phone-backup"
+                        required
+                        type="tel"
+                        placeholder="e.g. 9876543210"
+                        value={formData.whatsappNumber}
+                        onChange={e => {
+                          setFormData({ ...formData, whatsappNumber: e.target.value });
+                          setOtpSent(false);
+                          setOtpVerified(false);
+                          setOtpCode('');
+                          setOtpError('');
+                        }}
+                        style={{
+                          flex: 1,
+                          minWidth: 0,
+                          height: 40,
+                          padding: "9px 12px",
+                          border: `1px solid ${B}`,
+                          borderRadius: 7,
+                          fontSize: 13,
+                          outline: "none",
+                          boxSizing: "border-box",
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          transition: "border-color 0.2s"
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleSendOtp}
+                        disabled={!isValidPhone(formData.whatsappNumber) || otpSent || otpLoading}
+                        style={{
+                          width: 96,
+                          minWidth: 96,
+                          maxWidth: 96,
+                          flexShrink: 0,
+                          height: 40,
+                          background: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#F3F4F6",
+                          color: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "#fff" : "#9CA3AF",
+                          border: `1px solid ${(isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#E5E7EB"}`,
+                          borderRadius: 7,
+                          padding: 0,
+                          fontSize: 12,
+                          fontWeight: 700,
+                          cursor: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "pointer" : "not-allowed",
+                          transition: "all 0.2s",
+                          whiteSpace: "nowrap",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxSizing: "border-box"
+                        }}
+                      >
+                        {otpLoading ? "Sending..." : otpSent ? "Sent ✓" : "Send OTP"}
+                      </button>
+                    </div>
+                  </div>
 
-                {/* 6. SUBMIT */}
-                <button
-                  type="submit"
-                  id="hero-submit-btn"
-                  disabled={formStatus === 'submitting' || !isFormValid()}
-                  style={{
-                    width: "100%",
-                    padding: "12px 14px",
-                    background: (formStatus === 'submitting' || !isFormValid()) ? "#F3F4F6" : R,
-                    color: (formStatus === 'submitting' || !isFormValid()) ? "#9CA3AF" : "#fff",
-                    border: (formStatus === 'submitting' || !isFormValid()) ? "1px solid #E5E7EB" : "none",
-                    borderRadius: 8,
-                    fontSize: 13.5,
-                    fontWeight: 700,
-                    cursor: (formStatus === 'submitting' || !isFormValid()) ? "not-allowed" : "pointer",
-                    fontFamily: "var(--font-dm-sans), sans-serif",
-                    boxShadow: (formStatus === 'submitting' || !isFormValid()) ? "none" : "0 4px 14px rgba(128,40,31,0.25)",
-                    transition: "all 0.2s"
-                  }}
-                >
-                  {formStatus === 'submitting' ? 'Submitting...' : 'Submit'}
-                </button>
-                <p style={{ fontSize: 11, color: G, fontStyle: "italic", textAlign: "center", margin: "8px 0 4px", fontWeight: 500 }}>
-                  Free for HR &amp; Admin teams • Takes 60 seconds • No obligation
-                </p>
-                <p style={{ fontSize: 10, color: "#999", textAlign: "center", margin: "4px 0 0" }}>
-                  By clicking submit, you accept our <Link href="/terms" style={{ color: "#999", textDecoration: "underline" }}>Terms &amp; Conditions</Link>
-                </p>
-              </form>
-            )}
-          </div>
+                  {/* 5. OTP */}
+                  <div style={{ marginBottom: 12 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, minHeight: 14 }}>
+                      <label htmlFor="hero-otp-backup" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, lineHeight: "14px" }}>
+                        OTP *
+                      </label>
+                      {otpSent && !otpVerified && (
+                        <button
+                          type="button"
+                          onClick={handleSendOtp}
+                          disabled={otpLoading}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: R,
+                            fontSize: 10.5,
+                            fontWeight: 600,
+                            cursor: otpLoading ? "not-allowed" : "pointer",
+                            padding: 0,
+                            textDecoration: "underline",
+                            lineHeight: "14px"
+                          }}
+                        >
+                          Resend OTP
+                        </button>
+                      )}
+                    </div>
+                    <div style={{ display: "flex", gap: 8, alignItems: "stretch" }}>
+                      <input
+                        id="hero-otp-backup"
+                        type="text"
+                        maxLength={6}
+                        placeholder={otpSent ? "Enter 6-digit OTP" : "Enter number & click Send OTP"}
+                        value={otpCode}
+                        onChange={e => setOtpCode(e.target.value)}
+                        disabled={otpVerified}
+                        style={{
+                          flex: 1,
+                          minWidth: 0,
+                          height: 40,
+                          padding: "9px 12px",
+                          border: `1px solid ${otpVerified ? "#16A34A" : B}`,
+                          borderRadius: 7,
+                          fontSize: 13,
+                          outline: "none",
+                          boxSizing: "border-box",
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          background: otpVerified ? "#F0FDF4" : "#fff",
+                          color: otpVerified ? "#166534" : D,
+                          transition: "border-color 0.2s"
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleVerifyOtp()}
+                        disabled={otpVerified || !otpCode || otpVerifying}
+                        style={{
+                          width: 96,
+                          minWidth: 96,
+                          maxWidth: 96,
+                          flexShrink: 0,
+                          height: 40,
+                          background: otpVerified ? "#16A34A" : (!otpCode || otpVerifying) ? "#F3F4F6" : "#16A34A",
+                          color: (otpVerified || (otpCode && !otpVerifying)) ? "#fff" : "#9CA3AF",
+                          border: `1px solid ${(otpVerified || otpCode) ? "#16A34A" : "#E5E7EB"}`,
+                          borderRadius: 7,
+                          padding: 0,
+                          fontSize: 12,
+                          fontWeight: 700,
+                          cursor: (otpVerified || !otpCode || otpVerifying) ? "default" : "pointer",
+                          transition: "all 0.2s",
+                          whiteSpace: "nowrap",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxSizing: "border-box"
+                        }}
+                      >
+                        {otpVerifying ? "..." : otpVerified ? "Verified ✓" : "Verify"}
+                      </button>
+                    </div>
+                    {otpError && (
+                      <span style={{ display: "block", color: "#DC2626", fontSize: 11, fontWeight: 600, marginTop: 4 }}>{otpError}</span>
+                    )}
+                    {otpVerified && (
+                      <span style={{ display: "block", color: "#16A34A", fontSize: 11, fontWeight: 600, marginTop: 4 }}>✓ Phone Verified</span>
+                    )}
+                  </div>
+
+                  {formStatus === 'error' && (
+                    <p style={{ fontSize: 12, color: "#DC2626", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 6, padding: "9px 12px", margin: "0 0 10px" }}>{formMsg}</p>
+                  )}
+
+                  {/* 6. SUBMIT */}
+                  <button
+                    type="submit"
+                    disabled={formStatus === 'submitting' || !isFormValid()}
+                    style={{
+                      width: "100%",
+                      padding: "12px 14px",
+                      background: (formStatus === 'submitting' || !isFormValid()) ? "#F3F4F6" : R,
+                      color: (formStatus === 'submitting' || !isFormValid()) ? "#9CA3AF" : "#fff",
+                      border: (formStatus === 'submitting' || !isFormValid()) ? "1px solid #E5E7EB" : "none",
+                      borderRadius: 8,
+                      fontSize: 13.5,
+                      fontWeight: 700,
+                      cursor: (formStatus === 'submitting' || !isFormValid()) ? "not-allowed" : "pointer",
+                      fontFamily: "var(--font-dm-sans), sans-serif",
+                      boxShadow: (formStatus === 'submitting' || !isFormValid()) ? "none" : "0 4px 14px rgba(128,40,31,0.25)",
+                      transition: "all 0.2s"
+                    }}
+                  >
+                    {formStatus === 'submitting' ? 'Submitting...' : 'Submit'}
+                  </button>
+                  <p style={{ fontSize: 11, color: G, fontStyle: "italic", textAlign: "center", margin: "8px 0 4px", fontWeight: 500 }}>
+                    Free for HR &amp; Admin teams • Takes 30 seconds • No obligation
+                  </p>
+                  <p style={{ fontSize: 10, color: "#999", textAlign: "center", margin: "4px 0 0" }}>
+                    By clicking submit, you accept our <Link href="/terms" style={{ color: "#999", textDecoration: "underline" }}>Terms &amp; Conditions</Link>
+                  </p>
+                </form>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
       {/* ===== COMPANY AUTO LOGO MARQUEE SLIDER ===== */}
       <CompanyLogoSlider />
 
-      {/* ===== 2. WHY CHOOSE US ===== */}
-      <Sec bg="#FAFAFA" id="why-us">
-        <div style={{ textAlign: "center", marginBottom: 30 }}>
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(26px, 3.5vw, 32px)", margin: "0 0 8px" }}>Why HR and Admin Teams Choose <span style={{ color: R }}>BookMyCorporateParty.com</span></h2>
-          <p style={{ fontSize: 15, color: G, maxWidth: 520, margin: "0 auto" }}>Corporate-only. Curated. Handled end-to-end.</p>
-        </div>
-        <div className="features-grid">
-          {[
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>, title: "Save Time", desc: "We do the venue research for you." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></svg>, title: "Save Money", desc: "Access negotiated corporate packages." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6" /><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" /></svg>, title: "Reduce Hassle", desc: "One point of contact from enquiry to execution." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><polyline points="9 12 11 14 15 10" /></svg>, title: "Choose With Confidence", desc: "Curated and pre-verified venues." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg>, title: "Compare Easily", desc: "Pricing, packages, capacity and inclusions in one place." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>, title: "Book Faster", desc: "Get shortlisted options quickly." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>, title: "Customize Your Event", desc: "Food, drinks, DJ, décor, activities and branding." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>, title: "Handle Any Group Size", desc: "From intimate team gatherings to large corporate celebrations." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><polyline points="9 15 11 17 15 13" /></svg>, title: "Make Approvals Easier", desc: "Clear proposals and transparent pricing." },
-            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>, title: "Focus on Your Team", desc: "We handle the coordination; you enjoy the event." },
-          ].map((b, i) => (
-            <div key={i} style={{ background: "#fff", borderRadius: 14, padding: "24px 16px", border: `1px solid ${B}`, textAlign: "center", transition: "transform 0.2s, box-shadow 0.2s", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start" }} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.05)"; }} onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
-              <div style={{ color: R, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
-                {b.icon}
-              </div>
-              <h4 style={{ margin: "0 0 8px", fontSize: 16, fontWeight: 700, color: D }}>{b.title}</h4>
-              <p style={{ margin: 0, fontSize: 13, color: G, lineHeight: 1.6 }}>{b.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* The BMCP Proposition Text */}
-        <div style={{
-          marginTop: 28,
-          textAlign: "center",
-          padding: "0 16px"
-        }}>
-          <p
-            className="bmcp-promise-text"
-            style={{
-              margin: 0,
-              fontFamily: "var(--font-dm-sans), sans-serif",
-              fontSize: "clamp(14px, 1.35vw, 16px)",
-              fontWeight: 500,
-              color: D,
-              lineHeight: 1.6,
-              textAlign: "center",
-              width: "100%"
-            }}
-          >
-            You tell us the date, budget and guest count — we find the venue, negotiate the package, and coordinate the event.
-          </p>
-        </div>
-      </Sec>
-
-      {/* ===== PREMIUM SCROLLING TICKER ===== */}
-      <div style={{ background: R, padding: "16px 0", borderTop: "1px solid rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(255,255,255,0.1)", overflow: "hidden", position: "relative" }}>
-        <style>{`
-          @keyframes scrollTicker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-          .ticker-content { display: flex; white-space: nowrap; animation: scrollTicker 30s linear infinite; width: max-content; }
-        `}</style>
-        <div className="ticker-content">
-          {[...Array(2)].map((_, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: 60, paddingRight: 60 }}>
-              {[
-                "500+ Brands Served", "30-Min Venue Matching", "Free for HR Teams",
-                "DJ · Bar · AV Sorted", "Last-Minute Bookings OK", "Site Visits Arranged"
-              ].map((text, idx) => (
-                <div key={idx} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 11.5, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", color: "#fff" }}>
-                  <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 9 }}>◆</span>
-                  {text}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ===== WHAT WE DELIVER FOR CORPORATES ===== */}
-      <Sec id="deliver" style={{ padding: "32px 0" }}>
-        <div style={{ textAlign: "center", marginBottom: 32, padding: "0 20px" }}>
-          <Badge text="What We Deliver For Corporates" />
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "14px 0 8px" }}>
-            What We Deliver For <span style={{ color: R }}>Corporates</span>
-          </h2>
-          <p style={{ fontSize: 15, color: G, maxWidth: 580, margin: "0 auto" }}>
-            Explore how we bring corporate celebrations to life with curated venues, grand setups, and seamless execution.
-          </p>
-        </div>
-        <DeliverSlider />
-      </Sec>
-
-      {/* ===== 3. VENUE CARDS ===== */}
-      <Sec id="venues">
-        <style>{`
-          .venue-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 22px;
-          }
-          @media (max-width: 1024px) {
-            .venue-grid {
-              grid-template-columns: repeat(2, 1fr);
-            }
-          }
-          @media (max-width: 640px) {
-            .venue-grid {
-              grid-template-columns: 1fr;
-            }
-          }
-        `}</style>
-        <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <Badge text="WHAT YOU CAN BOOK?" />
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "14px 0 8px" }}>
-            www.BookMyCorporateParty.com
-          </h2>
-          <p style={{ fontSize: 15, color: G, maxWidth: 520, margin: "0 auto" }}>
-            From 20 to 2000+ guests
-          </p>
-        </div>
-        <div className="venue-grid">
-          {venues.map((v, i) => <VenueCard key={i} v={v} />)}
-        </div>
-        <p style={{ textAlign: "center", color: G, fontSize: 13, marginTop: 28, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, flexWrap: "wrap" }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={R} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          Mumbai · Navi Mumbai · Thane · Pune · Goa · Delhi · Bangalore · Hyderabad · Chennai
-        </p>
-      </Sec>
-
-      {/* ===== TRUSTED BY LEADING CORPORATES ===== */}
-      {/* ===== TRUSTED BY LEADING CORPORATES (COMMENTED OUT) =====
-      <section className="trusted-section" style={{ background: R, position: "relative", overflow: "hidden", padding: "60px clamp(100px, 8vw, 200px)" }}>
-        <div style={{ textAlign: "center", marginBottom: 44 }}>
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 38px)", fontWeight: 800, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.5px", lineHeight: 1.15, textTransform: "uppercase" }}>
-            Trusted by Leading{" "}
-            <span style={{ color: "#FFD700" }}>Corporates</span>
-          </h2>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", margin: 0 }}>
-            500+ companies across India rely on us for their team celebrations
-          </p>
-        </div>
-
-        <div className="trusted-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, width: "100%" }}>
-          {[
-            ["We Work", "Indus Valley", "Morgan Stanley"],
-            ["Hyundai", "JP Morgan", "KPMG"],
-            ["Mphasis", "Naukri.com", "Hindustan Unilever"],
-            ["Red Hat", "Amazon", "BNY Mellon"],
-            ["JSW", "Cisco", "IBM"],
-            ["Mphasis", "InfoBeans", "Cybage"],
-            ["Suzlon", "Info Edge", "Guidepoint"],
-            ["WNS", "Lupin", ""],
-          ].map((row, ri) =>
-            row.map((company, ci) =>
-              company ? (
-                <div key={`${ri}-${ci}`} style={{
-                  padding: "16px 24px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  borderBottom: ri < 7 ? "1px solid rgba(255,255,255,0.08)" : "none",
-                  borderRight: ci < 2 ? "1px solid rgba(255,255,255,0.08)" : "none",
-                }}>
-                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" style={{ flexShrink: 0 }}>
-                    <path d={ci === 0 ? "M1 4L4 1L7 4L4 7Z" : ci === 1 ? "M4 0L8 4L4 8L0 4Z" : "M0 4L4 0L8 4L4 8Z"} fill="#FFD700" opacity="0.85" />
-                  </svg>
-                  <span style={{ color: "rgba(255,255,255,0.92)", fontSize: 14.5, fontWeight: 600, letterSpacing: "0.3px" }}>{company}</span>
-                </div>
-              ) : (
-                <div key={`${ri}-${ci}`} style={{ padding: "16px 24px", borderRight: ci < 2 ? "1px solid rgba(255,255,255,0.08)" : "none" }} />
-              )
-            )
-          )}
-        </div>
-      </section>
-      */}
-
-      {/* ===== VIDEO TESTIMONIALS ===== */}
-      {/* <ReviewsSection /> */}
-      <EventsSection />
-
-      {/* ===== INSTAGRAM WIDGET ===== */}
-      <InstagramWidget />
-
-      {/* ===== 4. TESTIMONIALS — GOOGLE REVIEWS ===== */}
-      <Sec bg="#F5F5F7">
-        {/* Centered header */}
-        <div style={{ textAlign: "center", marginBottom: 24 }}>
-          <Badge text="Google Reviews" />
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "10px 0 12px" }}>Trusted by <span style={{ color: R }}>500+ Brands</span></h2>
-          {/* Google rating summary */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", border: `1px solid ${B}`, borderRadius: 30, padding: "6px 16px" }}>
-            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            <span style={{ fontWeight: 800, fontSize: 14, color: D }}>4.8</span>
-            <div style={{ display: "flex", gap: 2 }}>{[1,2,3,4,5].map(s => <svg key={s} width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>)}</div>
-            <span style={{ fontSize: 11, color: G }}>Google Reviews</span>
-          </div>
-        </div>
-
-        {/* Carousel wrapper with absolute prev/next buttons */}
-        <div style={{ position: "relative" }}>
-          {/* Prev button */}
-          <button onClick={() => testimonialRowRef.current?.scrollBy({ left: -300, behavior: 'smooth' })} style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", border: `1px solid ${B}`, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: D, transition: "all 0.2s", fontSize: 22, boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = R; }} onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = D; e.currentTarget.style.borderColor = B; }}>‹</button>
-          {/* Next button */}
-          <button onClick={() => testimonialRowRef.current?.scrollBy({ left: 300, behavior: 'smooth' })} style={{ position: "absolute", right: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", border: `1px solid ${B}`, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: D, transition: "all 0.2s", fontSize: 22, boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = R; }} onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = D; e.currentTarget.style.borderColor = B; }}>›</button>
-
-          <div ref={testimonialRowRef} className="testimonials-row" style={{ display: "flex", gap: 16, flexWrap: "nowrap", overflowX: "auto", paddingBottom: 8, scrollSnapType: "x mandatory", msOverflowStyle: "none", scrollbarWidth: "none" as const }}>
-          {[
-            {
-              name: "Namrata Kadam", meta: "Local Guide · 13 reviews", time: "a month ago",
-              img: "/images/google reviews/Namrata Kadam.png", initial: null, color: null,
-              q: "I have worked with the bookmycorporateparty team for more than 5 events, and i highly recommend their services. They manage the entire coordination process and ensure seamless execution every time. Their pricing is reasonable, and the team's support allows you to focus on other priorities without worrying about event logistics.",
-            },
-            {
-              name: "Sonali Ramaiya", meta: "Local Guide · 13 reviews", time: "a month ago",
-              img: null, initial: "S", color: "#4CAF50",
-              q: "We wanted to have our company's new year celebration and needed a venue around Mumbai. We not only got the right pricing and a good venue, but a lot of our requirements were taken care of by Book My Corporate Party team. We would recommend their service to all small businesses and corporates.",
-            },
-            {
-              name: "Esha Kamble", meta: "Local Guide · 38 reviews", time: "a month ago",
-              img: null, initial: "E", color: "#F44336",
-              q: "They planned our corporate outing, it was really well planned and executed.",
-            },
-            {
-              name: "Manish Shinde", meta: "5 reviews · 19 photos", time: "4 weeks ago",
-              img: "/images/google reviews/manish.png", initial: null, color: null,
-              q: "The entire event was beautifully curated by Book My Corporate Party.com. Sachin Jawale and his team guided us through every detail — finalizing the venue, planning the event flow, entertainment, games, and food. The atmosphere was warm and joyful, executed with professionalism and care. Highly recommended for reliable, creative, and stress-free event management.",
-            },
-            {
-              name: "Rakshavati Poojari", meta: "4 reviews", time: "4 weeks ago",
-              img: null, initial: "R", color: "#9C27B0",
-              q: "We have had a wonderful experience working with Sachin and Pradeep for our corporate events. Their professionalism and seamless coordination has made our events smooth and successful, and saved a lot of our time on logistics. Highly recommend them for planning your corporate events.",
-            },
-          ].map((t, i) => (
-            <div key={i} style={{ flex: "0 0 270px", width: 270, background: "#fff", border: `1px solid ${B}`, borderRadius: 14, padding: "14px 16px", boxShadow: "0 4px 12px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: 0, scrollSnapAlign: "start" }}>
-              {/* Top row: avatar + name + Google logo */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  {t.img ? (
-                    <img src={t.img} alt={t.name} style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
-                  ) : (
-                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: t.color!, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 700, color: "#fff", flexShrink: 0 }}>
-                      {t.initial}
-                    </div>
-                  )}
-                  <div>
-                    <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: D }}>{t.name}</p>
-                    <p style={{ margin: "1px 0 0", fontSize: 10, color: G }}>{t.meta}</p>
-                  </div>
-                </div>
-                {/* Google G */}
-                <svg width="20" height="20" viewBox="0 0 24 24" style={{ flexShrink: 0 }}><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-              </div>
-              {/* Stars + time */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                <div style={{ display: "flex", gap: 2 }}>
-                  {[1,2,3,4,5].map(s => <svg key={s} width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>)}
-                </div>
-                <span style={{ fontSize: 11, color: G }}>{t.time}</span>
-              </div>
-              {/* Review text */}
-              <p style={{ fontSize: 12.5, color: D, lineHeight: 1.65, margin: 0, flex: 1 }}>
-                {t.q}
-              </p>
-            </div>
-          ))}
-        </div>
-        </div>{/* end carousel wrapper */}
-      </Sec>
-
       {/* ===== TOP 10 PROBLEMS HR FACES ===== */}
-      <Sec bg="#FFFFFF" id="hr-problems" style={{ borderTop: `1px solid ${B}` }}>
+      <Sec bg="#FFFFFF" id="hr-problems">
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <Badge text="The Real HR Struggle" />
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 36px)", margin: "14px 0 10px", color: D, letterSpacing: "-0.3px" }}>
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 34px)", margin: "14px 0 10px", color: D, letterSpacing: "-0.5px" }}>
             Top 10 Problems HR Faces <span style={{ color: R }}>When Planning Events</span>
           </h2>
-          <p style={{ fontSize: 15, color: G, maxWidth: 640, margin: "0 auto", lineHeight: 1.6 }}>
+          <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, maxWidth: 1150, margin: "0 auto", lineHeight: 1.6 }}>
             Planning corporate celebrations sounds exciting until the endless calls, unclear pricing, and vendor chaos begin. Here is what HR teams deal with — and how we eliminate each one.
           </p>
         </div>
@@ -2102,102 +2156,17 @@ export default function BMCPLanding() {
             </div>
           ))}
         </div>
-      </Sec>
-
-      {/* ===== 5. THE COMPARISON BOARD (WHITE) ===== */}
-      <Sec bg="#FAFAFA" id="comparison-board">
-        <div style={{ textAlign: "center", marginBottom: 30 }}>
-          <Badge text="The Comparison" />
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "10px 0 0" }}>Why HRs Prefer Our <span style={{ color: R }}>Streamlined</span> Process</h2>
-        </div>
-
-        <div className="comparison-board" style={{ width: "100%", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: 30 }}>
-          {/* THE OLD WAY */}
-          <div style={{ background: "#fff", borderRadius: 16, border: `1px solid ${B}`, padding: "40px", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "#E5E7EB" }} />
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 30 }}>
-              <div style={{ color: "#9CA3AF" }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-              </div>
-              <h3 style={{ fontSize: 16, fontWeight: 800, color: "#6B7280", margin: 0, letterSpacing: "1px", textTransform: "uppercase" }}>The Old Way</h3>
-            </div>
-            {[
-              "Google 'corporate party venues' — get 50 random listings mixed with weddings and birthdays.",
-              "Call each venue. Half don't pick up. Half don't do corporate events.",
-              "Compare pricing on WhatsApp, Excel, and sticky notes.",
-              "Spend 2–3 weeks. Boss asks for a cost breakdown. You don't have one."
-            ].map((text, i) => (
-              <div key={i} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
-                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#D1D5DB", marginTop: 7, flexShrink: 0 }} />
-                <p style={{ margin: 0, fontSize: 14, color: "#6B7280", lineHeight: 1.6 }}>{text}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* THE BMCP WAY */}
-          <div style={{ background: "#fff", borderRadius: 16, border: `1px solid ${B}`, padding: "40px", position: "relative", overflow: "hidden", boxShadow: "0 10px 30px rgba(0,0,0,0.04)" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: R }} />
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 30 }}>
-              <div style={{ color: R }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-              </div>
-              <h3 style={{ fontSize: 16, fontWeight: 800, color: D, margin: 0, letterSpacing: "1px", textTransform: "uppercase" }}>The BMCP Way</h3>
-            </div>
-            {[
-              "Share event details — team size, budget, vibe, date.",
-              "Get 3–5 handpicked venues with pricing in 30 minutes.",
-              "Compare side by side. Schedule a site visit if needed.",
-              "Finalize fast. We coordinate everything until your event is done."
-            ].map((text, i) => (
-              <div key={i} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
-                <div style={{ color: R, marginTop: 3, flexShrink: 0 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </div>
-                <p style={{ margin: 0, fontSize: 14.5, fontWeight: 600, color: D, lineHeight: 1.6 }}>{text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Sec>
-
-      {/* ===== 6. HOW IT WORKS (PEARL GRAY) ===== */}
-      <Sec bg="#F5F5F7" id="how-it-works">
-        <div style={{ textAlign: "center", marginBottom: 30 }}>
-          <Badge text="HOW IT WORKS" />
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 32, margin: "10px 0 0" }}>
-            From Enquiry to Event in <span style={{ color: R }}>5 Steps</span>
-          </h2>
-        </div>
-        <div style={{ position: "relative", width: "100%" }}>
-          <div className="steps-line" style={{ position: "absolute", top: 26, left: "10%", right: "10%", height: 0, borderTop: `2px dashed ${B}`, zIndex: 0 }} />
-          <div className="steps-container" style={{ display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap", position: "relative", zIndex: 1 }}>
-            {[
-              { t: "Share Your Details", d: "Venue type, preferred area, guest count, date, and budget. Takes 60 seconds." },
-              { t: "We Shortlist the Best", d: "3–5 handpicked venues from our curated network — all vetted for corporate events." },
-              { t: "Compare Packages", d: "Venue photos, capacity, inclusions, per-person pricing. Side-by-side. Site visits on request." },
-              { t: "Finalize Your Venue", d: "Pick your venue. Confirm the package. Done in 30 minutes." },
-              { t: "We Coordinate Until Your Event", d: "Menu, DJ, decor, branding, team activities — all handled. You just bring your team." },
-            ].map((s, i) => (
-              <div key={i} style={{ flex: "1 1 180px", textAlign: "center", transition: "transform 0.3s ease" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
-                <div style={{ width: 52, height: 52, background: R, color: "#fff", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 800, margin: "0 auto 20px", boxShadow: "0 8px 20px rgba(192,57,43,0.15)" }}>
-                  {i + 1}
-                </div>
-                <h4 style={{ fontSize: 15.5, fontWeight: 700, margin: "0 0 10px", color: D, letterSpacing: "-0.2px" }}>{s.t}</h4>
-                <p style={{ fontSize: 13, color: G, lineHeight: 1.7, margin: "0 auto", padding: "0 5px", maxWidth: 170 }}>{s.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <SectionCTA text="SOLVE YOUR EVENT PLANNING HASSLE →" subtext="Takes 30 seconds • Free for HR & Admin teams • Options in 30 mins" />
       </Sec>
 
       {/* ===== WHY BMCP SOLUTIONS ===== */}
-      <Sec bg="#FFFFFF" id="solutions" style={{ borderTop: `1px solid ${B}`, padding: "52px clamp(20px, 4vw, 80px)" }}>
+      <Sec bg="#FAFAFA" id="solutions" style={{ borderTop: `1px solid ${B}`, padding: "52px clamp(20px, 4vw, 80px)" }}>
         <div style={{ textAlign: "center", marginBottom: 38 }}>
           <Badge text="WHY BMCP SOLUTIONS" />
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 36px)", margin: "14px 0 10px", color: D, letterSpacing: "-0.3px" }}>
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 34px)", margin: "14px 0 10px", color: D, letterSpacing: "-0.5px" }}>
             Why BMCP Solutions <span style={{ color: R }}>Are Built for Companies</span>
           </h2>
-          <p style={{ fontSize: 15, color: G, maxWidth: 680, margin: "0 auto", lineHeight: 1.6 }}>
+          <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, maxWidth: 1150, margin: "0 auto", lineHeight: 1.6 }}>
             Designed exclusively for HR, Admin, and Corporate teams. From fast 30-minute shortlists to negotiated packages and full coordination — here is why 500+ companies choose us.
           </p>
         </div>
@@ -2269,6 +2238,61 @@ export default function BMCPLanding() {
             </div>
           ))}
         </div>
+        <SectionCTA text="GET 5 CURATED VENUE OPTIONS FREE →" subtext="Options in 30 minutes • Free for HR & Admin teams • No obligation" />
+      </Sec>
+
+      {/* ===== 2. WHY CHOOSE US ===== */}
+      <Sec bg="#FFFFFF" id="why-us" style={{ borderTop: `1px solid ${B}` }}>
+        <div style={{ textAlign: "center", marginBottom: 30 }}>
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(22px, 2.4vw, 30px)", margin: "0 0 8px", color: D, letterSpacing: "-0.5px" }}>Why HR and Admin Teams Choose <span style={{ color: R }}>BookMyCorporateParty.com</span></h2>
+          <p style={{ fontSize: 15, color: G, maxWidth: 520, margin: "0 auto" }}>Corporate-only. Curated. Handled end-to-end.</p>
+        </div>
+        <div className="features-grid">
+          {[
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>, title: "Save Time", desc: "We do the venue research for you." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></svg>, title: "Save Money", desc: "Access negotiated corporate packages." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6" /><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" /></svg>, title: "Reduce Hassle", desc: "One point of contact from enquiry to execution." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><polyline points="9 12 11 14 15 10" /></svg>, title: "Choose With Confidence", desc: "Curated and pre-verified venues." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg>, title: "Compare Easily", desc: "Pricing, packages, capacity and inclusions in one place." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>, title: "Book Faster", desc: "Get shortlisted options quickly." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>, title: "Customize Your Event", desc: "Food, drinks, DJ, décor, activities and branding." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>, title: "Handle Any Group Size", desc: "From intimate team gatherings to large corporate celebrations." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><polyline points="9 15 11 17 15 13" /></svg>, title: "Make Approvals Easier", desc: "Clear proposals and transparent pricing." },
+            { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>, title: "Focus on Your Team", desc: "We handle the coordination; you enjoy the event." },
+          ].map((b, i) => (
+            <div key={i} style={{ background: "#fff", borderRadius: 14, padding: "24px 16px", border: `1px solid ${B}`, textAlign: "center", transition: "transform 0.2s, box-shadow 0.2s", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start" }} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.05)"; }} onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
+              <div style={{ color: R, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+                {b.icon}
+              </div>
+              <h4 style={{ margin: "0 0 8px", fontSize: 16, fontWeight: 700, color: D }}>{b.title}</h4>
+              <p style={{ margin: 0, fontSize: 13, color: G, lineHeight: 1.6 }}>{b.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* The BMCP Proposition Text */}
+        <div style={{
+          marginTop: 28,
+          textAlign: "center",
+          padding: "0 16px"
+        }}>
+          <p
+            className="bmcp-promise-text"
+            style={{
+              margin: 0,
+              fontFamily: "var(--font-dm-sans), sans-serif",
+              fontSize: "clamp(14px, 1.35vw, 16px)",
+              fontWeight: 500,
+              color: D,
+              lineHeight: 1.6,
+              textAlign: "center",
+              width: "100%"
+            }}
+          >
+            You tell us the date, budget and guest count — we find the venue, negotiate the package, and coordinate the event.
+          </p>
+        </div>
+        <SectionCTA text="GET VENUE OPTIONS IN 30 MINUTES →" subtext="100% Free for HR & Admin teams • No obligations" />
       </Sec>
 
       {/* ===== 7. COMPARISON TABLE (PERFECTED BMCP MATRIX) ===== */}
@@ -2278,7 +2302,8 @@ export default function BMCPLanding() {
         style={{
           position: "relative",
           overflow: "hidden",
-          padding: "48px clamp(20px, 4vw, 80px)"
+          padding: "48px clamp(20px, 4vw, 80px)",
+          borderTop: `1px solid ${B}`
         }}
       >
 
@@ -2287,21 +2312,27 @@ export default function BMCPLanding() {
             <Badge text="The Choice" />
           </div>
 
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 36px)", margin: "14px 0 8px", color: D, letterSpacing: "-0.3px" }}>
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 34px)", margin: "14px 0 8px", color: D, letterSpacing: "-0.5px" }}>
             BookMyCorporateParty vs Others
           </h2>
-          <p style={{ fontSize: 14.5, color: G, margin: 0, fontWeight: 400 }}>
+          <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, margin: 0, fontWeight: 400 }}>
             Dedicated corporate event intelligence vs generic public listing sites
           </p>
         </div>
 
         {/* Swipe hint for mobile screens */}
-        <div className="matrix-scroll-hint" style={{ display: "none", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 12, color: G, marginBottom: 12 }}>
-          <span>⇄ Swipe horizontally to view all 7 comparison points</span>
+        <div className="matrix-scroll-hint">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span>Swipe sideways to compare all 7 points</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
         </div>
 
         {/* Matrix Card Container */}
-        <div style={{
+        <div className="matrix-card" style={{
           width: "100%",
           borderRadius: 22,
           overflow: "hidden",
@@ -2313,9 +2344,9 @@ export default function BMCPLanding() {
         }}>
           {/* Scrollable Container */}
           <div className="matrix-scroll-wrap" style={{ width: "100%", overflowX: "auto" }}>
-            <div style={{ minWidth: 1220 }}>
+            <div className="matrix-inner" style={{ minWidth: 1220 }}>
               {/* Header Row: Top-Left Icon + 7 Criteria Columns */}
-              <div style={{
+              <div className="matrix-grid-row" style={{
                 display: "grid",
                 gridTemplateColumns: "310px repeat(7, 1fr)",
                 background: "#F8FAFC",
@@ -2323,7 +2354,7 @@ export default function BMCPLanding() {
                 alignItems: "stretch"
               }}>
                 {/* Top-Left Geometric Monogram */}
-                <div style={{
+                <div className="matrix-col-sticky matrix-sticky-header" style={{
                   display: "flex",
                   alignItems: "center",
                   gap: 12,
@@ -2333,7 +2364,7 @@ export default function BMCPLanding() {
                   zIndex: 4,
                   background: "#F8FAFC"
                 }}>
-                  <div style={{
+                  <div className="matrix-sticky-icon" style={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -2347,7 +2378,7 @@ export default function BMCPLanding() {
                     </svg>
                   </div>
                   <div>
-                    <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: "#334155" }}>PLATFORM COMPARISON</span>
+                    <span className="matrix-sticky-header-text" style={{ fontSize: 11, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: "#334155" }}>PLATFORM COMPARISON</span>
                   </div>
                 </div>
 
@@ -2361,7 +2392,7 @@ export default function BMCPLanding() {
                   "LAST-MINUTE BOOKING",
                   "SITE INSPECTION"
                 ].map((crit, idx) => (
-                  <div key={idx} style={{
+                  <div key={idx} className="matrix-header-cell" style={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -2381,7 +2412,7 @@ export default function BMCPLanding() {
               </div>
 
               {/* ROW 1: BookMyCorporateParty (SEAMLESS PURE BRAND BROWN - NO EXTRA COLOR PATCH) */}
-              <div style={{
+              <div className="matrix-grid-row" style={{
                 display: "grid",
                 gridTemplateColumns: "310px repeat(7, 1fr)",
                 background: R,
@@ -2392,7 +2423,7 @@ export default function BMCPLanding() {
                 position: "relative"
               }}>
                 {/* Left Provider Block (Seamless Background matching parent 100%) */}
-                <div style={{
+                <div className="matrix-col-sticky matrix-sticky-bmcp" style={{
                   display: "flex",
                   alignItems: "center",
                   gap: 14,
@@ -2403,15 +2434,16 @@ export default function BMCPLanding() {
                   background: R
                 }}>
                   <img
+                    className="matrix-entity-logo"
                     src="/images/logo-icon.png"
                     alt="BookMyCorporateParty"
                     style={{ width: 44, height: 44, objectFit: "contain", flexShrink: 0, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.25))" }}
                   />
                   <div>
-                    <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.2px" }}>
+                    <h3 className="matrix-entity-title" style={{ margin: 0, fontSize: 17, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.2px" }}>
                       BookMyCorporateParty
                     </h3>
-                    <p style={{ margin: "4px 0 0", fontSize: 11.5, color: "rgba(255, 255, 255, 0.88)", lineHeight: 1.45 }}>
+                    <p className="matrix-desc" style={{ margin: "4px 0 0", fontSize: 11.5, color: "rgba(255, 255, 255, 0.88)", lineHeight: 1.45 }}>
                       Dedicated corporate event intelligence with handpicked venues &amp; priority coordination.
                     </p>
                   </div>
@@ -2427,7 +2459,7 @@ export default function BMCPLanding() {
                   "Dedicated priority support",
                   "Arranged & coordinated"
                 ].map((val, idx) => (
-                  <div key={idx} style={{
+                  <div key={idx} className="matrix-bmcp-cell" style={{
                     textAlign: "center",
                     padding: "24px 10px",
                     display: "flex",
@@ -2437,7 +2469,7 @@ export default function BMCPLanding() {
                     borderLeft: "1px solid rgba(255, 255, 255, 0.15)"
                   }}>
                     {/* Circled Checkmark (Aneeverse Style) */}
-                    <div style={{
+                    <div className="matrix-check-circle" style={{
                       width: 32,
                       height: 32,
                       borderRadius: "50%",
@@ -2451,7 +2483,7 @@ export default function BMCPLanding() {
                     }}>
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                     </div>
-                    <span style={{ fontSize: 12.5, fontWeight: 700, color: "#FFFFFF", marginTop: 10, lineHeight: 1.35, display: "block" }}>
+                    <span className="matrix-cell-text" style={{ fontSize: 12.5, fontWeight: 700, color: "#FFFFFF", marginTop: 10, lineHeight: 1.35, display: "block" }}>
                       {val}
                     </span>
                   </div>
@@ -2459,14 +2491,14 @@ export default function BMCPLanding() {
               </div>
 
               {/* ROW 2: Other Sites (COMPETITOR ROW - HIGH CONTRAST & FULLY VISIBLE) */}
-              <div style={{
+              <div className="matrix-grid-row" style={{
                 display: "grid",
                 gridTemplateColumns: "310px repeat(7, 1fr)",
                 background: "#FFFFFF",
                 alignItems: "stretch"
               }}>
                 {/* Left Provider Block (Seamless Sticky) */}
-                <div style={{
+                <div className="matrix-col-sticky matrix-sticky-other" style={{
                   display: "flex",
                   alignItems: "center",
                   gap: 14,
@@ -2476,7 +2508,7 @@ export default function BMCPLanding() {
                   zIndex: 3,
                   background: "#FFFFFF"
                 }}>
-                  <div style={{
+                  <div className="matrix-other-icon" style={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -2498,10 +2530,10 @@ export default function BMCPLanding() {
                     </svg>
                   </div>
                   <div>
-                    <h3 style={{ margin: 0, fontSize: 17.5, fontWeight: 800, color: "#0F172A", letterSpacing: "-0.2px" }}>
+                    <h3 className="matrix-entity-title" style={{ margin: 0, fontSize: 17.5, fontWeight: 800, color: "#0F172A", letterSpacing: "-0.2px" }}>
                       Other Sites
                     </h3>
-                    <p style={{ margin: "4px 0 0", fontSize: 12, fontWeight: 500, color: "#475569", lineHeight: 1.45 }}>
+                    <p className="matrix-desc" style={{ margin: "4px 0 0", fontSize: 12, fontWeight: 500, color: "#475569", lineHeight: 1.45 }}>
                       Generic public portals catering to weddings, birthdays, and unverified listings.
                     </p>
                   </div>
@@ -2517,7 +2549,7 @@ export default function BMCPLanding() {
                   "No dedicated support team",
                   "Self-service only"
                 ].map((val, idx) => (
-                  <div key={idx} style={{
+                  <div key={idx} className="matrix-other-cell" style={{
                     textAlign: "center",
                     padding: "24px 10px",
                     display: "flex",
@@ -2527,7 +2559,7 @@ export default function BMCPLanding() {
                     borderLeft: "1px solid #E2E8F0"
                   }}>
                     {/* Circled High-Contrast Cross Badge */}
-                    <div style={{
+                    <div className="matrix-cross-circle" style={{
                       width: 34,
                       height: 34,
                       borderRadius: "50%",
@@ -2541,7 +2573,7 @@ export default function BMCPLanding() {
                     }}>
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </div>
-                    <span style={{ fontSize: 12.5, fontWeight: 700, color: "#1E293B", marginTop: 10, lineHeight: 1.35, display: "block" }}>
+                    <span className="matrix-cell-text" style={{ fontSize: 12.5, fontWeight: 700, color: "#1E293B", marginTop: 10, lineHeight: 1.35, display: "block" }}>
                       {val}
                     </span>
                   </div>
@@ -2550,13 +2582,316 @@ export default function BMCPLanding() {
             </div>
           </div>
         </div>
+        <SectionCTA text="EXPERIENCE THE BMCP DIFFERENCE →" subtext="Dedicated corporate event manager • 1000+ curated venues" />
+      </Sec>
+
+      {/* ===== PREMIUM SCROLLING TICKER ===== */}
+      <div style={{ background: R, padding: "16px 0", borderTop: "1px solid rgba(255,255,255,0.1)", borderBottom: "1px solid rgba(255,255,255,0.1)", overflow: "hidden", position: "relative" }}>
+        <style>{`
+          @keyframes scrollTicker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+          .ticker-content { display: flex; white-space: nowrap; animation: scrollTicker 30s linear infinite; width: max-content; }
+        `}</style>
+        <div className="ticker-content">
+          {[...Array(2)].map((_, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 60, paddingRight: 60 }}>
+              {[
+                "500+ Brands Served", "30-Min Venue Matching", "Free for HR Teams",
+                "DJ · Bar · AV Sorted", "Last-Minute Bookings OK", "Site Visits Arranged"
+              ].map((text, idx) => (
+                <div key={idx} style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 11.5, fontWeight: 700, letterSpacing: "1.2px", textTransform: "uppercase", color: "#fff" }}>
+                  <span style={{ color: "rgba(255,255,255,0.6)", fontSize: 9 }}>◆</span>
+                  {text}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ===== WHAT WE DELIVER FOR CORPORATES ===== */}
+      <Sec id="deliver" style={{ padding: "32px 0" }}>
+        <div style={{ textAlign: "center", marginBottom: 32, padding: "0 20px" }}>
+          <Badge text="What We Deliver For Corporates" />
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 32px)", margin: "14px 0 8px", color: D, letterSpacing: "-0.5px" }}>
+            What We Deliver For <span style={{ color: R }}>Corporates</span>
+          </h2>
+          <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, maxWidth: 900, margin: "0 auto" }}>
+            Explore how we bring corporate celebrations to life with curated venues, grand setups, and seamless execution.
+          </p>
+        </div>
+        <DeliverSlider />
+        <SectionCTA text="PLAN YOUR CORPORATE EVENT NOW →" subtext="Free for HR & Admin teams • Vetted venues across 10+ cities" />
+      </Sec>
+
+      {/* ===== 3. VENUE CARDS ===== */}
+      <Sec id="venues">
+        <style>{`
+          .venue-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+          }
+          @media (max-width: 1024px) {
+            .venue-grid {
+              grid-template-columns: repeat(2, 1fr);
+            }
+          }
+          @media (max-width: 640px) {
+            .venue-grid {
+              grid-template-columns: 1fr;
+            }
+          }
+        `}</style>
+        <div style={{ textAlign: "center", marginBottom: 32 }}>
+          <Badge text="WHAT YOU CAN BOOK?" />
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 32px)", margin: "14px 0 8px", color: D, letterSpacing: "-0.5px" }}>
+            www.BookMyCorporateParty.com
+          </h2>
+          <p style={{ fontSize: 15, color: G, maxWidth: 520, margin: "0 auto" }}>
+            From 20 to 2000+ guests
+          </p>
+        </div>
+        <div className="venue-grid">
+          {venues.map((v, i) => <VenueCard key={i} v={v} />)}
+        </div>
+        <p style={{ textAlign: "center", color: G, fontSize: 13, marginTop: 28, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, flexWrap: "wrap" }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={R} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          Mumbai · Navi Mumbai · Thane · Pune · Goa · Delhi · Bangalore · Hyderabad · Chennai
+        </p>
+      </Sec>
+
+      {/* ===== TRUSTED BY LEADING CORPORATES ===== */}
+      {/* ===== TRUSTED BY LEADING CORPORATES (COMMENTED OUT) =====
+      <section className="trusted-section" style={{ background: R, position: "relative", overflow: "hidden", padding: "60px clamp(100px, 8vw, 200px)" }}>
+        <div style={{ textAlign: "center", marginBottom: 44 }}>
+          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(28px, 4vw, 38px)", fontWeight: 800, color: "#fff", margin: "0 0 12px", letterSpacing: "-0.5px", lineHeight: 1.15, textTransform: "uppercase" }}>
+            Trusted by Leading{" "}
+            <span style={{ color: "#FFD700" }}>Corporates</span>
+          </h2>
+          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", margin: 0 }}>
+            500+ companies across India rely on us for their team celebrations
+          </p>
+        </div>
+
+        <div className="trusted-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 0, width: "100%" }}>
+          {[
+            ["We Work", "Indus Valley", "Morgan Stanley"],
+            ["Hyundai", "JP Morgan", "KPMG"],
+            ["Mphasis", "Naukri.com", "Hindustan Unilever"],
+            ["Red Hat", "Amazon", "BNY Mellon"],
+            ["JSW", "Cisco", "IBM"],
+            ["Mphasis", "InfoBeans", "Cybage"],
+            ["Suzlon", "Info Edge", "Guidepoint"],
+            ["WNS", "Lupin", ""],
+          ].map((row, ri) =>
+            row.map((company, ci) =>
+              company ? (
+                <div key={`${ri}-${ci}`} style={{
+                  padding: "16px 24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  borderBottom: ri < 7 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                  borderRight: ci < 2 ? "1px solid rgba(255,255,255,0.08)" : "none",
+                }}>
+                  <svg width="8" height="8" viewBox="0 0 8 8" fill="none" style={{ flexShrink: 0 }}>
+                    <path d={ci === 0 ? "M1 4L4 1L7 4L4 7Z" : ci === 1 ? "M4 0L8 4L4 8L0 4Z" : "M0 4L4 0L8 4L4 8Z"} fill="#FFD700" opacity="0.85" />
+                  </svg>
+                  <span style={{ color: "rgba(255,255,255,0.92)", fontSize: 14.5, fontWeight: 600, letterSpacing: "0.3px" }}>{company}</span>
+                </div>
+              ) : (
+                <div key={`${ri}-${ci}`} style={{ padding: "16px 24px", borderRight: ci < 2 ? "1px solid rgba(255,255,255,0.08)" : "none" }} />
+              )
+            )
+          )}
+        </div>
+      </section>
+      */}
+
+      {/* ===== VIDEO TESTIMONIALS ===== */}
+      {/* <ReviewsSection /> */}
+      <EventsSection />
+
+      {/* ===== 4. TESTIMONIALS — GOOGLE REVIEWS ===== */}
+      <Sec bg="#F5F5F7">
+        {/* Centered header */}
+        <div style={{ textAlign: "center", marginBottom: 24 }}>
+          <Badge text="Google Reviews" />
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 32px)", margin: "10px 0 12px", color: D, letterSpacing: "-0.5px" }}>Trusted by <span style={{ color: R }}>500+ Brands</span></h2>
+          {/* Google rating summary */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", border: `1px solid ${B}`, borderRadius: 30, padding: "6px 16px" }}>
+            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            <span style={{ fontWeight: 800, fontSize: 14, color: D }}>4.8</span>
+            <div style={{ display: "flex", gap: 2 }}>{[1,2,3,4,5].map(s => <svg key={s} width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>)}</div>
+            <span style={{ fontSize: 11, color: G }}>Google Reviews</span>
+          </div>
+        </div>
+
+        {/* Carousel wrapper with absolute prev/next buttons */}
+        <div style={{ position: "relative" }}>
+          {/* Prev button */}
+          <button onClick={() => testimonialRowRef.current?.scrollBy({ left: -300, behavior: 'smooth' })} style={{ position: "absolute", left: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", border: `1px solid ${B}`, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: D, transition: "all 0.2s", fontSize: 22, boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = R; }} onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = D; e.currentTarget.style.borderColor = B; }}>‹</button>
+          {/* Next button */}
+          <button onClick={() => testimonialRowRef.current?.scrollBy({ left: 300, behavior: 'smooth' })} style={{ position: "absolute", right: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", border: `1px solid ${B}`, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: D, transition: "all 0.2s", fontSize: 22, boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = R; }} onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = D; e.currentTarget.style.borderColor = B; }}>›</button>
+
+          <div ref={testimonialRowRef} className="testimonials-row" style={{ display: "flex", gap: 16, flexWrap: "nowrap", overflowX: "auto", paddingBottom: 8, scrollSnapType: "x mandatory", msOverflowStyle: "none", scrollbarWidth: "none" as const }}>
+          {[
+            {
+              name: "Namrata Kadam", meta: "Local Guide · 13 reviews", time: "a month ago",
+              img: "/images/google reviews/Namrata Kadam.png", initial: null, color: null,
+              q: "I have worked with the bookmycorporateparty team for more than 5 events, and i highly recommend their services. They manage the entire coordination process and ensure seamless execution every time. Their pricing is reasonable, and the team's support allows you to focus on other priorities without worrying about event logistics.",
+            },
+            {
+              name: "Sonali Ramaiya", meta: "Local Guide · 13 reviews", time: "a month ago",
+              img: null, initial: "S", color: "#4CAF50",
+              q: "We wanted to have our company's new year celebration and needed a venue around Mumbai. We not only got the right pricing and a good venue, but a lot of our requirements were taken care of by Book My Corporate Party team. We would recommend their service to all small businesses and corporates.",
+            },
+            {
+              name: "Esha Kamble", meta: "Local Guide · 38 reviews", time: "a month ago",
+              img: null, initial: "E", color: "#F44336",
+              q: "They planned our corporate outing, it was really well planned and executed.",
+            },
+            {
+              name: "Manish Shinde", meta: "5 reviews · 19 photos", time: "4 weeks ago",
+              img: "/images/google reviews/manish.png", initial: null, color: null,
+              q: "The entire event was beautifully curated by Book My Corporate Party.com. Sachin Jawale and his team guided us through every detail — finalizing the venue, planning the event flow, entertainment, games, and food. The atmosphere was warm and joyful, executed with professionalism and care. Highly recommended for reliable, creative, and stress-free event management.",
+            },
+            {
+              name: "Rakshavati Poojari", meta: "4 reviews", time: "4 weeks ago",
+              img: null, initial: "R", color: "#9C27B0",
+              q: "We have had a wonderful experience working with Sachin and Pradeep for our corporate events. Their professionalism and seamless coordination has made our events smooth and successful, and saved a lot of our time on logistics. Highly recommend them for planning your corporate events.",
+            },
+          ].map((t, i) => (
+            <div key={i} style={{ flex: "0 0 270px", width: 270, background: "#fff", border: `1px solid ${B}`, borderRadius: 14, padding: "14px 16px", boxShadow: "0 4px 12px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: 0, scrollSnapAlign: "start" }}>
+              {/* Top row: avatar + name + Google logo */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  {t.img ? (
+                    <img src={t.img} alt={t.name} style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+                  ) : (
+                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: t.color!, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 700, color: "#fff", flexShrink: 0 }}>
+                      {t.initial}
+                    </div>
+                  )}
+                  <div>
+                    <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: D }}>{t.name}</p>
+                    <p style={{ margin: "1px 0 0", fontSize: 10, color: G }}>{t.meta}</p>
+                  </div>
+                </div>
+                {/* Google G */}
+                <svg width="20" height="20" viewBox="0 0 24 24" style={{ flexShrink: 0 }}><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              </div>
+              {/* Stars + time */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                <div style={{ display: "flex", gap: 2 }}>
+                  {[1,2,3,4,5].map(s => <svg key={s} width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>)}
+                </div>
+                <span style={{ fontSize: 11, color: G }}>{t.time}</span>
+              </div>
+              {/* Review text */}
+              <p style={{ fontSize: 12.5, color: D, lineHeight: 1.65, margin: 0, flex: 1 }}>
+                {t.q}
+              </p>
+            </div>
+          ))}
+        </div>
+        </div>{/* end carousel wrapper */}
+        <SectionCTA text="BOOK YOUR TEAM CELEBRATION →" subtext="Trusted by 500+ corporate teams • Takes 30 seconds" />
+      </Sec>
+
+      {/* ===== 5. THE COMPARISON BOARD (WHITE) ===== */}
+      <Sec bg="#FAFAFA" id="comparison-board" style={{ borderTop: `1px solid ${B}` }}>
+        <div style={{ textAlign: "center", marginBottom: 30 }}>
+          <Badge text="The Comparison" />
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 32px)", margin: "10px 0 0", color: D, letterSpacing: "-0.5px" }}>Why HRs Prefer Our <span style={{ color: R }}>Streamlined</span> Process</h2>
+        </div>
+
+        <div className="comparison-board" style={{ width: "100%", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: 30 }}>
+          {/* THE OLD WAY */}
+          <div style={{ background: "#fff", borderRadius: 16, border: `1px solid ${B}`, padding: "40px", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "#E5E7EB" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 30 }}>
+              <div style={{ color: "#9CA3AF" }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+              </div>
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: "#6B7280", margin: 0, letterSpacing: "1px", textTransform: "uppercase" }}>The Old Way</h3>
+            </div>
+            {[
+              "Google 'corporate party venues' — get 50 random listings mixed with weddings and birthdays.",
+              "Call each venue. Half don't pick up. Half don't do corporate events.",
+              "Compare pricing on WhatsApp, Excel, and sticky notes.",
+              "Spend 2–3 weeks. Boss asks for a cost breakdown. You don't have one."
+            ].map((text, i) => (
+              <div key={i} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
+                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#D1D5DB", marginTop: 7, flexShrink: 0 }} />
+                <p style={{ margin: 0, fontSize: 14, color: "#6B7280", lineHeight: 1.6 }}>{text}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* THE BMCP WAY */}
+          <div style={{ background: "#fff", borderRadius: 16, border: `1px solid ${B}`, padding: "40px", position: "relative", overflow: "hidden", boxShadow: "0 10px 30px rgba(0,0,0,0.04)" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: R }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 30 }}>
+              <div style={{ color: R }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              </div>
+              <h3 style={{ fontSize: 16, fontWeight: 800, color: D, margin: 0, letterSpacing: "1px", textTransform: "uppercase" }}>The BMCP Way</h3>
+            </div>
+            {[
+              "Share event details — team size, budget, vibe, date.",
+              "Get 3–5 handpicked venues with pricing in 30 minutes.",
+              "Compare side by side. Schedule a site visit if needed.",
+              "Finalize fast. We coordinate everything until your event is done."
+            ].map((text, i) => (
+              <div key={i} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
+                <div style={{ color: R, marginTop: 3, flexShrink: 0 }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <p style={{ margin: 0, fontSize: 14.5, fontWeight: 600, color: D, lineHeight: 1.6 }}>{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <SectionCTA text="SWITCH TO THE BMCP WAY →" subtext="One enquiry • Curated venues • Transparent pricing" />
+      </Sec>
+
+      {/* ===== 6. HOW IT WORKS (PEARL GRAY) ===== */}
+      <Sec bg="#F5F5F7" id="how-it-works">
+        <div style={{ textAlign: "center", marginBottom: 30 }}>
+          <Badge text="HOW IT WORKS" />
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 32px)", margin: "10px 0 0", color: D, letterSpacing: "-0.5px" }}>
+            From Enquiry to Event in <span style={{ color: R }}>5 Steps</span>
+          </h2>
+        </div>
+        <div style={{ position: "relative", width: "100%" }}>
+          <div className="steps-line" style={{ position: "absolute", top: 26, left: "10%", right: "10%", height: 0, borderTop: `2px dashed ${B}`, zIndex: 0 }} />
+          <div className="steps-container" style={{ display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap", position: "relative", zIndex: 1 }}>
+            {[
+              { t: "Share Your Details", d: "Venue type, preferred area, guest count, date, and budget. Takes 30 seconds." },
+              { t: "We Shortlist the Best", d: "3–5 handpicked venues from our curated network — all vetted for corporate events." },
+              { t: "Compare Packages", d: "Venue photos, capacity, inclusions, per-person pricing. Side-by-side. Site visits on request." },
+              { t: "Finalize Your Venue", d: "Pick your venue. Confirm the package. Done in 30 minutes." },
+              { t: "We Coordinate Until Your Event", d: "Menu, DJ, decor, branding, team activities — all handled. You just bring your team." },
+            ].map((s, i) => (
+              <div key={i} style={{ flex: "1 1 180px", textAlign: "center", transition: "transform 0.3s ease" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+                <div style={{ width: 52, height: 52, background: R, color: "#fff", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 800, margin: "0 auto 20px", boxShadow: "0 8px 20px rgba(192,57,43,0.15)" }}>
+                  {i + 1}
+                </div>
+                <h4 style={{ fontSize: 15.5, fontWeight: 700, margin: "0 0 10px", color: D, letterSpacing: "-0.2px" }}>{s.t}</h4>
+                <p style={{ fontSize: 13, color: G, lineHeight: 1.7, margin: "0 auto", padding: "0 5px", maxWidth: 170 }}>{s.d}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <SectionCTA text="GET STARTED IN 30 SECONDS →" subtext="Free for HR & Admin teams • Curated venues in 30 minutes" />
       </Sec>
 
       {/* ===== 8. FAQ (PEARL GRAY) ===== */}
       <Sec id="faq" bg="#F5F5F7">
         <div style={{ textAlign: "center", marginBottom: 30 }}>
           <Badge text="FAQ" />
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: 28, margin: "10px 0 0" }}>Frequently Asked Questions</h2>
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 30px)", margin: "10px 0 0", color: D, letterSpacing: "-0.5px" }}>Frequently Asked Questions</h2>
         </div>
         <div style={{ width: "100%" }}>
           <FAQItem q="How fast can I finalize a corporate party venue?" a="Within 30 minutes after reviewing our shortlisted options. For last-minute bookings, we provide priority support — subject to availability." />
@@ -2568,34 +2903,400 @@ export default function BMCPLanding() {
         </div>
       </Sec>
 
-      {/* ===== 9. FINAL CTA (DIAMOND WHITE) ===== */}
-      <section className="cta-section" style={{ background: "#fff", padding: "60px clamp(100px, 8vw, 200px)", textAlign: "center", position: "relative", borderTop: `1px solid ${B}` }}>
-        <div style={{ width: "100%", position: "relative", zIndex: 1 }}>
-          <div style={{ display: "inline-block", background: L, padding: "7px 18px", borderRadius: 30, color: R, fontSize: 11, fontWeight: 800, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 26, border: `1px solid ${B}` }}>
-            The Corporate Party Experts
+      {/* ===== 9. FINAL CTA & LEAD FORM (MERGED UNIFIED SECTION) ===== */}
+      <section id="enquiry-cta-section" className="cta-section" style={{ background: "#FFFFFF", padding: "80px clamp(24px, 6vw, 140px)", position: "relative", borderTop: `1px solid ${B}` }}>
+        <div className="cta-merge-container" style={{ maxWidth: 1240, margin: "0 auto", display: "flex", gap: "clamp(40px, 6vw, 76px)", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
+          
+          {/* Left: Authoritative Closing Headline & Value Bullets */}
+          <div className="cta-left" style={{ flex: "1 1 500px", minWidth: 300, textAlign: "left" }}>
+            <div style={{ display: "inline-block", background: R, padding: "7px 18px", borderRadius: 30, color: "#fff", fontSize: 11, fontWeight: 800, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 20, boxShadow: "0 2px 8px rgba(128, 40, 31, 0.2)", border: "1px solid rgba(255, 255, 255, 0.15)" }}>
+              The Corporate Party Experts
+            </div>
+            <h2 style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(30px, 4vw, 44px)", color: D, margin: "0 0 18px", lineHeight: 1.15, letterSpacing: "-0.5px" }}>
+              Your Team Deserves a Great Party.<br />
+              <span style={{ color: R }}>You Deserve an Easy Booking.</span>
+            </h2>
+            <p className="cta-subtitle" style={{ fontSize: 17, color: G, margin: "0 0 30px", lineHeight: 1.7, maxWidth: 540 }}>
+              One enquiry. Curated venues. Real pricing. No cold calls.<br />
+              Finalize in 30 minutes.
+            </p>
+
+            {/* Key Value Points */}
+            <div className="cta-bullets" style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 30 }}>
+              {[
+                "100% Free for HR & Admin teams — zero fees or markups",
+                "Curated options & negotiated quotes delivered in 30 minutes",
+                "1000+ top venues across 10+ major cities",
+                "1 dedicated SPOC for venue, food, DJ & entertainment management"
+              ].map((pt, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ width: 22, height: 22, borderRadius: "50%", background: "#F0FDF4", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </div>
+                  <span style={{ fontSize: 14.5, color: D, fontWeight: 500, lineHeight: 1.4 }}>{pt}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Trust Highlights */}
+            <div className="cta-trust-row" style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap", paddingTop: 18, borderTop: `1px solid ${B}`, color: G, fontSize: 13, fontWeight: 600 }}>
+              <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Trusted by 500+ companies
+              </span>
+              <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Takes 30 seconds
+              </span>
+              <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                No obligation
+              </span>
+            </div>
           </div>
-          <h2 style={{ fontFamily: "var(--font-playfair), serif", fontSize: "clamp(34px, 5.5vw, 48px)", color: D, margin: "0 0 24px", lineHeight: 1.1, letterSpacing: "-0.5px" }}>
-            Your Team Deserves a Great Party.<br />
-            <span style={{ color: R }}>You Deserve an Easy Booking.</span>
-          </h2>
-          <p className="cta-subtitle" style={{ fontSize: 18, color: G, margin: "0 auto 40px", lineHeight: 1.7, maxWidth: 640 }}>
-            One enquiry. Curated venues. Real pricing. No cold calls. <br />
-            Finalize in 30 minutes.
-          </p>
 
-          <button onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })} style={{ background: R, color: "#fff", border: "none", borderRadius: 12, padding: "20px 52px", fontSize: 18, fontWeight: 800, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif", boxShadow: "0 12px 30px rgba(192,57,43,0.3)", transition: "transform 0.2s" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-3px)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
-            GET VENUE OPTIONS FREE →
-          </button>
+          {/* Right: The High-Converting Lead Form */}
+          <div className="cta-right" style={{ flex: "1 1 420px", maxWidth: 480, minWidth: 300, width: "100%" }}>
+            <div id="hero-form" className="hero-form-card" style={{ position: "relative", zIndex: 10, background: "#fff", borderRadius: 16, padding: "28px 24px", boxShadow: "0 14px 40px rgba(0,0,0,0.08)", border: `1px solid ${B}` }}>
+              {formStatus === 'success' ? (
+                <div style={{ textAlign: "center", padding: "28px 0" }}>
+                  <div style={{ width: 60, height: 60, background: "#F0FDF4", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </div>
+                  <h3 style={{ margin: "0 0 8px", fontSize: 19, fontWeight: 700, color: D }}>Request Received!</h3>
+                  <p style={{ fontSize: 13.5, color: G, lineHeight: 1.6, margin: "0 0 22px" }}>{formMsg || "Thank you! Our corporate party expert will reach out within 30 minutes with curated options."}</p>
+                  <button onClick={() => { setFormStatus('idle'); }} style={{ background: "none", color: R, border: `1px solid ${R}`, borderRadius: 8, padding: "10px 24px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Submit Another</button>
+                </div>
+              ) : (
+                <form key="hero-form" onSubmit={handleSubmit}>
+                  <h3 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 800, color: D, fontFamily: "var(--font-dm-sans), sans-serif", letterSpacing: "-0.3px" }}>
+                    Get Venue Options Free
+                  </h3>
+                  <p style={{ margin: "0 0 16px", fontSize: 12, color: G }}>
+                    Free for HR &amp; Admin teams. Options within 30 minutes.
+                  </p>
 
-          <p style={{ fontSize: 13, color: G, marginTop: 18, marginBottom: 32 }}>
-            Takes 60 seconds. Free for HR & Admin teams. No obligations.
-          </p>
+                  {/* 1. What u want to book? */}
+                  <div style={{ marginBottom: 12 }}>
+                    <label
+                      htmlFor="hero-occasion"
+                      onClick={() => {
+                        const sel = document.getElementById('hero-occasion') as HTMLSelectElement | null;
+                        if (sel) {
+                          sel.focus();
+                          try {
+                            if (typeof (sel as any).showPicker === 'function') (sel as any).showPicker();
+                          } catch {}
+                        }
+                      }}
+                      style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4, cursor: "pointer" }}
+                    >
+                      What u want to book? *
+                    </label>
+                    <div style={{ position: "relative", width: "100%" }}>
+                      <select
+                        id="hero-occasion"
+                        required
+                        value={formData.occasion}
+                        onChange={e => setFormData({ ...formData, occasion: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "10px 36px 10px 12px",
+                          border: `1px solid ${formData.occasion ? R : B}`,
+                          borderRadius: 7,
+                          fontSize: 13,
+                          outline: "none",
+                          boxSizing: "border-box",
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          background: "#fff",
+                          color: formData.occasion ? D : "#9CA3AF",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                          appearance: "none",
+                          cursor: "pointer",
+                          position: "relative",
+                          zIndex: 2,
+                          transition: "border-color 0.2s"
+                        }}
+                        onFocus={e => e.target.style.borderColor = R}
+                        onBlur={e => e.target.style.borderColor = formData.occasion ? R : B}
+                      >
+                        <option value="" disabled hidden>Select venue type</option>
+                        {OCCASIONS.map((occ) => (
+                          <option key={occ} value={occ} style={{ color: D }}>{occ}</option>
+                        ))}
+                      </select>
+                      <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 3, display: "flex", alignItems: "center", color: "#6B7280" }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                      </div>
+                    </div>
+                  </div>
 
-          <div className="cta-trust" style={{ color: G, fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center", gap: 30, marginTop: 12 }}>
-            <span style={{ display: "flex", alignItems: "center", gap: 8 }}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Trusted by 500+ companies</span>
+                  {/* 2. NAME */}
+                  <div style={{ marginBottom: 12 }}>
+                    <label htmlFor="hero-name" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                      Name *
+                    </label>
+                    <input
+                      id="hero-name"
+                      required
+                      type="text"
+                      placeholder="e.g. Priya Sharma"
+                      value={formData.name}
+                      onChange={e => setFormData({ ...formData, name: e.target.value })}
+                      style={{
+                        width: "100%",
+                        padding: "9px 12px",
+                        border: `1px solid ${B}`,
+                        borderRadius: 7,
+                        fontSize: 13,
+                        outline: "none",
+                        boxSizing: "border-box",
+                        fontFamily: "var(--font-dm-sans), sans-serif",
+                        transition: "border-color 0.2s"
+                      }}
+                      onFocus={e => e.target.style.borderColor = R}
+                      onBlur={e => e.target.style.borderColor = B}
+                    />
+                  </div>
+
+                  {/* 3. EMAIL */}
+                  <div style={{ marginBottom: 12 }}>
+                    <label htmlFor="hero-email" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                      Email *
+                    </label>
+                    <input
+                      id="hero-email"
+                      required
+                      type="email"
+                      placeholder="you@company.com"
+                      value={formData.email}
+                      onChange={e => setFormData({ ...formData, email: e.target.value })}
+                      style={{
+                        width: "100%",
+                        padding: "9px 12px",
+                        border: `1px solid ${B}`,
+                        borderRadius: 7,
+                        fontSize: 13,
+                        outline: "none",
+                        boxSizing: "border-box",
+                        fontFamily: "var(--font-dm-sans), sans-serif",
+                        transition: "border-color 0.2s"
+                      }}
+                      onFocus={e => e.target.style.borderColor = R}
+                      onBlur={e => e.target.style.borderColor = B}
+                    />
+                  </div>
+
+                  {/* 4. NUMBER (WhatsApp / Phone) */}
+                  <div style={{ marginBottom: 12 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, minHeight: 14 }}>
+                      <label htmlFor="hero-phone" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, lineHeight: "14px" }}>
+                        Number *
+                      </label>
+                    </div>
+                    <div className="hero-otp-row" style={{ display: "flex", gap: 8, alignItems: "stretch" }}>
+                      <input
+                        id="hero-phone"
+                        className="hero-otp-input"
+                        required
+                        type="tel"
+                        placeholder="e.g. 9876543210"
+                        value={formData.whatsappNumber}
+                        onChange={e => {
+                          setFormData({ ...formData, whatsappNumber: e.target.value });
+                          setOtpSent(false);
+                          setOtpVerified(false);
+                          setOtpCode('');
+                          setOtpError('');
+                        }}
+                        style={{
+                          flex: 1,
+                          minWidth: 0,
+                          height: 40,
+                          padding: "9px 12px",
+                          border: `1px solid ${B}`,
+                          borderRadius: 7,
+                          fontSize: 13,
+                          outline: "none",
+                          boxSizing: "border-box",
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          transition: "border-color 0.2s"
+                        }}
+                        onFocus={e => e.target.style.borderColor = R}
+                        onBlur={e => e.target.style.borderColor = B}
+                      />
+                      <button
+                        type="button"
+                        id="hero-send-otp-btn"
+                        className="hero-otp-btn"
+                        onClick={handleSendOtp}
+                        disabled={!isValidPhone(formData.whatsappNumber) || otpSent || otpLoading}
+                        style={{
+                          width: 96,
+                          minWidth: 96,
+                          maxWidth: 96,
+                          flexShrink: 0,
+                          height: 40,
+                          background: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#F3F4F6",
+                          color: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "#fff" : "#9CA3AF",
+                          border: `1px solid ${(isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#E5E7EB"}`,
+                          borderRadius: 7,
+                          padding: 0,
+                          fontSize: 12,
+                          fontWeight: 700,
+                          cursor: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "pointer" : "not-allowed",
+                          transition: "all 0.2s",
+                          whiteSpace: "nowrap",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxSizing: "border-box"
+                        }}
+                      >
+                        {otpLoading ? "Sending..." : otpSent ? "Sent ✓" : "Send OTP"}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 5. OTP */}
+                  <div style={{ marginBottom: 12 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, minHeight: 14 }}>
+                      <label htmlFor="hero-otp" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, lineHeight: "14px" }}>
+                        OTP *
+                      </label>
+                      {otpSent && !otpVerified && (
+                        <button
+                          type="button"
+                          className="hero-resend-otp-btn"
+                          onClick={handleSendOtp}
+                          disabled={otpLoading}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: R,
+                            fontSize: 10.5,
+                            fontWeight: 600,
+                            cursor: otpLoading ? "not-allowed" : "pointer",
+                            padding: 0,
+                            textDecoration: "underline",
+                            lineHeight: "14px"
+                          }}
+                        >
+                          Resend OTP
+                        </button>
+                      )}
+                    </div>
+                    <div className="hero-otp-row" style={{ display: "flex", gap: 8, alignItems: "stretch" }}>
+                      <input
+                        id="hero-otp"
+                        className="hero-otp-input"
+                        type="text"
+                        maxLength={6}
+                        placeholder={otpSent ? "Enter 6-digit OTP" : "Enter number & click Send OTP"}
+                        value={otpCode}
+                        onChange={e => setOtpCode(e.target.value)}
+                        disabled={otpVerified}
+                        style={{
+                          flex: 1,
+                          minWidth: 0,
+                          height: 40,
+                          padding: "9px 12px",
+                          border: `1px solid ${otpVerified ? "#16A34A" : B}`,
+                          borderRadius: 7,
+                          fontSize: 13,
+                          outline: "none",
+                          boxSizing: "border-box",
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          background: otpVerified ? "#F0FDF4" : "#fff",
+                          color: otpVerified ? "#166534" : D,
+                          transition: "border-color 0.2s"
+                        }}
+                        onFocus={e => e.target.style.borderColor = otpVerified ? "#16A34A" : R}
+                        onBlur={e => e.target.style.borderColor = otpVerified ? "#16A34A" : B}
+                      />
+                      <button
+                        type="button"
+                        id="hero-verify-otp-btn"
+                        className="hero-otp-btn"
+                        onClick={() => handleVerifyOtp()}
+                        disabled={otpVerified || !otpCode || otpVerifying}
+                        style={{
+                          width: 96,
+                          minWidth: 96,
+                          maxWidth: 96,
+                          flexShrink: 0,
+                          height: 40,
+                          background: otpVerified ? "#16A34A" : (!otpCode || otpVerifying) ? "#F3F4F6" : "#16A34A",
+                          color: (otpVerified || (otpCode && !otpVerifying)) ? "#fff" : "#9CA3AF",
+                          border: `1px solid ${(otpVerified || otpCode) ? "#16A34A" : "#E5E7EB"}`,
+                          borderRadius: 7,
+                          padding: 0,
+                          fontSize: 12,
+                          fontWeight: 700,
+                          cursor: (otpVerified || !otpCode || otpVerifying) ? "default" : "pointer",
+                          transition: "all 0.2s",
+                          whiteSpace: "nowrap",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxSizing: "border-box"
+                        }}
+                      >
+                        {otpVerifying ? "..." : otpVerified ? "Verified ✓" : "Verify"}
+                      </button>
+                    </div>
+                    {otpError && (
+                      <span style={{ display: "block", color: "#DC2626", fontSize: 11, fontWeight: 600, marginTop: 4 }}>{otpError}</span>
+                    )}
+                    {otpVerified && (
+                      <span style={{ display: "block", color: "#16A34A", fontSize: 11, fontWeight: 600, marginTop: 4 }}>✓ Phone Verified</span>
+                    )}
+                  </div>
+
+                  {formStatus === 'error' && (
+                    <p style={{ fontSize: 12, color: "#DC2626", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 6, padding: "9px 12px", margin: "0 0 10px" }}>{formMsg}</p>
+                  )}
+
+                  {/* 6. SUBMIT */}
+                  <button
+                    type="submit"
+                    id="hero-submit-btn"
+                    className="hero-submit-btn"
+                    disabled={formStatus === 'submitting' || !isFormValid()}
+                    style={{
+                      width: "100%",
+                      padding: "12px 14px",
+                      background: (formStatus === 'submitting' || !isFormValid()) ? "#F3F4F6" : R,
+                      color: (formStatus === 'submitting' || !isFormValid()) ? "#9CA3AF" : "#fff",
+                      border: (formStatus === 'submitting' || !isFormValid()) ? "1px solid #E5E7EB" : "none",
+                      borderRadius: 8,
+                      fontSize: 13.5,
+                      fontWeight: 700,
+                      cursor: (formStatus === 'submitting' || !isFormValid()) ? "not-allowed" : "pointer",
+                      fontFamily: "var(--font-dm-sans), sans-serif",
+                      boxShadow: (formStatus === 'submitting' || !isFormValid()) ? "none" : "0 4px 14px rgba(128,40,31,0.25)",
+                      transition: "all 0.2s"
+                    }}
+                  >
+                    {formStatus === 'submitting' ? 'Submitting...' : 'Submit'}
+                  </button>
+                  <p style={{ fontSize: 11, color: G, fontStyle: "italic", textAlign: "center", margin: "8px 0 4px", fontWeight: 500 }}>
+                    Free for HR &amp; Admin teams • Takes 30 seconds • No obligation
+                  </p>
+                  <p style={{ fontSize: 10, color: "#999", textAlign: "center", margin: "4px 0 0" }}>
+                    By clicking submit, you accept our <Link href="/terms" style={{ color: "#999", textDecoration: "underline" }}>Terms &amp; Conditions</Link>
+                  </p>
+                </form>
+              )}
+            </div>
           </div>
+
         </div>
       </section>
+
+      {/* ===== INSTAGRAM WIDGET ===== */}
+      <InstagramWidget />
 
       {/* ===== 10. EXECUTIVE FOOTER (BRAND RED THEME) ===== */}
       <footer className="footer-wrap" style={{ background: R, padding: "80px 0 40px" }}>
