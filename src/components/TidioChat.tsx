@@ -17,6 +17,10 @@ declare global {
 }
 
 export default function TidioChat() {
+  // Hide Quick Help / Tidio chat for now as requested
+  const HIDE_TIDIO_FOR_NOW = true;
+  if (HIDE_TIDIO_FOR_NOW) return null;
+
   const tidioKey = process.env.NEXT_PUBLIC_TIDIO_KEY?.trim();
 
   useEffect(() => {
