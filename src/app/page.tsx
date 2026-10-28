@@ -60,32 +60,27 @@ function SectionCTA({ text = "GET 5 FREE QUOTES →", subtext, style }: { text?:
           }
         }}
         style={{
-          background: R,
-          color: "#fff",
-          border: "none",
           borderRadius: 10,
           padding: "16px 36px",
           fontSize: 15,
           fontWeight: 800,
           cursor: "pointer",
           fontFamily: "var(--font-dm-sans), sans-serif",
-          boxShadow: "0 8px 24px rgba(128,40,31,0.28)",
-          transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
           display: "inline-flex",
           alignItems: "center",
           gap: 10,
           letterSpacing: "0.3px"
         }}
-        onMouseEnter={e => {
-          e.currentTarget.style.transform = "translateY(-2px)";
-          e.currentTarget.style.boxShadow = "0 12px 28px rgba(128,40,31,0.42)";
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.transform = "none";
-          e.currentTarget.style.boxShadow = "0 8px 24px rgba(128,40,31,0.28)";
-        }}
       >
-        <span>{text}</span>
+        <span>
+          {text.includes("→") ? (
+            <>
+              {text.replace("→", "").trim()} <span className="cta-arrow">→</span>
+            </>
+          ) : (
+            text
+          )}
+        </span>
       </button>
       {subtext ? (
         <p className="section-cta-subtext" style={{ fontSize: 12.5, color: G, marginTop: 10, marginBottom: 0, fontStyle: "italic" }}>
@@ -271,23 +266,6 @@ const HR_PROBLEMS = [
   },
   {
     num: "05",
-    title: "Negotiating with vendors",
-    desc: (
-      <>
-        HR often has to <strong>negotiate prices, inclusions, upgrades and cancellation terms individually</strong>.
-      </>
-    ),
-    solution: "We leverage our volume corporate purchasing power to secure negotiated corporate pricing & free upgrades for you.",
-    icon: (
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <polyline points="16 11 18 13 22 9" />
-      </svg>
-    ),
-  },
-  {
-    num: "06",
     title: "Checking availability",
     desc: (
       <>
@@ -305,7 +283,7 @@ const HR_PROBLEMS = [
     ),
   },
   {
-    num: "07",
+    num: "06",
     title: "Budget pressure",
     desc: (
       <>
@@ -322,7 +300,7 @@ const HR_PROBLEMS = [
     ),
   },
   {
-    num: "08",
+    num: "07",
     title: "Reliability & quality concerns",
     desc: (
       <>
@@ -338,7 +316,7 @@ const HR_PROBLEMS = [
     ),
   },
   {
-    num: "09",
+    num: "08",
     title: "Last-minute changes",
     desc: (
       <>
@@ -355,7 +333,7 @@ const HR_PROBLEMS = [
     ),
   },
   {
-    num: "10",
+    num: "09",
     title: "Too much time spent on event planning",
     desc: (
       <>
@@ -499,6 +477,25 @@ export default function BMCPLanding() {
           setShowFloatingActions(false);
           return;
         }
+      }
+
+      // Check if user has reached the footer bottom (prevent covering "Designed by Aneeverse" & footer links)
+      const footerBottom = document.querySelector(".footer-bottom-bar");
+      if (footerBottom) {
+        const rect = footerBottom.getBoundingClientRect();
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        // Hide as soon as the footer bottom bar approaches or enters the viewport
+        if (rect.top <= windowHeight + 20) {
+          setShowFloatingActions(false);
+          return;
+        }
+      }
+
+      // Fallback check: hide if user is within 80px of the very bottom of the document
+      const docHeight = document.documentElement.scrollHeight;
+      if (scrollY + window.innerHeight >= docHeight - 80) {
+        setShowFloatingActions(false);
+        return;
       }
 
       setShowFloatingActions(true);
@@ -842,6 +839,83 @@ export default function BMCPLanding() {
         .reveal-section {
           animation: revealForm 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+
+        /* High-converting Attention-Grabbing CTA Buttons */
+        .hero-cta-btn,
+        .section-cta-btn {
+          position: relative !important;
+          overflow: hidden !important;
+          background: linear-gradient(135deg, #DC2626 0%, #B91C1C 48%, #881313 100%) !important;
+          color: #ffffff !important;
+          border: 1px solid rgba(255, 255, 255, 0.35) !important;
+          box-shadow: 0 8px 24px rgba(220, 38, 38, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
+          animation: ctaAttentionPulse 2.8s ease-in-out infinite !important;
+          cursor: pointer !important;
+          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, background 0.25s ease !important;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .hero-cta-btn::after,
+        .section-cta-btn::after {
+          content: '' !important;
+          position: absolute !important;
+          top: -70% !important;
+          left: -80% !important;
+          width: 50% !important;
+          height: 240% !important;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.45) 50%,
+            transparent 100%
+          ) !important;
+          transform: rotate(25deg) !important;
+          animation: ctaShimmer 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+          pointer-events: none !important;
+        }
+
+        @keyframes ctaAttentionPulse {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 8px 24px rgba(220, 38, 38, 0.45), 0 0 0 0 rgba(220, 38, 38, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+          }
+          50% {
+            transform: scale(1.035);
+            box-shadow: 0 12px 32px rgba(220, 38, 38, 0.65), 0 0 0 9px rgba(220, 38, 38, 0), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+          }
+        }
+
+        @keyframes ctaShimmer {
+          0% { left: -80%; }
+          30% { left: 140%; }
+          100% { left: 140%; }
+        }
+
+        .hero-cta-btn:hover,
+        .section-cta-btn:hover {
+          transform: translateY(-2px) scale(1.045) !important;
+          background: linear-gradient(135deg, #EF4444 0%, #DC2626 48%, #991B1B 100%) !important;
+          box-shadow: 0 14px 38px rgba(220, 38, 38, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+          animation-play-state: paused !important;
+        }
+
+        .cta-arrow {
+          display: inline-block !important;
+          margin-left: 4px !important;
+          animation: arrowNudge 1.6s ease-in-out infinite !important;
+          transition: transform 0.2s ease !important;
+        }
+
+        .hero-cta-btn:hover .cta-arrow,
+        .section-cta-btn:hover .cta-arrow {
+          transform: translateX(5px) !important;
+          animation-play-state: paused !important;
+        }
+
+        @keyframes arrowNudge {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(4px); }
+        }
         
         /* Make entire date inputs clickable natively, and style custom calendar icon */
         input[type="date"] {
@@ -890,7 +964,7 @@ export default function BMCPLanding() {
           gap: 22px;
         }
         @media (min-width: 1025px) {
-          .hr-problems-grid > div:last-child {
+          .hr-problems-grid > div:nth-child(3n+1):last-child {
             grid-column: 2;
           }
         }
@@ -1283,54 +1357,101 @@ export default function BMCPLanding() {
             line-height: 1.25 !important;
           }
 
-          /* Single-Line Responsive CTA Buttons (Mobile Only) */
+          /* Hero Occasions Pills on Mobile (Horizontal Scroll, Zero Clutter) */
+          .hero-occasions-list {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+            gap: 8px !important;
+            margin: 0 0 16px 0 !important;
+            padding: 2px 0 8px 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .hero-occasions-list::-webkit-scrollbar {
+            display: none !important;
+          }
+          .hero-occasion-item {
+            flex-shrink: 0 !important;
+            background: rgba(255, 255, 255, 0.09) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            border-radius: 9999px !important;
+            padding: 6px 14px !important;
+            font-size: 12.5px !important;
+            font-weight: 600 !important;
+            color: #F8FAFC !important;
+            letter-spacing: 0.2px !important;
+            white-space: nowrap !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+            backdrop-filter: blur(6px) !important;
+            -webkit-backdrop-filter: blur(6px) !important;
+          }
+          .hero-occasion-dot {
+            display: none !important;
+          }
+
+          /* Prominent, Big Mobile CTA Buttons */
           .section-cta-wrap {
             margin-top: 26px !important;
-            padding: 0 4px !important;
+            padding: 0 !important;
+            width: 100% !important;
             text-align: center !important;
           }
           .section-cta-btn,
           .hero-cta-btn {
             white-space: nowrap !important;
-            font-size: clamp(10.5px, 2.95vw, 13px) !important;
-            padding: 12px clamp(10px, 2.8vw, 18px) !important;
-            max-width: calc(100vw - 28px) !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            min-height: 52px !important;
+            font-size: clamp(14px, 4.2vw, 16px) !important;
+            font-weight: 800 !important;
+            padding: 15px 20px !important;
             box-sizing: border-box !important;
-            display: inline-flex !important;
+            display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            letter-spacing: 0.15px !important;
-            line-height: 1 !important;
-            gap: 7px !important;
-            border-radius: 9px !important;
+            letter-spacing: 0.4px !important;
+            line-height: 1.2 !important;
+            gap: 8px !important;
+            border-radius: 12px !important;
+            box-shadow: 0 10px 28px rgba(220, 38, 38, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
           }
           .section-cta-btn span,
           .hero-cta-btn span {
             white-space: nowrap !important;
-            display: inline-block !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            font-size: inherit !important;
+            font-weight: 800 !important;
           }
           .hero-cta-wrapper {
             width: 100% !important;
-            align-items: flex-start !important;
+            align-items: stretch !important;
           }
-          .hero-cta-btn svg {
-            width: 15px !important;
-            height: 15px !important;
-            flex-shrink: 0 !important;
+          .hero-cta-btn .cta-arrow,
+          .section-cta-btn .cta-arrow {
+            font-size: 18px !important;
+            margin-left: 5px !important;
           }
           .section-cta-subtext {
-            font-size: clamp(10px, 2.6vw, 11.5px) !important;
-            line-height: 1.35 !important;
-            margin-top: 7px !important;
+            font-size: 12px !important;
+            line-height: 1.4 !important;
+            margin-top: 8px !important;
             padding: 0 4px !important;
-            max-width: 340px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
+            max-width: 100% !important;
+            text-align: center !important;
           }
           .hero-cta-subtext {
-            font-size: clamp(10px, 2.6vw, 11.5px) !important;
-            line-height: 1.35 !important;
-            margin-top: 6px !important;
+            font-size: 12px !important;
+            line-height: 1.4 !important;
+            margin-top: 8px !important;
+            text-align: center !important;
+            width: 100% !important;
+            padding-left: 0 !important;
           }
 
           /* CTA section & Lead Form Responsive Mobile Styles */
@@ -1438,7 +1559,7 @@ export default function BMCPLanding() {
           .main-nav { padding: 10px 16px !important; }
 
           /* Footer */
-          .footer-wrap { padding: 40px 0 24px !important; }
+          .footer-wrap { padding: 40px 0 44px !important; }
           .footer-inner { padding: 0 16px !important; }
           .footer-cols {
             gap: 24px !important;
@@ -1627,8 +1748,8 @@ export default function BMCPLanding() {
               Tell us your event requirement. We’ll shortlist suitable venues, packages &amp; pricing for you.
             </p>
             
-            {/* Occasions List (Clean natural text, left-aligned) */}
-            <div style={{
+            {/* Occasions List */}
+            <div className="hero-occasions-list" style={{
               display: "flex",
               flexWrap: "wrap",
               alignItems: "center",
@@ -1642,9 +1763,9 @@ export default function BMCPLanding() {
               textAlign: "left"
             }}>
               {OCCASIONS.map((occ, i) => (
-                <span key={occ} style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
+                <span key={occ} className="hero-occasion-item" style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
                   <span>{occ}</span>
-                  {i < OCCASIONS.length - 1 && <span style={{ color: "#FF5252", fontSize: 13, opacity: 0.9 }}>•</span>}
+                  {i < OCCASIONS.length - 1 && <span className="hero-occasion-dot" style={{ color: "#FF5252", fontSize: 13, opacity: 0.9 }}>•</span>}
                 </span>
               ))}
             </div>
@@ -1693,32 +1814,16 @@ export default function BMCPLanding() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 10,
-                  background: "linear-gradient(135deg, #A8201A 0%, #80281F 100%)",
-                  color: "#fff",
-                  border: "1px solid rgba(255, 255, 255, 0.22)",
                   borderRadius: 10,
                   padding: "16px 34px",
                   fontSize: 15,
                   fontWeight: 800,
                   letterSpacing: "0.35px",
                   cursor: "pointer",
-                  boxShadow: "0 8px 24px rgba(128, 40, 31, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.25)",
-                  transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
-                  fontFamily: "var(--font-dm-sans), sans-serif",
-                  textShadow: "0 1px 2px rgba(0, 0, 0, 0.25)"
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = "linear-gradient(135deg, #C22D26 0%, #8E2319 100%)";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                  e.currentTarget.style.boxShadow = "0 12px 30px rgba(128, 40, 31, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.35)";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = "linear-gradient(135deg, #A8201A 0%, #80281F 100%)";
-                  e.currentTarget.style.transform = "none";
-                  e.currentTarget.style.boxShadow = "0 8px 24px rgba(128, 40, 31, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.25)";
+                  fontFamily: "var(--font-dm-sans), sans-serif"
                 }}
               >
-                <span>GET 5 FREE QUOTES →</span>
+                <span>GET 5 FREE QUOTES <span className="cta-arrow">→</span></span>
               </button>
               <div className="hero-cta-subtext" style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.85)", fontStyle: "italic", paddingLeft: 2, textAlign: "left" }}>
                 Free for HR &amp; Admin teams • Takes 30 seconds • No obligation
@@ -2040,12 +2145,12 @@ export default function BMCPLanding() {
       {/* ===== COMPANY AUTO LOGO MARQUEE SLIDER ===== */}
       <CompanyLogoSlider />
 
-      {/* ===== TOP 10 PROBLEMS HR FACES ===== */}
+      {/* ===== TOP PROBLEMS HR FACES ===== */}
       <Sec bg="#FFFFFF" id="hr-problems">
         <div style={{ textAlign: "center", marginBottom: 36 }}>
           <Badge text="The Real HR Struggle" />
           <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 34px)", margin: "14px 0 10px", color: D, letterSpacing: "-0.5px" }}>
-            Top 10 Problems HR Faces <span style={{ color: R }}>When Planning Events</span>
+            Top Problems HR Faces <span style={{ color: R }}>When Planning Events</span>
           </h2>
           <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, maxWidth: 1150, margin: "0 auto", lineHeight: 1.6 }}>
             Planning corporate celebrations sounds exciting until the endless calls, unclear pricing, and vendor chaos begin. Here is what HR teams deal with — and how we eliminate each one.
@@ -2116,10 +2221,10 @@ export default function BMCPLanding() {
                 </p>
               </div>
 
-              {/* The BMCP Fix */}
+              {/* Solution */}
               <div style={{
-                background: "#F8FAFC",
-                border: "1px solid #E2E8F0",
+                background: "#F0FDF4",
+                border: "1px solid #BBF7D0",
                 borderRadius: 8,
                 padding: "10px 12px",
                 display: "flex",
@@ -2127,11 +2232,11 @@ export default function BMCPLanding() {
                 gap: 8,
                 marginTop: "auto"
               }}>
-                <div style={{ color: R, flexShrink: 0, marginTop: 1 }}>
+                <div style={{ color: "#16A34A", flexShrink: 0, marginTop: 1 }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </div>
-                <p style={{ margin: 0, fontSize: 12, color: "#1E293B", lineHeight: 1.45, fontWeight: 500 }}>
-                  <strong style={{ color: R, fontWeight: 700 }}>The BMCP Fix: </strong>
+                <p style={{ margin: 0, fontSize: 12, color: "#166534", lineHeight: 1.45, fontWeight: 500 }}>
+                  <strong style={{ color: "#15803D", fontWeight: 700 }}>Solution: </strong>
                   {item.solution}
                 </p>
               </div>
@@ -3331,7 +3436,7 @@ export default function BMCPLanding() {
       <InstagramWidget />
 
       {/* ===== 10. EXECUTIVE FOOTER (BRAND RED THEME) ===== */}
-      <footer className="footer-wrap" style={{ background: R, padding: "80px 0 40px" }}>
+      <footer className="footer-wrap" style={{ background: R, padding: "80px 0 60px" }}>
         <div className="footer-inner" style={{ width: "100%", padding: "0 clamp(100px, 8vw, 200px)", boxSizing: "border-box" }}>
           <div className="footer-cols" style={{ display: "flex", gap: 60, flexWrap: "wrap", marginBottom: 60 }}>
             {/* Logo & About */}
