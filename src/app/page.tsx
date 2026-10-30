@@ -12,6 +12,23 @@ const InstagramWidget = dynamic(() => import("../components/InstagramWidget"), {
 const CompanyLogoSlider = dynamic(() => import("../components/CompanyLogoSlider"), { ssr: false });
 const DeliverSlider = dynamic(() => import("../components/DeliverSlider"), { ssr: false });
 
+import {
+  Presentation,
+  Briefcase,
+  Rocket,
+  Palmtree,
+  Hotel,
+  Mountain,
+  Tent,
+  Sailboat,
+  Martini,
+  FerrisWheel,
+  Users,
+  ChefHat,
+  TreePine,
+  PartyPopper
+} from "lucide-react";
+
 const R = "#80281F";
 const D = "#1A1A1A";
 const L = "#FDF0EF";
@@ -46,49 +63,7 @@ function Badge({ text }: { text: string }) {
 }
 
 function SectionCTA({ text = "GET 5 FREE QUOTES →", subtext, style }: { text?: string; subtext?: string; style?: React.CSSProperties }) {
-  return (
-    <div className="section-cta-wrap" style={{ textAlign: "center", marginTop: 40, ...style }}>
-      <button
-        type="button"
-        className="section-cta-btn"
-        onClick={() => {
-          if (typeof window !== 'undefined') {
-            const el = document.getElementById("enquiry-cta-section") || document.getElementById("hero-form");
-            if (el) {
-              el.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
-          }
-        }}
-        style={{
-          borderRadius: 10,
-          padding: "16px 36px",
-          fontSize: 15,
-          fontWeight: 800,
-          cursor: "pointer",
-          fontFamily: "var(--font-dm-sans), sans-serif",
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 10,
-          letterSpacing: "0.3px"
-        }}
-      >
-        <span>
-          {text.includes("→") ? (
-            <>
-              {text.replace("→", "").trim()} <span className="cta-arrow">→</span>
-            </>
-          ) : (
-            text
-          )}
-        </span>
-      </button>
-      {subtext ? (
-        <p className="section-cta-subtext" style={{ fontSize: 12.5, color: G, marginTop: 10, marginBottom: 0, fontStyle: "italic" }}>
-          {subtext}
-        </p>
-      ) : null}
-    </div>
-  );
+  return null;
 }
 
 function FAQItem({ q, a }: { q: string; a: string }) {
@@ -101,6 +76,54 @@ function FAQItem({ q, a }: { q: string; a: string }) {
       </div>
       <div style={{ maxHeight: open ? 300 : 0, overflow: "hidden", transition: "max-height 0.4s ease, opacity 0.3s", opacity: open ? 1 : 0 }}>
         <p style={{ fontSize: 15, color: G, lineHeight: 1.7, margin: "12px 0 0", paddingRight: 40 }}>{a}</p>
+      </div>
+    </div>
+  );
+}
+
+function HRProblemItem({ item, defaultOpen = false }: { item: typeof HR_PROBLEMS[number]; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div
+      style={{
+        borderBottom: `1px solid ${B}`,
+        cursor: "pointer",
+        padding: "18px 0"
+      }}
+      onClick={() => setOpen(!open)}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+        <h4 style={{ margin: 0, fontSize: 16.5, fontWeight: 600, color: D, lineHeight: 1.4 }}>
+          {item.title}
+        </h4>
+        <span
+          style={{
+            fontSize: 22,
+            color: R,
+            transition: "transform 0.3s ease",
+            transform: open ? "rotate(45deg)" : "none",
+            flexShrink: 0,
+            lineHeight: 1
+          }}
+        >
+          +
+        </span>
+      </div>
+      <div
+        style={{
+          maxHeight: open ? 350 : 0,
+          overflow: "hidden",
+          transition: "max-height 0.4s ease, opacity 0.3s ease",
+          opacity: open ? 1 : 0
+        }}
+      >
+        <div style={{ fontSize: 14.5, color: G, lineHeight: 1.6, margin: "12px 0 8px", paddingRight: 40 }}>
+          {item.desc}
+        </div>
+        <p style={{ fontSize: 15, color: D, lineHeight: 1.7, margin: "6px 0 4px", paddingRight: 40 }}>
+          <strong style={{ color: "#15803D" }}>Solution: </strong>
+          {item.solution}
+        </p>
       </div>
     </div>
   );
@@ -351,6 +374,78 @@ const HR_PROBLEMS = [
   },
 ];
 
+const DELIVER_CATEGORIES = [
+  {
+    title: "Business Conference",
+    occasion: "Annual Day",
+    icon: <Presentation size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Annual Business Meeting",
+    occasion: "Annual Day",
+    icon: <Briefcase size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Product Launch",
+    occasion: "Annual Day",
+    icon: <Rocket size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Villa & Resort",
+    occasion: "Team Offsite",
+    icon: <Palmtree size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Luxury Hotel",
+    occasion: "Team Lunch / Dinner",
+    icon: <Hotel size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Team Offsite",
+    occasion: "Team Offsite",
+    icon: <Mountain size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Camping Adventure Offsite",
+    occasion: "Team Offsite",
+    icon: <Tent size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Private Yacht Party",
+    occasion: "Yacht Party",
+    icon: <Sailboat size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Cocktail Parties",
+    occasion: "Cocktail Party",
+    icon: <Martini size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Carnival Party",
+    occasion: "Festival Celebration",
+    icon: <FerrisWheel size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Corporate Family Day",
+    occasion: "Family Day",
+    icon: <Users size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Catering Services",
+    occasion: "Office Catering",
+    icon: <ChefHat size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "Christmas Party",
+    occasion: "Festival Celebration",
+    icon: <TreePine size={32} strokeWidth={1.8} />
+  },
+  {
+    title: "New Year Party",
+    occasion: "Festival Celebration",
+    icon: <PartyPopper size={32} strokeWidth={1.8} />
+  }
+];
 
 export default function BMCPLanding() {
   const router = useRouter();
@@ -620,7 +715,7 @@ export default function BMCPLanding() {
         userIp: uGeo ? uGeo.ip : 'Unknown',
         ...uUtm,
       }),
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   useEffect(() => {
@@ -660,24 +755,24 @@ export default function BMCPLanding() {
     const p = new URLSearchParams(window.location.search);
     const src = p.get('utm_source') || '';
     const captured = {
-      utmSource:   src,
-      utmMedium:   p.get('utm_medium')   || '',
+      utmSource: src,
+      utmMedium: p.get('utm_medium') || '',
       utmCampaign: p.get('utm_campaign') || '',
-      utmTerm:     p.get('utm_term')     || '',
-      utmContent:  p.get('utm_content')  || '',
-      gclid:       p.get('gclid')        || '',
+      utmTerm: p.get('utm_term') || '',
+      utmContent: p.get('utm_content') || '',
+      gclid: p.get('gclid') || '',
     };
     setUtmData(captured);
 
     // Map utm_source to the Source dropdown value
     const srcLower = src.toLowerCase();
     const mapped =
-      srcLower.includes('google')    ? 'Google'    :
-      srcLower.includes('instagram') ? 'Instagram' :
-      srcLower.includes('facebook')  ? 'Facebook'  :
-      srcLower.includes('whatsapp')  ? 'WhatsApp'  :
-      srcLower.includes('friend') || srcLower.includes('referral') ? 'Friend' :
-      src ? 'Other' : '';
+      srcLower.includes('google') ? 'Google' :
+        srcLower.includes('instagram') ? 'Instagram' :
+          srcLower.includes('facebook') ? 'Facebook' :
+            srcLower.includes('whatsapp') ? 'WhatsApp' :
+              srcLower.includes('friend') || srcLower.includes('referral') ? 'Friend' :
+                src ? 'Other' : '';
 
     if (mapped) {
       setFormData(prev => ({ ...prev, source: mapped }));
@@ -1005,16 +1100,45 @@ export default function BMCPLanding() {
           .nav-links, .nav-actions { display: none !important; }
           .hamburger-btn { display: flex !important; }
           .section-pad { padding: 24px 16px !important; }
-          .hero-section { min-height: auto !important; padding: 28px 0 36px !important; background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('/images/home_banner.png') center/cover !important; }
+          .hero-section {
+            min-height: calc(100svh - 60px) !important;
+            min-height: calc(100dvh - 60px) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 24px 0 !important;
+            box-sizing: border-box !important;
+            background: linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)), url('/images/home_banner.png') center/cover !important;
+          }
           .hero-container {
-            padding: 0 16px !important;
-            gap: 20px !important;
+            padding: 0 20px !important;
             flex-direction: column !important;
             align-items: flex-start !important;
-            justify-content: flex-start !important;
+            justify-content: center !important;
             text-align: left !important;
+            width: 100% !important;
           }
-          .hero-text { min-width: 0 !important; flex: 1 1 100% !important; text-align: left !important; }
+          .hero-text {
+            min-width: 0 !important;
+            flex: 1 1 auto !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+          }
+          .hero-text h1 {
+            font-size: clamp(28px, 8vw, 42px) !important;
+            line-height: 1.18 !important;
+            margin: 20px 0 28px !important;
+          }
+          .hero-cta-btn {
+            width: 100% !important;
+            max-width: 320px !important;
+            justify-content: center !important;
+            padding: 16px 28px !important;
+          }
           .hero-form-card { flex: 1 1 100% !important; max-width: 100% !important; }
           .hero-badges { flex-wrap: wrap !important; gap: 8px !important; }
           .hero-badges > div { font-size: 11px !important; }
@@ -1588,11 +1712,49 @@ export default function BMCPLanding() {
           .footer-bottom-bar > a {
             justify-content: center !important;
           }
-          .whatsapp-fab {
-            bottom: 20px !important;
-            right: 16px !important;
+          .floating-actions-container {
+            bottom: 14px !important;
+            left: 14px !important;
+            right: 14px !important;
+            width: auto !important;
+            max-width: calc(100% - 28px) !important;
+            margin: 0 auto !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 10px !important;
+            box-sizing: border-box !important;
+            z-index: 9999 !important;
+          }
+          .expert-fab {
+            flex: 1 1 auto !important;
+            width: 100% !important;
+            height: 52px !important;
+            padding: 0 16px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 8px !important;
+            font-size: 14.5px !important;
+            font-weight: 800 !important;
+            white-space: nowrap !important;
+            letter-spacing: 0.2px !important;
+            border-radius: 9999px !important;
+          }
+          .whatsapp-fab-btn {
             width: 52px !important;
             height: 52px !important;
+            flex-shrink: 0 !important;
+            border-radius: 50% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          .fab-full-text {
+            display: inline-block !important;
+            font-size: 14px !important;
+            font-weight: 800 !important;
+            white-space: nowrap !important;
           }
 
           /* Trusted by Leading Corporates - 2 column grid on mobile */
@@ -1710,34 +1872,36 @@ export default function BMCPLanding() {
           padding: "0 clamp(32px, 7vw, 160px)",
           display: "flex",
           justifyContent: "flex-start",
-          alignItems: "flex-start",
+          alignItems: "center",
           textAlign: "left",
           boxSizing: "border-box"
         }}>
           <div className="hero-text" style={{
-            maxWidth: 680,
+            maxWidth: 760,
             width: "100%",
-            paddingTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
+            justifyContent: "center",
             textAlign: "left"
           }}>
-            <Badge text="CORPORATE PARTY PLATFORM" />
+            <div style={{ marginBottom: 26 }}>
+              <Badge text="CORPORATE PARTY PLATFORM" />
+            </div>
             <h1 style={{
               fontFamily: "var(--font-dm-sans), sans-serif",
-              fontSize: "clamp(34px, 5.2vw, 58px)",
+              fontSize: "clamp(38px, 4.8vw, 62px)",
               fontWeight: 800,
               color: "#fff",
-              lineHeight: 1.12,
+              lineHeight: 1.16,
               letterSpacing: "-0.5px",
-              margin: "18px 0 16px",
+              margin: "0 0 38px",
               textAlign: "left"
             }}>
               Stop Calling 20 Venues.<br />
               <span style={{ color: "#FF5252" }}>Book Your Corporate Party in One Click.</span>
             </h1>
-            <p style={{
+            {/* <p style={{
               fontSize: 17,
               color: "#E0E0E0",
               lineHeight: 1.65,
@@ -1746,10 +1910,10 @@ export default function BMCPLanding() {
               textAlign: "left"
             }}>
               Tell us your event requirement. We’ll shortlist suitable venues, packages &amp; pricing for you.
-            </p>
-            
-            {/* Occasions List */}
-            <div className="hero-occasions-list" style={{
+            </p> */}
+
+            {/* Occasions List (Moved to dedicated section below per user request) */}
+            {/* <div className="hero-occasions-list" style={{
               display: "flex",
               flexWrap: "wrap",
               alignItems: "center",
@@ -1768,10 +1932,10 @@ export default function BMCPLanding() {
                   {i < OCCASIONS.length - 1 && <span className="hero-occasion-dot" style={{ color: "#FF5252", fontSize: 13, opacity: 0.9 }}>•</span>}
                 </span>
               ))}
-            </div>
+            </div> */}
 
-            {/* Stats Line (Clean natural inline text with dividers, left-aligned) */}
-            <div style={{
+            {/* Stats Line (Moved to dedicated section below per user request) */}
+            {/* <div style={{
               display: "flex",
               alignItems: "center",
               justifyContent: "flex-start",
@@ -1797,7 +1961,7 @@ export default function BMCPLanding() {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF5252" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg>
                 <span>One Point of Contact</span>
               </div>
-            </div>
+            </div> */}
 
             {/* Left CTA Action */}
             <div className="hero-cta-wrapper" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 8 }}>
@@ -1813,10 +1977,10 @@ export default function BMCPLanding() {
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  gap: 10,
-                  borderRadius: 10,
-                  padding: "16px 34px",
-                  fontSize: 15,
+                  gap: 12,
+                  borderRadius: 12,
+                  padding: "18px 40px",
+                  fontSize: 16,
                   fontWeight: 800,
                   letterSpacing: "0.35px",
                   cursor: "pointer",
@@ -1825,9 +1989,9 @@ export default function BMCPLanding() {
               >
                 <span>GET 5 FREE QUOTES <span className="cta-arrow">→</span></span>
               </button>
-              <div className="hero-cta-subtext" style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.85)", fontStyle: "italic", paddingLeft: 2, textAlign: "left" }}>
+              {/* <div className="hero-cta-subtext" style={{ fontSize: 13, color: "rgba(255, 255, 255, 0.85)", fontStyle: "italic", paddingLeft: 2, textAlign: "left" }}>
                 Free for HR &amp; Admin teams • Takes 30 seconds • No obligation
-              </div>
+              </div> */}
             </div>
           </div>
           {/* Form (Hidden in hero, preserved for future use) */}
@@ -2152,98 +2316,246 @@ export default function BMCPLanding() {
           <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 34px)", margin: "14px 0 10px", color: D, letterSpacing: "-0.5px" }}>
             Top Problems HR Faces <span style={{ color: R }}>When Planning Events</span>
           </h2>
-          <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, maxWidth: 1150, margin: "0 auto", lineHeight: 1.6 }}>
+          {/* <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, maxWidth: 1150, margin: "0 auto", lineHeight: 1.6 }}>
             Planning corporate celebrations sounds exciting until the endless calls, unclear pricing, and vendor chaos begin. Here is what HR teams deal with — and how we eliminate each one.
-          </p>
+          </p> */}
         </div>
 
-        <div className="hr-problems-grid">
+        <div style={{ width: "100%" }}>
           {HR_PROBLEMS.map((item, idx) => (
+            <HRProblemItem key={item.num || idx} item={item} defaultOpen={false} />
+          ))}
+        </div>
+      </Sec>
+
+      {/* ===== 1.5. CORPORATE OCCASIONS & SCALE ===== */}
+      <Sec bg="#FAFAFA" id="corporate-occasions" style={{ borderTop: `1px solid ${B}`, borderBottom: `1px solid ${B}`, padding: "40px clamp(20px, 6vw, 120px)" }}>
+        <style>{`
+          .stat-segment:not(:last-child) {
+            border-right: 1px solid #E5E7EB;
+          }
+          .stat-title-mobile {
+            display: none;
+          }
+          @media (max-width: 768px) {
+            #corporate-occasions {
+              padding: 24px 12px !important;
+            }
+            .occasions-header-wrap {
+              margin-bottom: 16px !important;
+            }
+            .occasions-pills-wrap {
+              gap: 6px 7px !important;
+              margin-bottom: 18px !important;
+            }
+            .occasion-pill-item {
+              padding: 6px 12px !important;
+              font-size: 12px !important;
+              gap: 6px !important;
+            }
+            .occasion-pill-dot {
+              width: 5px !important;
+              height: 5px !important;
+            }
+            .stats-segmented-bar {
+              grid-template-columns: repeat(3, 1fr) !important;
+            }
+            .stat-segment {
+              padding: 10px 4px !important;
+              flex-direction: column !important;
+              text-align: center !important;
+              gap: 5px !important;
+            }
+            .stat-segment:not(:last-child) {
+              border-right: 1px solid #E5E7EB !important;
+              border-bottom: none !important;
+            }
+            .stat-segment-icon {
+              width: 32px !important;
+              height: 32px !important;
+            }
+            .stat-segment-icon svg {
+              width: 16px !important;
+              height: 16px !important;
+            }
+            .stat-segment-title {
+              font-size: 11.5px !important;
+              line-height: 1.2 !important;
+              text-align: center !important;
+            }
+            .stat-title-desktop {
+              display: none !important;
+            }
+            .stat-title-mobile {
+              display: inline !important;
+            }
+            .stat-segment-desc {
+              display: none !important;
+            }
+          }
+        `}</style>
+        <div className="occasions-header-wrap" style={{ textAlign: "center", marginBottom: 28 }}>
+          <Badge text="Corporate Celebrations" />
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 34px)", margin: "14px 0 0", color: D, letterSpacing: "-0.5px" }}>
+            Events &amp; Occasions <span style={{ color: R }}>We Plan &amp; Manage</span>
+          </h2>
+        </div>
+
+        {/* Occasions List Pills */}
+        <div className="occasions-pills-wrap" style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "10px 14px",
+          maxWidth: 980,
+          margin: "0 auto 32px"
+        }}>
+          {OCCASIONS.map((occ) => (
             <div
-              key={idx}
+              key={occ}
+              className="occasion-pill-item"
+              onClick={() => {
+                setFormData(prev => ({ ...prev, occasion: occ }));
+                const el = document.getElementById("enquiry-cta-section") || document.getElementById("hero-form");
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                setTimeout(() => {
+                  const selectEl = document.getElementById("hero-occasion");
+                  if (selectEl) selectEl.focus();
+                }, 400);
+              }}
               style={{
-                background: "#fff",
-                borderRadius: 14,
-                border: `1px solid ${B}`,
-                padding: "22px 20px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                transition: "all 0.25s ease",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.03)"
+                background: "#FFFFFF",
+                border: `1.5px solid ${B}`,
+                borderRadius: 9999,
+                padding: "9px 20px",
+                fontSize: 14,
+                fontWeight: 600,
+                color: D,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                boxShadow: "0 2px 6px rgba(0,0,0,0.02)",
+                cursor: "pointer",
+                transition: "all 0.2s ease"
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.transform = "translateY(-4px)";
-                e.currentTarget.style.boxShadow = "0 12px 28px rgba(128,40,31,0.09)";
-                e.currentTarget.style.borderColor = "rgba(128,40,31,0.3)";
+                e.currentTarget.style.borderColor = R;
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 6px 14px rgba(128,40,31,0.08)";
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.transform = "none";
-                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.03)";
                 e.currentTarget.style.borderColor = B;
+                e.currentTarget.style.transform = "none";
+                e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.02)";
               }}
             >
-              <div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                  <span style={{
-                    fontSize: 10.5,
-                    fontWeight: 800,
-                    letterSpacing: "0.8px",
-                    color: R,
-                    background: L,
-                    border: "1px solid rgba(128,40,31,0.15)",
-                    padding: "3px 8px",
-                    borderRadius: 6,
-                    textTransform: "uppercase"
-                  }}>
-                    PROBLEM {item.num}
-                  </span>
-                  <div style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 8,
-                    background: L,
-                    color: R,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0
-                  }}>
-                    {item.icon}
-                  </div>
-                </div>
-
-                <h3 style={{ margin: "0 0 8px", fontSize: 16.5, fontWeight: 700, color: D, letterSpacing: "-0.2px" }}>
-                  {item.title}
-                </h3>
-                <p style={{ margin: "0 0 14px", fontSize: 13, color: "#4B5563", lineHeight: 1.6 }}>
-                  {item.desc}
-                </p>
-              </div>
-
-              {/* Solution */}
-              <div style={{
-                background: "#F0FDF4",
-                border: "1px solid #BBF7D0",
-                borderRadius: 8,
-                padding: "10px 12px",
-                display: "flex",
-                alignItems: "flex-start",
-                gap: 8,
-                marginTop: "auto"
-              }}>
-                <div style={{ color: "#16A34A", flexShrink: 0, marginTop: 1 }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </div>
-                <p style={{ margin: 0, fontSize: 12, color: "#166534", lineHeight: 1.45, fontWeight: 500 }}>
-                  <strong style={{ color: "#15803D", fontWeight: 700 }}>Solution: </strong>
-                  {item.solution}
-                </p>
-              </div>
+              <span className="occasion-pill-dot" style={{ width: 7, height: 7, borderRadius: "50%", background: R, display: "inline-block" }}></span>
+              <span>{occ}</span>
             </div>
           ))}
         </div>
-        <SectionCTA text="GET 5 FREE QUOTES →" />
+
+        {/* 3 Unified Metric Highlights */}
+        <div style={{
+          maxWidth: 860,
+          margin: "0 auto",
+          background: "#FFFFFF",
+          border: `1px solid ${B}`,
+          borderRadius: 16,
+          boxShadow: "0 4px 18px rgba(0,0,0,0.03)",
+          overflow: "hidden"
+        }}>
+          <div className="stats-segmented-bar" style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            alignItems: "center"
+          }}>
+            {/* Stat 1: 1000+ Venues */}
+            <div className="stat-segment" style={{
+              padding: "18px 22px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 14
+            }}>
+              <div className="stat-segment-icon" style={{
+                width: 42,
+                height: 42,
+                borderRadius: "50%",
+                background: L,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: R,
+                flexShrink: 0
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3M9 9h1M9 13h1M9 17h1" /></svg>
+              </div>
+              <div style={{ textAlign: "left" }}>
+                <div className="stat-segment-title" style={{ fontSize: 16.5, fontWeight: 800, color: D, letterSpacing: "-0.3px", lineHeight: 1.2 }}>1000+ Venues</div>
+                <div className="stat-segment-desc" style={{ fontSize: 12, color: G, marginTop: 3, fontWeight: 500 }}>Verified corporate spaces</div>
+              </div>
+            </div>
+
+            {/* Stat 2: 10+ Cities */}
+            <div className="stat-segment" style={{
+              padding: "18px 22px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 14
+            }}>
+              <div className="stat-segment-icon" style={{
+                width: 42,
+                height: 42,
+                borderRadius: "50%",
+                background: L,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: R,
+                flexShrink: 0
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+              </div>
+              <div style={{ textAlign: "left" }}>
+                <div className="stat-segment-title" style={{ fontSize: 16.5, fontWeight: 800, color: D, letterSpacing: "-0.3px", lineHeight: 1.2 }}>10+ Cities</div>
+                <div className="stat-segment-desc" style={{ fontSize: 12, color: G, marginTop: 3, fontWeight: 500 }}>Major business metros</div>
+              </div>
+            </div>
+
+            {/* Stat 3: One Point of Contact */}
+            <div className="stat-segment" style={{
+              padding: "18px 22px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 14
+            }}>
+              <div className="stat-segment-icon" style={{
+                width: 42,
+                height: 42,
+                borderRadius: "50%",
+                background: L,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: R,
+                flexShrink: 0
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7" r="4" /><path d="M5.5 21a6.5 6.5 0 0 1 13 0" /></svg>
+              </div>
+              <div style={{ textAlign: "left" }}>
+                <div className="stat-segment-title" style={{ fontSize: 16.5, fontWeight: 800, color: D, letterSpacing: "-0.3px", lineHeight: 1.2 }}>
+                  <span className="stat-title-desktop">One Point of Contact</span>
+                  <span className="stat-title-mobile">1 Dedicated Contact</span>
+                </div>
+                <div className="stat-segment-desc" style={{ fontSize: 12, color: G, marginTop: 3, fontWeight: 500 }}>From enquiry to execution</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </Sec>
 
 
@@ -2267,14 +2579,14 @@ export default function BMCPLanding() {
               <div style={{ color: R, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
                 {b.icon}
               </div>
-              <h4 style={{ margin: "0 0 8px", fontSize: 16, fontWeight: 700, color: D }}>{b.title}</h4>
-              <p style={{ margin: 0, fontSize: 13, color: G, lineHeight: 1.6 }}>{b.desc}</p>
+              <h4 style={{ margin: 0, fontSize: 15.5, fontWeight: 700, color: D, lineHeight: 1.3 }}>{b.title}</h4>
+              {/* <p style={{ margin: 0, fontSize: 13, color: G, lineHeight: 1.6 }}>{b.desc}</p> */}
             </div>
           ))}
         </div>
 
-        {/* The BMCP Proposition Text */}
-        <div style={{
+        {/* The BMCP Proposition Text (Hidden per user request) */}
+        {/* <div style={{
           marginTop: 28,
           textAlign: "center",
           padding: "0 16px"
@@ -2294,8 +2606,7 @@ export default function BMCPLanding() {
           >
             You tell us the date, budget and guest count — we find the venue, negotiate the package, and coordinate the event.
           </p>
-        </div>
-        <SectionCTA text="GET 5 FREE QUOTES →" />
+        </div> */}
       </Sec>
 
       {/* ===== 7. COMPARISON TABLE (3-COLUMN DESIGN AS REQUESTED) ===== */}
@@ -2308,16 +2619,16 @@ export default function BMCPLanding() {
           borderTop: `1px solid ${B}`
         }}
       >
-        <div style={{ textAlign: "center", marginBottom: 34 }}>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: 14 }}>
             <Badge text="The Choice" />
           </div>
-          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 34px)", margin: "14px 0 8px", color: D, letterSpacing: "-0.5px" }}>
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(18px, 2.5vw, 34px)", margin: "14px 0 8px", color: D, letterSpacing: "-0.5px", whiteSpace: "nowrap" }}>
             BookMyCorporateParty vs Others
           </h2>
-          <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, margin: 0, fontWeight: 400 }}>
+          {/* <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, margin: 0, fontWeight: 400 }}>
             Dedicated corporate event intelligence vs generic public listing sites
-          </p>
+          </p> */}
         </div>
 
         {/* Comparison Table Container */}
@@ -2424,300 +2735,297 @@ export default function BMCPLanding() {
             </table>
           </div>
         </div>
-
-        <SectionCTA text="GET 5 FREE QUOTES →" />
       </Sec>
 
       {/* ===== PREVIOUS COMPARISON MATRIX (PRESERVED & HIDDEN PER USER INSTRUCTION) ===== */}
       <div style={{ display: "none" }} aria-hidden="true">
-      <Sec
-        bg="#FFFFFF"
-        id="comparison-old"
-        style={{
-          position: "relative",
-          overflow: "hidden",
-          padding: "48px clamp(20px, 4vw, 80px)",
-          borderTop: `1px solid ${B}`
-        }}
-      >
+        <Sec
+          bg="#FFFFFF"
+          id="comparison-old"
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            padding: "48px clamp(20px, 4vw, 80px)",
+            borderTop: `1px solid ${B}`
+          }}
+        >
 
-        <div style={{ textAlign: "center", marginBottom: 32, position: "relative", zIndex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: 14, flexWrap: "wrap" }}>
-            <Badge text="The Choice" />
+          <div style={{ textAlign: "center", marginBottom: 32, position: "relative", zIndex: 1 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 14, marginBottom: 14, flexWrap: "wrap" }}>
+              <Badge text="The Choice" />
+            </div>
+
+            <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(18px, 2.5vw, 34px)", margin: "14px 0 8px", color: D, letterSpacing: "-0.5px", whiteSpace: "nowrap" }}>
+              BookMyCorporateParty vs Others
+            </h2>
+            {/* <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, margin: 0, fontWeight: 400 }}>
+            Dedicated corporate event intelligence vs generic public listing sites
+          </p> */}
           </div>
 
-          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 34px)", margin: "14px 0 8px", color: D, letterSpacing: "-0.5px" }}>
-            BookMyCorporateParty vs Others
-          </h2>
-          <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, margin: 0, fontWeight: 400 }}>
-            Dedicated corporate event intelligence vs generic public listing sites
-          </p>
-        </div>
+          {/* Swipe hint for mobile screens */}
+          <div className="matrix-scroll-hint">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            <span>Swipe sideways to compare all 7 points</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </div>
 
-        {/* Swipe hint for mobile screens */}
-        <div className="matrix-scroll-hint">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-          <span>Swipe sideways to compare all 7 points</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
-
-        {/* Matrix Card Container */}
-        <div className="matrix-card" style={{
-          width: "100%",
-          borderRadius: 22,
-          overflow: "hidden",
-          background: "#FFFFFF",
-          border: `1px solid ${B}`,
-          boxShadow: "0 16px 45px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02)",
-          position: "relative",
-          zIndex: 1,
-        }}>
-          {/* Scrollable Container */}
-          <div className="matrix-scroll-wrap" style={{ width: "100%", overflowX: "auto" }}>
-            <div className="matrix-inner" style={{ minWidth: 1220 }}>
-              {/* Header Row: Top-Left Icon + 7 Criteria Columns */}
-              <div className="matrix-grid-row" style={{
-                display: "grid",
-                gridTemplateColumns: "310px repeat(7, 1fr)",
-                background: "#F8FAFC",
-                borderBottom: "1px solid #E2E8F0",
-                alignItems: "stretch"
-              }}>
-                {/* Top-Left Geometric Monogram */}
-                <div className="matrix-col-sticky matrix-sticky-header" style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "18px 24px",
-                  position: "sticky",
-                  left: 0,
-                  zIndex: 4,
-                  background: "#F8FAFC"
+          {/* Matrix Card Container */}
+          <div className="matrix-card" style={{
+            width: "100%",
+            borderRadius: 22,
+            overflow: "hidden",
+            background: "#FFFFFF",
+            border: `1px solid ${B}`,
+            boxShadow: "0 16px 45px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02)",
+            position: "relative",
+            zIndex: 1,
+          }}>
+            {/* Scrollable Container */}
+            <div className="matrix-scroll-wrap" style={{ width: "100%", overflowX: "auto" }}>
+              <div className="matrix-inner" style={{ minWidth: 1220 }}>
+                {/* Header Row: Top-Left Icon + 7 Criteria Columns */}
+                <div className="matrix-grid-row" style={{
+                  display: "grid",
+                  gridTemplateColumns: "310px repeat(7, 1fr)",
+                  background: "#F8FAFC",
+                  borderBottom: "1px solid #E2E8F0",
+                  alignItems: "stretch"
                 }}>
-                  <div className="matrix-sticky-icon" style={{
+                  {/* Top-Left Geometric Monogram */}
+                  <div className="matrix-col-sticky matrix-sticky-header" style={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    color: "#475569",
-                    flexShrink: 0
+                    gap: 12,
+                    padding: "18px 24px",
+                    position: "sticky",
+                    left: 0,
+                    zIndex: 4,
+                    background: "#F8FAFC"
                   }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-                      <path d="M3 9h18"></path>
-                      <path d="M9 21V9"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="matrix-sticky-header-text" style={{ fontSize: 11, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: "#334155" }}>PLATFORM COMPARISON</span>
-                  </div>
-                </div>
-
-                {/* 7 Column Headers */}
-                {[
-                  "AUDIENCE FOCUS",
-                  "SHORTLISTING SPEED",
-                  "VENUE QUALITY",
-                  "PRICING CONTROL",
-                  "END-TO-END SUPPORT",
-                  "LAST-MINUTE BOOKING",
-                  "SITE INSPECTION"
-                ].map((crit, idx) => (
-                  <div key={idx} className="matrix-header-cell" style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    textAlign: "center",
-                    fontSize: 10.5,
-                    fontWeight: 800,
-                    letterSpacing: "1.2px",
-                    textTransform: "uppercase",
-                    color: "#475569",
-                    padding: "16px 10px",
-                    lineHeight: 1.35,
-                    borderLeft: "1px solid #E2E8F0"
-                  }}>
-                    {crit}
-                  </div>
-                ))}
-              </div>
-
-              {/* ROW 1: BookMyCorporateParty (SEAMLESS PURE BRAND BROWN - NO EXTRA COLOR PATCH) */}
-              <div className="matrix-grid-row" style={{
-                display: "grid",
-                gridTemplateColumns: "310px repeat(7, 1fr)",
-                background: R,
-                color: "#FFFFFF",
-                alignItems: "stretch",
-                borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
-                boxShadow: "0 6px 20px rgba(128, 40, 31, 0.16)",
-                position: "relative"
-              }}>
-                {/* Left Provider Block (Seamless Background matching parent 100%) */}
-                <div className="matrix-col-sticky matrix-sticky-bmcp" style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 14,
-                  padding: "24px 24px",
-                  position: "sticky",
-                  left: 0,
-                  zIndex: 3,
-                  background: R
-                }}>
-                  <img
-                    className="matrix-entity-logo"
-                    src="/images/logo-icon.png"
-                    alt="BookMyCorporateParty"
-                    style={{ width: 44, height: 44, objectFit: "contain", flexShrink: 0, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.25))" }}
-                  />
-                  <div>
-                    <h3 className="matrix-entity-title" style={{ margin: 0, fontSize: 17, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.2px" }}>
-                      BookMyCorporateParty
-                    </h3>
-                    <p className="matrix-desc" style={{ margin: "4px 0 0", fontSize: 11.5, color: "rgba(255, 255, 255, 0.88)", lineHeight: 1.45 }}>
-                      Dedicated corporate event intelligence with handpicked venues &amp; priority coordination.
-                    </p>
-                  </div>
-                </div>
-
-                {/* 7 Columns for BMCP */}
-                {[
-                  "100% corporate events",
-                  "Options in 30 minutes",
-                  "Handpicked & curated",
-                  "Negotiated corporate rates",
-                  "DJ, Food, AV — all coordinated",
-                  "Dedicated priority support",
-                  "Arranged & coordinated"
-                ].map((val, idx) => (
-                  <div key={idx} className="matrix-bmcp-cell" style={{
-                    textAlign: "center",
-                    padding: "24px 10px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderLeft: "1px solid rgba(255, 255, 255, 0.15)"
-                  }}>
-                    {/* Circled Checkmark (Aneeverse Style) */}
-                    <div className="matrix-check-circle" style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: "50%",
-                      background: "rgba(255, 255, 255, 0.18)",
-                      border: "1.5px solid rgba(255, 255, 255, 0.85)",
+                    <div className="matrix-sticky-icon" style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "#FFFFFF",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.12)"
+                      color: "#475569",
+                      flexShrink: 0
                     }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                        <path d="M3 9h18"></path>
+                        <path d="M9 21V9"></path>
+                      </svg>
                     </div>
-                    <span className="matrix-cell-text" style={{ fontSize: 12.5, fontWeight: 700, color: "#FFFFFF", marginTop: 10, lineHeight: 1.35, display: "block" }}>
-                      {val}
-                    </span>
+                    <div>
+                      <span className="matrix-sticky-header-text" style={{ fontSize: 11, fontWeight: 800, letterSpacing: "1.5px", textTransform: "uppercase", color: "#334155" }}>PLATFORM COMPARISON</span>
+                    </div>
                   </div>
-                ))}
-              </div>
 
-              {/* ROW 2: Other Sites (COMPETITOR ROW - HIGH CONTRAST & FULLY VISIBLE) */}
-              <div className="matrix-grid-row" style={{
-                display: "grid",
-                gridTemplateColumns: "310px repeat(7, 1fr)",
-                background: "#FFFFFF",
-                alignItems: "stretch"
-              }}>
-                {/* Left Provider Block (Seamless Sticky) */}
-                <div className="matrix-col-sticky matrix-sticky-other" style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 14,
-                  padding: "24px 24px",
-                  position: "sticky",
-                  left: 0,
-                  zIndex: 3,
-                  background: "#FFFFFF"
-                }}>
-                  <div className="matrix-other-icon" style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "#1E293B",
-                    flexShrink: 0,
-                    width: 44,
-                    height: 44
-                  }}>
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="2" y="3" width="20" height="18" rx="3"></rect>
-                      <line x1="2" y1="8" x2="22" y2="8"></line>
-                      <circle cx="5.5" cy="5.5" r="0.75" fill="currentColor"></circle>
-                      <circle cx="8" cy="5.5" r="0.75" fill="currentColor"></circle>
-                      <circle cx="10.5" cy="5.5" r="0.75" fill="currentColor"></circle>
-                      <rect x="5.5" y="11.5" width="4.5" height="4.5" rx="1"></rect>
-                      <line x1="13" y1="12.5" x2="18.5" y2="12.5"></line>
-                      <line x1="13" y1="15" x2="17.5" y2="15"></line>
-                      <line x1="5.5" y1="18.5" x2="18.5" y2="18.5"></line>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="matrix-entity-title" style={{ margin: 0, fontSize: 17.5, fontWeight: 800, color: "#0F172A", letterSpacing: "-0.2px" }}>
-                      Other Sites
-                    </h3>
-                    <p className="matrix-desc" style={{ margin: "4px 0 0", fontSize: 12, fontWeight: 500, color: "#475569", lineHeight: 1.45 }}>
-                      Generic public portals catering to weddings, birthdays, and unverified listings.
-                    </p>
-                  </div>
-                </div>
-
-                {/* 7 Columns for Other Sites - High-Contrast Visible Badges & Crisp Text */}
-                {[
-                  "Weddings, birthdays, everything",
-                  "Browse listings yourself for days",
-                  "Open unverified marketplace",
-                  "Listed rack rates / call to know",
-                  "You coordinate with venue directly",
-                  "No dedicated support team",
-                  "Self-service only"
-                ].map((val, idx) => (
-                  <div key={idx} className="matrix-other-cell" style={{
-                    textAlign: "center",
-                    padding: "24px 10px",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderLeft: "1px solid #E2E8F0"
-                  }}>
-                    {/* Circled High-Contrast Cross Badge */}
-                    <div className="matrix-cross-circle" style={{
-                      width: 34,
-                      height: 34,
-                      borderRadius: "50%",
-                      background: "#F1F5F9",
-                      border: "2px solid #94A3B8",
+                  {/* 7 Column Headers */}
+                  {[
+                    "AUDIENCE FOCUS",
+                    "SHORTLISTING SPEED",
+                    "VENUE QUALITY",
+                    "PRICING CONTROL",
+                    "END-TO-END SUPPORT",
+                    "LAST-MINUTE BOOKING",
+                    "SITE INSPECTION"
+                  ].map((crit, idx) => (
+                    <div key={idx} className="matrix-header-cell" style={{
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: "#334155",
-                      boxShadow: "0 2px 6px rgba(0,0,0,0.05)"
+                      textAlign: "center",
+                      fontSize: 10.5,
+                      fontWeight: 800,
+                      letterSpacing: "1.2px",
+                      textTransform: "uppercase",
+                      color: "#475569",
+                      padding: "16px 10px",
+                      lineHeight: 1.35,
+                      borderLeft: "1px solid #E2E8F0"
                     }}>
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                      {crit}
                     </div>
-                    <span className="matrix-cell-text" style={{ fontSize: 12.5, fontWeight: 700, color: "#1E293B", marginTop: 10, lineHeight: 1.35, display: "block" }}>
-                      {val}
-                    </span>
+                  ))}
+                </div>
+
+                {/* ROW 1: BookMyCorporateParty (SEAMLESS PURE BRAND BROWN - NO EXTRA COLOR PATCH) */}
+                <div className="matrix-grid-row" style={{
+                  display: "grid",
+                  gridTemplateColumns: "310px repeat(7, 1fr)",
+                  background: R,
+                  color: "#FFFFFF",
+                  alignItems: "stretch",
+                  borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+                  boxShadow: "0 6px 20px rgba(128, 40, 31, 0.16)",
+                  position: "relative"
+                }}>
+                  {/* Left Provider Block (Seamless Background matching parent 100%) */}
+                  <div className="matrix-col-sticky matrix-sticky-bmcp" style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                    padding: "24px 24px",
+                    position: "sticky",
+                    left: 0,
+                    zIndex: 3,
+                    background: R
+                  }}>
+                    <img
+                      className="matrix-entity-logo"
+                      src="/images/logo-icon.png"
+                      alt="BookMyCorporateParty"
+                      style={{ width: 44, height: 44, objectFit: "contain", flexShrink: 0, filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.25))" }}
+                    />
+                    <div>
+                      <h3 className="matrix-entity-title" style={{ margin: 0, fontSize: 17, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.2px" }}>
+                        BookMyCorporateParty
+                      </h3>
+                      <p className="matrix-desc" style={{ margin: "4px 0 0", fontSize: 11.5, color: "rgba(255, 255, 255, 0.88)", lineHeight: 1.45 }}>
+                        Dedicated corporate event intelligence with handpicked venues &amp; priority coordination.
+                      </p>
+                    </div>
                   </div>
-                ))}
+
+                  {/* 7 Columns for BMCP */}
+                  {[
+                    "100% corporate events",
+                    "Options in 30 minutes",
+                    "Handpicked & curated",
+                    "Negotiated corporate rates",
+                    "DJ, Food, AV — all coordinated",
+                    "Dedicated priority support",
+                    "Arranged & coordinated"
+                  ].map((val, idx) => (
+                    <div key={idx} className="matrix-bmcp-cell" style={{
+                      textAlign: "center",
+                      padding: "24px 10px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderLeft: "1px solid rgba(255, 255, 255, 0.15)"
+                    }}>
+                      {/* Circled Checkmark (Aneeverse Style) */}
+                      <div className="matrix-check-circle" style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        background: "rgba(255, 255, 255, 0.18)",
+                        border: "1.5px solid rgba(255, 255, 255, 0.85)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#FFFFFF",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.12)"
+                      }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      </div>
+                      <span className="matrix-cell-text" style={{ fontSize: 12.5, fontWeight: 700, color: "#FFFFFF", marginTop: 10, lineHeight: 1.35, display: "block" }}>
+                        {val}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* ROW 2: Other Sites (COMPETITOR ROW - HIGH CONTRAST & FULLY VISIBLE) */}
+                <div className="matrix-grid-row" style={{
+                  display: "grid",
+                  gridTemplateColumns: "310px repeat(7, 1fr)",
+                  background: "#FFFFFF",
+                  alignItems: "stretch"
+                }}>
+                  {/* Left Provider Block (Seamless Sticky) */}
+                  <div className="matrix-col-sticky matrix-sticky-other" style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                    padding: "24px 24px",
+                    position: "sticky",
+                    left: 0,
+                    zIndex: 3,
+                    background: "#FFFFFF"
+                  }}>
+                    <div className="matrix-other-icon" style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#1E293B",
+                      flexShrink: 0,
+                      width: 44,
+                      height: 44
+                    }}>
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="3" width="20" height="18" rx="3"></rect>
+                        <line x1="2" y1="8" x2="22" y2="8"></line>
+                        <circle cx="5.5" cy="5.5" r="0.75" fill="currentColor"></circle>
+                        <circle cx="8" cy="5.5" r="0.75" fill="currentColor"></circle>
+                        <circle cx="10.5" cy="5.5" r="0.75" fill="currentColor"></circle>
+                        <rect x="5.5" y="11.5" width="4.5" height="4.5" rx="1"></rect>
+                        <line x1="13" y1="12.5" x2="18.5" y2="12.5"></line>
+                        <line x1="13" y1="15" x2="17.5" y2="15"></line>
+                        <line x1="5.5" y1="18.5" x2="18.5" y2="18.5"></line>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="matrix-entity-title" style={{ margin: 0, fontSize: 17.5, fontWeight: 800, color: "#0F172A", letterSpacing: "-0.2px" }}>
+                        Other Sites
+                      </h3>
+                      <p className="matrix-desc" style={{ margin: "4px 0 0", fontSize: 12, fontWeight: 500, color: "#475569", lineHeight: 1.45 }}>
+                        Generic public portals catering to weddings, birthdays, and unverified listings.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 7 Columns for Other Sites - High-Contrast Visible Badges & Crisp Text */}
+                  {[
+                    "Weddings, birthdays, everything",
+                    "Browse listings yourself for days",
+                    "Open unverified marketplace",
+                    "Listed rack rates / call to know",
+                    "You coordinate with venue directly",
+                    "No dedicated support team",
+                    "Self-service only"
+                  ].map((val, idx) => (
+                    <div key={idx} className="matrix-other-cell" style={{
+                      textAlign: "center",
+                      padding: "24px 10px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderLeft: "1px solid #E2E8F0"
+                    }}>
+                      {/* Circled High-Contrast Cross Badge */}
+                      <div className="matrix-cross-circle" style={{
+                        width: 34,
+                        height: 34,
+                        borderRadius: "50%",
+                        background: "#F1F5F9",
+                        border: "2px solid #94A3B8",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#334155",
+                        boxShadow: "0 2px 6px rgba(0,0,0,0.05)"
+                      }}>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                      </div>
+                      <span className="matrix-cell-text" style={{ fontSize: 12.5, fontWeight: 700, color: "#1E293B", marginTop: 10, lineHeight: 1.35, display: "block" }}>
+                        {val}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <SectionCTA text="GET 5 FREE QUOTES →" />
-      </Sec>
+        </Sec>
       </div>
 
       {/* ===== PREMIUM SCROLLING TICKER ===== */}
@@ -2744,18 +3052,62 @@ export default function BMCPLanding() {
       </div>
 
       {/* ===== WHAT WE DELIVER FOR CORPORATES ===== */}
-      <Sec id="deliver" style={{ padding: "32px 0" }}>
-        <div style={{ textAlign: "center", marginBottom: 32, padding: "0 20px" }}>
+      <Sec id="deliver" style={{ padding: "36px clamp(16px, 4vw, 60px) 44px" }}>
+        <div style={{ textAlign: "center", marginBottom: 26, padding: "0 20px" }}>
           <Badge text="What We Deliver For Corporates" />
-          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 32px)", margin: "14px 0 8px", color: D, letterSpacing: "-0.5px" }}>
-            What We Deliver For <span style={{ color: R }}>Corporates</span>
-          </h2>
-          <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, maxWidth: 900, margin: "0 auto" }}>
-            Explore how we bring corporate celebrations to life with curated venues, grand setups, and seamless execution.
-          </p>
         </div>
-        <DeliverSlider />
-        <SectionCTA text="GET 5 FREE QUOTES →" />
+        {/* Preserved & hidden per user instruction: <DeliverSlider /> */}
+
+        {/* Deliverables Category Cards (Design inspired by reference image with brown line-art icons) */}
+        <div style={{ width: "100%", margin: "0 auto" }}>
+          <div className="features-grid">
+            {DELIVER_CATEGORIES.map((item, idx) => (
+              <div
+                key={idx}
+                onClick={() => {
+                  setFormData(prev => ({ ...prev, occasion: item.occasion }));
+                  const el = document.getElementById("enquiry-cta-section") || document.getElementById("hero-form");
+                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                  setTimeout(() => {
+                    const selectEl = document.getElementById("hero-occasion");
+                    if (selectEl) selectEl.focus();
+                  }, 400);
+                }}
+                style={{
+                  background: "#fff",
+                  borderRadius: 14,
+                  padding: "24px 16px",
+                  border: "1.5px solid #D1D5DB",
+                  textAlign: "center",
+                  transition: "transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.02)"
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = "translateY(-4px)";
+                  e.currentTarget.style.boxShadow = "0 10px 20px rgba(128,40,31,0.08)";
+                  e.currentTarget.style.borderColor = R;
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = "none";
+                  e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.02)";
+                  e.currentTarget.style.borderColor = "#D1D5DB";
+                }}
+              >
+                <div style={{ color: R, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14 }}>
+                  {item.icon}
+                </div>
+                <h4 style={{ margin: 0, fontSize: 15.5, fontWeight: 700, color: D, lineHeight: 1.3 }}>
+                  {item.title}
+                </h4>
+              </div>
+            ))}
+          </div>
+        </div>
       </Sec>
 
       {/* ===== 3. VENUE CARDS ===== */}
@@ -2855,9 +3207,9 @@ export default function BMCPLanding() {
           <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 32px)", margin: "10px 0 12px", color: D, letterSpacing: "-0.5px" }}>Trusted by <span style={{ color: R }}>500+ Brands</span></h2>
           {/* Google rating summary */}
           <div style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", border: `1px solid ${B}`, borderRadius: 30, padding: "6px 16px" }}>
-            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
             <span style={{ fontWeight: 800, fontSize: 14, color: D }}>4.8</span>
-            <div style={{ display: "flex", gap: 2 }}>{[1,2,3,4,5].map(s => <svg key={s} width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>)}</div>
+            <div style={{ display: "flex", gap: 2 }}>{[1, 2, 3, 4, 5].map(s => <svg key={s} width="12" height="12" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>)}</div>
             <span style={{ fontSize: 11, color: G }}>Google Reviews</span>
           </div>
         </div>
@@ -2870,127 +3222,125 @@ export default function BMCPLanding() {
           <button onClick={() => testimonialRowRef.current?.scrollBy({ left: 300, behavior: 'smooth' })} style={{ position: "absolute", right: -20, top: "50%", transform: "translateY(-50%)", zIndex: 10, width: 40, height: 40, borderRadius: "50%", border: `1px solid ${B}`, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: D, transition: "all 0.2s", fontSize: 22, boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = R; }} onMouseLeave={e => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = D; e.currentTarget.style.borderColor = B; }}>›</button>
 
           <div ref={testimonialRowRef} className="testimonials-row" style={{ display: "flex", gap: 16, flexWrap: "nowrap", overflowX: "auto", paddingBottom: 8, scrollSnapType: "x mandatory", msOverflowStyle: "none", scrollbarWidth: "none" as const }}>
-          {[
-            {
-              name: "Namrata Kadam", meta: "Local Guide · 13 reviews", time: "a month ago",
-              img: "/images/google reviews/Namrata Kadam.png", initial: null, color: null,
-              q: "I have worked with the bookmycorporateparty team for more than 5 events, and i highly recommend their services. They manage the entire coordination process and ensure seamless execution every time. Their pricing is reasonable, and the team's support allows you to focus on other priorities without worrying about event logistics.",
-            },
-            {
-              name: "Sonali Ramaiya", meta: "Local Guide · 13 reviews", time: "a month ago",
-              img: null, initial: "S", color: "#4CAF50",
-              q: "We wanted to have our company's new year celebration and needed a venue around Mumbai. We not only got the right pricing and a good venue, but a lot of our requirements were taken care of by Book My Corporate Party team. We would recommend their service to all small businesses and corporates.",
-            },
-            {
-              name: "Esha Kamble", meta: "Local Guide · 38 reviews", time: "a month ago",
-              img: null, initial: "E", color: "#F44336",
-              q: "They planned our corporate outing, it was really well planned and executed.",
-            },
-            {
-              name: "Manish Shinde", meta: "5 reviews · 19 photos", time: "4 weeks ago",
-              img: "/images/google reviews/manish.png", initial: null, color: null,
-              q: "The entire event was beautifully curated by Book My Corporate Party.com. Sachin Jawale and his team guided us through every detail — finalizing the venue, planning the event flow, entertainment, games, and food. The atmosphere was warm and joyful, executed with professionalism and care. Highly recommended for reliable, creative, and stress-free event management.",
-            },
-            {
-              name: "Rakshavati Poojari", meta: "4 reviews", time: "4 weeks ago",
-              img: null, initial: "R", color: "#9C27B0",
-              q: "We have had a wonderful experience working with Sachin and Pradeep for our corporate events. Their professionalism and seamless coordination has made our events smooth and successful, and saved a lot of our time on logistics. Highly recommend them for planning your corporate events.",
-            },
-          ].map((t, i) => (
-            <div key={i} style={{ flex: "0 0 270px", width: 270, background: "#fff", border: `1px solid ${B}`, borderRadius: 14, padding: "14px 16px", boxShadow: "0 4px 12px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: 0, scrollSnapAlign: "start" }}>
-              {/* Top row: avatar + name + Google logo */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  {t.img ? (
-                    <img src={t.img} alt={t.name} style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
-                  ) : (
-                    <div style={{ width: 36, height: 36, borderRadius: "50%", background: t.color!, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 700, color: "#fff", flexShrink: 0 }}>
-                      {t.initial}
+            {[
+              {
+                name: "Namrata Kadam", meta: "Local Guide · 13 reviews", time: "a month ago",
+                img: "/images/google reviews/Namrata Kadam.png", initial: null, color: null,
+                q: "I have worked with the bookmycorporateparty team for more than 5 events, and i highly recommend their services. They manage the entire coordination process and ensure seamless execution every time. Their pricing is reasonable, and the team's support allows you to focus on other priorities without worrying about event logistics.",
+              },
+              {
+                name: "Sonali Ramaiya", meta: "Local Guide · 13 reviews", time: "a month ago",
+                img: null, initial: "S", color: "#4CAF50",
+                q: "We wanted to have our company's new year celebration and needed a venue around Mumbai. We not only got the right pricing and a good venue, but a lot of our requirements were taken care of by Book My Corporate Party team. We would recommend their service to all small businesses and corporates.",
+              },
+              {
+                name: "Esha Kamble", meta: "Local Guide · 38 reviews", time: "a month ago",
+                img: null, initial: "E", color: "#F44336",
+                q: "They planned our corporate outing, it was really well planned and executed.",
+              },
+              {
+                name: "Manish Shinde", meta: "5 reviews · 19 photos", time: "4 weeks ago",
+                img: "/images/google reviews/manish.png", initial: null, color: null,
+                q: "The entire event was beautifully curated by Book My Corporate Party.com. Sachin Jawale and his team guided us through every detail — finalizing the venue, planning the event flow, entertainment, games, and food. The atmosphere was warm and joyful, executed with professionalism and care. Highly recommended for reliable, creative, and stress-free event management.",
+              },
+              {
+                name: "Rakshavati Poojari", meta: "4 reviews", time: "4 weeks ago",
+                img: null, initial: "R", color: "#9C27B0",
+                q: "We have had a wonderful experience working with Sachin and Pradeep for our corporate events. Their professionalism and seamless coordination has made our events smooth and successful, and saved a lot of our time on logistics. Highly recommend them for planning your corporate events.",
+              },
+            ].map((t, i) => (
+              <div key={i} style={{ flex: "0 0 270px", width: 270, background: "#fff", border: `1px solid ${B}`, borderRadius: 14, padding: "14px 16px", boxShadow: "0 4px 12px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: 0, scrollSnapAlign: "start" }}>
+                {/* Top row: avatar + name + Google logo */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    {t.img ? (
+                      <img src={t.img} alt={t.name} style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+                    ) : (
+                      <div style={{ width: 36, height: 36, borderRadius: "50%", background: t.color!, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 700, color: "#fff", flexShrink: 0 }}>
+                        {t.initial}
+                      </div>
+                    )}
+                    <div>
+                      <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: D }}>{t.name}</p>
+                      <p style={{ margin: "1px 0 0", fontSize: 10, color: G }}>{t.meta}</p>
                     </div>
-                  )}
-                  <div>
-                    <p style={{ margin: 0, fontSize: 13, fontWeight: 700, color: D }}>{t.name}</p>
-                    <p style={{ margin: "1px 0 0", fontSize: 10, color: G }}>{t.meta}</p>
                   </div>
+                  {/* Google G */}
+                  <svg width="20" height="20" viewBox="0 0 24 24" style={{ flexShrink: 0 }}><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" /><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" /><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" /><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" /></svg>
                 </div>
-                {/* Google G */}
-                <svg width="20" height="20" viewBox="0 0 24 24" style={{ flexShrink: 0 }}><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-              </div>
-              {/* Stars + time */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                <div style={{ display: "flex", gap: 2 }}>
-                  {[1,2,3,4,5].map(s => <svg key={s} width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>)}
+                {/* Stars + time */}
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                  <div style={{ display: "flex", gap: 2 }}>
+                    {[1, 2, 3, 4, 5].map(s => <svg key={s} width="13" height="13" viewBox="0 0 24 24" fill="#FBBF24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>)}
+                  </div>
+                  <span style={{ fontSize: 11, color: G }}>{t.time}</span>
                 </div>
-                <span style={{ fontSize: 11, color: G }}>{t.time}</span>
+                {/* Review text */}
+                <p style={{ fontSize: 12.5, color: D, lineHeight: 1.65, margin: 0, flex: 1 }}>
+                  {t.q}
+                </p>
               </div>
-              {/* Review text */}
-              <p style={{ fontSize: 12.5, color: D, lineHeight: 1.65, margin: 0, flex: 1 }}>
-                {t.q}
-              </p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         </div>{/* end carousel wrapper */}
-        <SectionCTA text="GET 5 FREE QUOTES →" />
       </Sec>
 
       {/* ===== 5. THE COMPARISON BOARD (WHITE - HIDDEN PER USER INSTRUCTION) ===== */}
       <div style={{ display: "none" }} aria-hidden="true">
-      <Sec bg="#FAFAFA" id="comparison-board" style={{ borderTop: `1px solid ${B}` }}>
-        <div style={{ textAlign: "center", marginBottom: 30 }}>
-          <Badge text="The Comparison" />
-          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 32px)", margin: "10px 0 0", color: D, letterSpacing: "-0.5px" }}>Why HRs Prefer Our <span style={{ color: R }}>Streamlined</span> Process</h2>
-        </div>
-
-        <div className="comparison-board" style={{ width: "100%", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: 30 }}>
-          {/* THE OLD WAY */}
-          <div style={{ background: "#fff", borderRadius: 16, border: `1px solid ${B}`, padding: "40px", position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "#E5E7EB" }} />
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 30 }}>
-              <div style={{ color: "#9CA3AF" }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-              </div>
-              <h3 style={{ fontSize: 16, fontWeight: 800, color: "#6B7280", margin: 0, letterSpacing: "1px", textTransform: "uppercase" }}>The Old Way</h3>
-            </div>
-            {[
-              "Google 'corporate party venues' — get 50 random listings mixed with weddings and birthdays.",
-              "Call each venue. Half don't pick up. Half don't do corporate events.",
-              "Compare pricing on WhatsApp, Excel, and sticky notes.",
-              "Spend 2–3 weeks. Boss asks for a cost breakdown. You don't have one."
-            ].map((text, i) => (
-              <div key={i} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
-                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#D1D5DB", marginTop: 7, flexShrink: 0 }} />
-                <p style={{ margin: 0, fontSize: 14, color: "#6B7280", lineHeight: 1.6 }}>{text}</p>
-              </div>
-            ))}
+        <Sec bg="#FAFAFA" id="comparison-board" style={{ borderTop: `1px solid ${B}` }}>
+          <div style={{ textAlign: "center", marginBottom: 30 }}>
+            <Badge text="The Comparison" />
+            <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 32px)", margin: "10px 0 0", color: D, letterSpacing: "-0.5px" }}>Why HRs Prefer Our <span style={{ color: R }}>Streamlined</span> Process</h2>
           </div>
 
-          {/* THE BMCP WAY */}
-          <div style={{ background: "#fff", borderRadius: 16, border: `1px solid ${B}`, padding: "40px", position: "relative", overflow: "hidden", boxShadow: "0 10px 30px rgba(0,0,0,0.04)" }}>
-            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: R }} />
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 30 }}>
-              <div style={{ color: R }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-              </div>
-              <h3 style={{ fontSize: 16, fontWeight: 800, color: D, margin: 0, letterSpacing: "1px", textTransform: "uppercase" }}>The BMCP Way</h3>
-            </div>
-            {[
-              "Share event details — team size, budget, vibe, date.",
-              "Get 3–5 handpicked venues with pricing in 30 minutes.",
-              "Compare side by side. Schedule a site visit if needed.",
-              "Finalize fast. We coordinate everything until your event is done."
-            ].map((text, i) => (
-              <div key={i} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
-                <div style={{ color: R, marginTop: 3, flexShrink: 0 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <div className="comparison-board" style={{ width: "100%", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: 30 }}>
+            {/* THE OLD WAY */}
+            <div style={{ background: "#fff", borderRadius: 16, border: `1px solid ${B}`, padding: "40px", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "#E5E7EB" }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 30 }}>
+                <div style={{ color: "#9CA3AF" }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
                 </div>
-                <p style={{ margin: 0, fontSize: 14.5, fontWeight: 600, color: D, lineHeight: 1.6 }}>{text}</p>
+                <h3 style={{ fontSize: 16, fontWeight: 800, color: "#6B7280", margin: 0, letterSpacing: "1px", textTransform: "uppercase" }}>The Old Way</h3>
               </div>
-            ))}
+              {[
+                "Google 'corporate party venues' — get 50 random listings mixed with weddings and birthdays.",
+                "Call each venue. Half don't pick up. Half don't do corporate events.",
+                "Compare pricing on WhatsApp, Excel, and sticky notes.",
+                "Spend 2–3 weeks. Boss asks for a cost breakdown. You don't have one."
+              ].map((text, i) => (
+                <div key={i} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#D1D5DB", marginTop: 7, flexShrink: 0 }} />
+                  <p style={{ margin: 0, fontSize: 14, color: "#6B7280", lineHeight: 1.6 }}>{text}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* THE BMCP WAY */}
+            <div style={{ background: "#fff", borderRadius: 16, border: `1px solid ${B}`, padding: "40px", position: "relative", overflow: "hidden", boxShadow: "0 10px 30px rgba(0,0,0,0.04)" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: R }} />
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 30 }}>
+                <div style={{ color: R }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                </div>
+                <h3 style={{ fontSize: 16, fontWeight: 800, color: D, margin: 0, letterSpacing: "1px", textTransform: "uppercase" }}>The BMCP Way</h3>
+              </div>
+              {[
+                "Share event details — team size, budget, vibe, date.",
+                "Get 3–5 handpicked venues with pricing in 30 minutes.",
+                "Compare side by side. Schedule a site visit if needed.",
+                "Finalize fast. We coordinate everything until your event is done."
+              ].map((text, i) => (
+                <div key={i} style={{ display: "flex", gap: 14, marginBottom: 20 }}>
+                  <div style={{ color: R, marginTop: 3, flexShrink: 0 }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </div>
+                  <p style={{ margin: 0, fontSize: 14.5, fontWeight: 600, color: D, lineHeight: 1.6 }}>{text}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <SectionCTA text="GET 5 FREE QUOTES →" />
-      </Sec>
+        </Sec>
       </div>
 
       {/* ===== 6. HOW IT WORKS (PEARL GRAY) ===== */}
@@ -3021,7 +3371,6 @@ export default function BMCPLanding() {
             ))}
           </div>
         </div>
-        <SectionCTA text="GET 5 FREE QUOTES →" />
       </Sec>
 
       {/* ===== 8. FAQ (PEARL GRAY) ===== */}
@@ -3043,7 +3392,7 @@ export default function BMCPLanding() {
       {/* ===== 9. FINAL CTA & LEAD FORM (MERGED UNIFIED SECTION) ===== */}
       <section id="enquiry-cta-section" className="cta-section" style={{ background: "#FFFFFF", padding: "80px clamp(24px, 6vw, 140px)", position: "relative", borderTop: `1px solid ${B}` }}>
         <div className="cta-merge-container" style={{ maxWidth: 1240, margin: "0 auto", display: "flex", gap: "clamp(40px, 6vw, 76px)", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
-          
+
           {/* Left: Authoritative Closing Headline & Value Bullets */}
           <div className="cta-left" style={{ flex: "1 1 500px", minWidth: 300, textAlign: "left" }}>
             <div style={{ display: "inline-block", background: R, padding: "7px 18px", borderRadius: 30, color: "#fff", fontSize: 11, fontWeight: 800, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 20, boxShadow: "0 2px 8px rgba(128, 40, 31, 0.2)", border: "1px solid rgba(255, 255, 255, 0.15)" }}>
@@ -3123,7 +3472,7 @@ export default function BMCPLanding() {
                           sel.focus();
                           try {
                             if (typeof (sel as any).showPicker === 'function') (sel as any).showPicker();
-                          } catch {}
+                          } catch { }
                         }
                       }}
                       style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4, cursor: "pointer" }}
@@ -3532,12 +3881,6 @@ export default function BMCPLanding() {
       <div
         className="floating-actions-container"
         style={{
-          position: "fixed",
-          bottom: 28,
-          right: 28,
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
           zIndex: 1000,
           transition: "opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s",
           opacity: showFloatingActions ? 1 : 0,
@@ -3566,7 +3909,6 @@ export default function BMCPLanding() {
             <line x1="16" y1="17" x2="8" y2="17"></line>
           </svg>
           <span className="fab-full-text">Get 5 Free Quotes</span>
-          <span className="fab-short-text">Quotes</span>
         </button>
 
         {/* 2. WhatsApp VIP Concierge Button */}

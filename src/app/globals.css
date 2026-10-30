@@ -140,30 +140,75 @@ body {
   display: none;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .floating-actions-container {
-    bottom: 18px !important;
+    bottom: 14px !important;
+    left: 14px !important;
     right: 14px !important;
+    width: auto !important;
+    max-width: calc(100% - 28px) !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    box-sizing: border-box !important;
+    z-index: 9999 !important;
+  }
+  .expert-fab {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    justify-content: center !important;
+    height: 52px !important;
+    padding: 0 16px !important;
+    font-size: 14.5px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    letter-spacing: 0.2px !important;
+    border-radius: 9999px !important;
+  }
+  .whatsapp-fab-btn {
+    width: 52px !important;
+    height: 52px !important;
+    flex-shrink: 0 !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .fab-full-text {
+    display: inline-block !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+  }
+  .fab-short-text {
+    display: none !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .floating-actions-container {
+    bottom: 10px !important;
+    left: 10px !important;
+    right: 10px !important;
+    max-width: calc(100% - 20px) !important;
     gap: 8px !important;
   }
   .expert-fab {
     height: 48px !important;
-    padding: 0 14px !important;
+    padding: 0 10px !important;
     font-size: 13px !important;
+    gap: 6px !important;
   }
   .whatsapp-fab-btn {
     width: 48px !important;
     height: 48px !important;
   }
-}
-
-@media (max-width: 400px) {
   .fab-full-text {
-    display: none !important;
+    font-size: 12.5px !important;
   }
   .fab-short-text {
-    display: inline !important;
+    display: none !important;
   }
 }
-
-
