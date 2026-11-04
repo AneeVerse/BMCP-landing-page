@@ -170,7 +170,7 @@ function VenueCard({ v }: { v: Venue }) {
           cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif",
           transition: "all 0.2s ease",
           flexShrink: 0
-        }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; }} onMouseLeave={e => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = R; }} onClick={() => document.getElementById('hero-form')?.scrollIntoView({ behavior: 'smooth' })}>
+        }} onMouseEnter={e => { e.currentTarget.style.background = R; e.currentTarget.style.color = "#fff"; }} onMouseLeave={e => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = R; }} onClick={() => window.dispatchEvent(new CustomEvent('open-lead-modal'))}>
           Get Venue Options →
         </button>
       </div>
@@ -189,6 +189,18 @@ export const OCCASIONS = [
   "Yacht Party",
   "Office Catering",
 ] as const;
+
+export const OCCASION_CARDS = [
+  { name: "Cocktail Party", img: "/images/what-you-can-book/nightclubs.png" },
+  { name: "Festival Celebration", img: "/images/what-you-can-book/open-lawn.png" },
+  { name: "Team Lunch / Dinner", img: "/images/insta-dinner.png" },
+  { name: "Team Offsite", img: "/images/what-you-can-book/villas.png" },
+  { name: "Annual Day", img: "/images/what-you-can-book/banquets.png" },
+  { name: "Family Day", img: "/images/what-you-can-book/water-parks.png" },
+  { name: "Sports Day", img: "/images/what-you-can-book/sports-bars.png" },
+  { name: "Yacht Party", img: "/images/what-you-can-book/private-YACHT.png" },
+  { name: "Office Catering", img: "/images/what-you-can-book/catering.png" },
+];
 
 type FormType = '' | 'villa' | 'lounge' | 'banquet' | 'nightclub' | 'catering';
 
@@ -540,11 +552,32 @@ export default function BMCPLanding() {
   const [tidioNotice, setTidioNotice] = useState(false);
   const [isTidioOpen, setIsTidioOpen] = useState(false);
   const [showFloatingActions, setShowFloatingActions] = useState(false);
+  const [openSteps, setOpenSteps] = useState<Record<number, boolean>>({});
+  const toggleStep = (idx: number) => {
+    setOpenSteps(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
+  const hasAutoOpenedModalRef = useRef(false);
 
   useEffect(() => {
-    const handleOpenModal = () => setShowLeadModal(true);
+    const handleOpenModal = () => {
+      hasAutoOpenedModalRef.current = true;
+      setShowLeadModal(true);
+    };
     window.addEventListener('open-lead-modal', handleOpenModal);
-    return () => window.removeEventListener('open-lead-modal', handleOpenModal);
+
+    // Auto-open modal popup after 5 seconds on initial load
+    const timer = setTimeout(() => {
+      if (!hasAutoOpenedModalRef.current) {
+        hasAutoOpenedModalRef.current = true;
+        setShowLeadModal(true);
+      }
+    }, 5000);
+
+    return () => {
+      window.removeEventListener('open-lead-modal', handleOpenModal);
+      clearTimeout(timer);
+    };
   }, []);
 
   useEffect(() => {
@@ -1096,19 +1129,78 @@ export default function BMCPLanding() {
             white-space: nowrap !important;
           }
         }
+        .hero-subtitle {
+          display: none;
+        }
+        .step-card {
+          flex: 1 1 180px;
+          text-align: center;
+          transition: transform 0.3s ease;
+          cursor: default;
+        }
+        .step-card:hover {
+          transform: translateY(-4px);
+        }
+        .step-card-header {
+          display: block;
+        }
+        .step-header-left {
+          display: block;
+        }
+        .step-circle {
+          width: 52px;
+          height: 52px;
+          background: #80281F;
+          color: #fff;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 18px;
+          font-weight: 800;
+          margin: 0 auto 20px;
+          box-shadow: 0 8px 20px rgba(192,57,43,0.15);
+        }
+        .step-title {
+          font-size: 15.5px;
+          font-weight: 700;
+          margin: 0 0 10px;
+          color: #111827;
+          letter-spacing: -0.2px;
+        }
+        .step-toggle-icon {
+          display: none !important;
+        }
+        .step-desc-wrapper {
+          display: block !important;
+        }
+        .step-desc {
+          display: block !important;
+          font-size: 13px;
+          color: #4B5563;
+          line-height: 1.7;
+          margin: 0 auto;
+          padding: 0 5px;
+          max-width: 170px;
+        }
         @media (max-width: 768px) {
           .nav-links, .nav-actions { display: none !important; }
           .hamburger-btn { display: flex !important; }
           .section-pad { padding: 24px 16px !important; }
           .hero-section {
-            min-height: calc(100svh - 60px) !important;
-            min-height: calc(100dvh - 60px) !important;
+            height: calc(100svh - 66px) !important;
+            height: calc(100dvh - 66px) !important;
+            min-height: calc(100svh - 66px) !important;
+            min-height: calc(100dvh - 66px) !important;
+            max-height: calc(100svh - 66px) !important;
+            max-height: calc(100dvh - 66px) !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            padding: 24px 0 !important;
+            padding: 20px 0 !important;
             box-sizing: border-box !important;
-            background: linear-gradient(rgba(0,0,0,0.72), rgba(0,0,0,0.72)), url('/images/home_banner.png') center/cover !important;
+            overflow: hidden !important;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.32) 0%, rgba(0, 0, 0, 0.44) 100%), url('/images/home_banner.png') center/cover !important;
           }
           .hero-container {
             padding: 0 20px !important;
@@ -1117,21 +1209,36 @@ export default function BMCPLanding() {
             justify-content: center !important;
             text-align: left !important;
             width: 100% !important;
+            height: 100% !important;
+            box-sizing: border-box !important;
           }
           .hero-text {
             min-width: 0 !important;
+            width: 100% !important;
             flex: 1 1 auto !important;
             display: flex !important;
             flex-direction: column !important;
             justify-content: center !important;
             align-items: flex-start !important;
             text-align: left !important;
-            width: 100% !important;
+          }
+          .hero-badge-wrap {
+            margin-bottom: 22px !important;
           }
           .hero-text h1 {
-            font-size: clamp(28px, 8vw, 42px) !important;
-            line-height: 1.18 !important;
-            margin: 20px 0 28px !important;
+            font-size: clamp(28px, 7.8vw, 36px) !important;
+            line-height: 1.22 !important;
+            margin: 0 0 22px !important;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85), 0 1px 3px rgba(0, 0, 0, 0.9) !important;
+          }
+          .hero-subtitle {
+            display: block !important;
+            font-size: clamp(13.5px, 3.8vw, 15px) !important;
+            color: #E2E8F0 !important;
+            line-height: 1.6 !important;
+            margin: 0 0 32px !important;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85) !important;
+            max-width: 100% !important;
           }
           .hero-cta-btn {
             width: 100% !important;
@@ -1152,6 +1259,42 @@ export default function BMCPLanding() {
             width: calc(50% - 6px) !important;
             max-width: calc(50% - 6px) !important;
             padding: 20px 16px !important;
+          }
+          .why-choose-card {
+            background: #80281F !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 12px !important;
+            padding: 12px 12px !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            gap: 10px !important;
+            min-height: 52px !important;
+            box-shadow: 0 3px 10px rgba(128, 40, 31, 0.25) !important;
+            box-sizing: border-box !important;
+          }
+          .why-choose-icon {
+            color: #FFFFFF !important;
+            margin-bottom: 0 !important;
+            flex-shrink: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          .why-choose-icon svg {
+            width: 20px !important;
+            height: 20px !important;
+            stroke-width: 2.2 !important;
+          }
+          .why-choose-title {
+            color: #FFFFFF !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            line-height: 1.25 !important;
+            margin: 0 !important;
+            text-align: left !important;
           }
 
           /* HR Problems - 1 column on mobile */
@@ -1183,74 +1326,97 @@ export default function BMCPLanding() {
             scroll-snap-align: start !important;
           }
 
-          /* Steps - zigzag grid: [1][2] / [4][3] / [5] */
+          /* Steps - 1 per row (FAQ style) */
           .steps-line { display: none !important; }
           .steps-container {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 16px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 10px !important;
+            width: 100% !important;
             position: relative !important;
           }
-          .steps-container > div {
-            flex-basis: auto !important;
-            max-width: none !important;
-            background: #fff;
-            border-radius: 14px;
-            padding: 24px 16px;
-            border: 1px solid #E5E7EB;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            position: relative;
+          .step-card {
+            flex: none !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            background: #fff !important;
+            border-radius: 12px !important;
+            padding: 14px 16px !important;
+            border: 1px solid #E5E7EB !important;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.03) !important;
+            cursor: pointer !important;
+            text-align: left !important;
+            transition: all 0.2s ease !important;
+            box-sizing: border-box !important;
+            order: initial !important;
+            transform: none !important;
+            -webkit-tap-highlight-color: transparent;
           }
-          /* Swap 3 and 4 for zigzag */
-          .steps-container > div:nth-child(3) { order: 2 !important; }
-          .steps-container > div:nth-child(4) { order: 1 !important; }
-          .steps-container > div:last-child {
-            grid-column: 1 / -1;
-            max-width: 50%;
-            margin: 0 auto;
-            order: 3 !important;
+          .step-card:hover {
+            transform: none !important;
           }
-          /* 1→2: horizontal right */
-          .steps-container > div:nth-child(1)::after {
-            content: '';
-            position: absolute;
-            top: 38px;
-            right: -16px;
-            width: 16px;
-            border-top: 2px dashed #D1D5DB;
-            z-index: 2;
+          .step-card::after {
+            display: none !important;
           }
-          /* 2→3: vertical down (right side) */
-          .steps-container > div:nth-child(2)::after {
-            content: '';
-            position: absolute;
-            bottom: -16px;
-            left: 50%;
-            transform: translateX(-50%);
-            height: 16px;
-            border-left: 2px dashed #D1D5DB;
-            z-index: 2;
+          .step-card-header {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
           }
-          /* 3→4: horizontal left (3 is on right visually) */
-          .steps-container > div:nth-child(3)::after {
-            content: '';
-            position: absolute;
-            top: 38px;
-            left: -16px;
-            width: 16px;
-            border-top: 2px dashed #D1D5DB;
-            z-index: 2;
+          .step-header-left {
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
           }
-          /* 4→5: vertical down (4 is on left visually) */
-          .steps-container > div:nth-child(4)::after {
-            content: '';
-            position: absolute;
-            bottom: -16px;
-            left: 50%;
-            transform: translateX(-50%);
-            height: 16px;
-            border-left: 2px dashed #D1D5DB;
-            z-index: 2;
+          .step-circle {
+            width: 32px !important;
+            height: 32px !important;
+            font-size: 14px !important;
+            margin: 0 !important;
+            flex-shrink: 0 !important;
+            box-shadow: none !important;
+          }
+          .step-title {
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            margin: 0 !important;
+            color: #111827 !important;
+            line-height: 1.3 !important;
+            text-align: left !important;
+          }
+          .step-toggle-icon {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 22px !important;
+            font-weight: 400 !important;
+            color: #80281F !important;
+            width: 24px !important;
+            height: 24px !important;
+            line-height: 1 !important;
+            flex-shrink: 0 !important;
+          }
+          .step-desc-wrapper {
+            max-height: 0 !important;
+            overflow: hidden !important;
+            opacity: 0 !important;
+            transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.25s ease !important;
+            margin-top: 0 !important;
+          }
+          .step-desc-wrapper.step-desc-expanded {
+            max-height: 160px !important;
+            opacity: 1 !important;
+            margin-top: 10px !important;
+          }
+          .step-desc {
+            font-size: 13.5px !important;
+            color: #4B5563 !important;
+            line-height: 1.55 !important;
+            margin: 0 !important;
+            padding: 0 0 0 44px !important;
+            max-width: 100% !important;
+            text-align: left !important;
           }
 
           /* Comparison Board */
@@ -1775,6 +1941,53 @@ export default function BMCPLanding() {
           .trusted-grid > div:nth-last-child(-n+2) {
             border-bottom: none !important;
           }
+
+          /* Lead Modal on Mobile */
+          .lead-modal-card {
+            max-width: 480px !important;
+            flex-direction: column !important;
+            border-radius: 16px !important;
+            max-height: 92vh !important;
+          }
+          .lead-modal-left-banner {
+            display: none !important;
+          }
+          .lead-modal-right-form {
+            width: 100% !important;
+            padding: 24px 18px 20px !important;
+            border-radius: 16px !important;
+          }
+        }
+
+        /* Lead Modal Popup (Wide 2-Column Desktop Layout) */
+        .lead-modal-card {
+          width: 100% !important;
+          max-width: 880px !important;
+          flex-direction: row !important;
+          border-radius: 20px !important;
+        }
+        .lead-modal-left-banner {
+          display: flex !important;
+          flex: 0 0 360px !important;
+          width: 360px !important;
+        }
+        .lead-modal-right-form {
+          flex: 1 1 auto !important;
+          width: calc(100% - 360px) !important;
+        }
+        @media (max-width: 920px) and (min-width: 769px) {
+          .lead-modal-card {
+            max-width: 94vw !important;
+          }
+          .lead-modal-left-banner {
+            flex: 0 0 310px !important;
+            width: 310px !important;
+            padding: 28px 22px !important;
+          }
+          .lead-modal-right-form {
+            width: calc(100% - 310px) !important;
+            padding: 28px 22px 20px !important;
+          }
         }
         @keyframes mobileMenuSlide {
           from { opacity: 0; transform: translateY(-100%); }
@@ -1809,12 +2022,7 @@ export default function BMCPLanding() {
               </div>
               <a href="tel:+919333749333" style={{ fontSize: 13.5, color: D, textDecoration: "none", fontWeight: 700, letterSpacing: "0.2px" }}>+91 9333 74 9333</a>
             </div>
-            <button className="nav-actions" onClick={() => {
-              const el = document.getElementById("enquiry-cta-section") || document.getElementById("hero-form");
-              if (el) {
-                el.scrollIntoView({ behavior: "smooth", block: "start" });
-              }
-            }} style={{ background: R, color: "#fff", border: "none", borderRadius: 7, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Get Started →</button>
+            <button className="nav-actions" onClick={() => setShowLeadModal(true)} style={{ background: R, color: "#fff", border: "none", borderRadius: 7, padding: "10px 22px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Get Started →</button>
             <button className="hamburger-btn" onClick={() => setMenuOpen(!menuOpen)} style={{ background: "none", border: "none", cursor: "pointer", padding: 8, flexDirection: "column", gap: 5, alignItems: "center", justifyContent: "center" }}>
               <span style={{ display: "block", width: 22, height: 2, background: D, borderRadius: 2, transition: "all 0.3s", transform: menuOpen ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
               <span style={{ display: "block", width: 22, height: 2, background: D, borderRadius: 2, transition: "all 0.3s", opacity: menuOpen ? 0 : 1 }} />
@@ -1839,10 +2047,7 @@ export default function BMCPLanding() {
           <div style={{ marginTop: 48, animation: "mobileMenuFade 0.5s 0.5s both" }}>
             <button onClick={() => {
               setMenuOpen(false);
-              const el = document.getElementById("enquiry-cta-section") || document.getElementById("hero-form");
-              if (el) {
-                el.scrollIntoView({ behavior: "smooth", block: "start" });
-              }
+              setShowLeadModal(true);
             }} style={{ background: R, color: "#fff", border: "none", borderRadius: 12, padding: "18px 52px", fontSize: 17, fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif" }}>Get Started →</button>
           </div>
           <a href="tel:+919333749333" style={{ marginTop: 28, fontSize: 16, color: G, textDecoration: "none", animation: "mobileMenuFade 0.5s 0.6s both", display: "flex", alignItems: "center", gap: 8 }}>
@@ -1885,7 +2090,7 @@ export default function BMCPLanding() {
             justifyContent: "center",
             textAlign: "left"
           }}>
-            <div style={{ marginBottom: 26 }}>
+            <div style={{ marginBottom: 26 }} className="hero-badge-wrap">
               <Badge text="CORPORATE PARTY PLATFORM" />
             </div>
             <h1 style={{
@@ -1901,16 +2106,9 @@ export default function BMCPLanding() {
               Stop Calling 20 Venues.<br />
               <span style={{ color: "#FF5252" }}>Book Your Corporate Party in One Click.</span>
             </h1>
-            {/* <p style={{
-              fontSize: 17,
-              color: "#E0E0E0",
-              lineHeight: 1.65,
-              margin: "0 0 20px",
-              maxWidth: 540,
-              textAlign: "left"
-            }}>
-              Tell us your event requirement. We’ll shortlist suitable venues, packages &amp; pricing for you.
-            </p> */}
+            <p className="hero-subtitle">
+              Tell us your requirement. We’ll shortlist verified venues, packages &amp; transparent pricing in 30 mins
+            </p>
 
             {/* Occasions List (Moved to dedicated section below per user request) */}
             {/* <div className="hero-occasions-list" style={{
@@ -1968,12 +2166,7 @@ export default function BMCPLanding() {
               <button
                 type="button"
                 className="hero-cta-btn"
-                onClick={() => {
-                  const el = document.getElementById("enquiry-cta-section") || document.getElementById("hero-form");
-                  if (el) {
-                    el.scrollIntoView({ behavior: "smooth", block: "start" });
-                  }
-                }}
+                onClick={() => setShowLeadModal(true)}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -2306,29 +2499,7 @@ export default function BMCPLanding() {
         </div>
       </section>
 
-      {/* ===== COMPANY AUTO LOGO MARQUEE SLIDER ===== */}
-      <CompanyLogoSlider />
-
-      {/* ===== TOP PROBLEMS HR FACES ===== */}
-      <Sec bg="#FFFFFF" id="hr-problems">
-        <div style={{ textAlign: "center", marginBottom: 36 }}>
-          <Badge text="The Real HR Struggle" />
-          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 34px)", margin: "14px 0 10px", color: D, letterSpacing: "-0.5px" }}>
-            Top Problems HR Faces <span style={{ color: R }}>When Planning Events</span>
-          </h2>
-          {/* <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, maxWidth: 1150, margin: "0 auto", lineHeight: 1.6 }}>
-            Planning corporate celebrations sounds exciting until the endless calls, unclear pricing, and vendor chaos begin. Here is what HR teams deal with — and how we eliminate each one.
-          </p> */}
-        </div>
-
-        <div style={{ width: "100%" }}>
-          {HR_PROBLEMS.map((item, idx) => (
-            <HRProblemItem key={item.num || idx} item={item} defaultOpen={false} />
-          ))}
-        </div>
-      </Sec>
-
-      {/* ===== 1.5. CORPORATE OCCASIONS & SCALE ===== */}
+      {/* ===== 1.5. CORPORATE OCCASIONS & SCALE (PLACED JUST BELOW HERO) ===== */}
       <Sec bg="#FAFAFA" id="corporate-occasions" style={{ borderTop: `1px solid ${B}`, borderBottom: `1px solid ${B}`, padding: "40px clamp(20px, 6vw, 120px)" }}>
         <style>{`
           .stat-segment:not(:last-child) {
@@ -2337,34 +2508,100 @@ export default function BMCPLanding() {
           .stat-title-mobile {
             display: none;
           }
+          .occasions-cards-scroll {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding: 8px 4px 22px;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+          }
+          .occasions-cards-scroll::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+          }
+          .occasion-photo-card {
+            flex: 0 0 calc((100% - (4 * 20px)) / 4.5);
+            width: calc((100% - (4 * 20px)) / 4.5);
+            min-width: calc((100% - (4 * 20px)) / 4.5);
+            cursor: pointer;
+            scroll-snap-align: start;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+          }
+          .occasion-photo-card:hover {
+            transform: translateY(-4px);
+          }
+          .occasion-photo-card:hover .occasion-card-img-wrap {
+            box-shadow: 0 12px 28px rgba(128, 40, 31, 0.18);
+            border-color: #80281F;
+          }
+          .occasion-card-img-wrap {
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #FFFFFF;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+            transition: all 0.25s ease;
+            position: relative;
+          }
+          .occasion-card-title {
+            margin-top: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1A1A1A;
+            line-height: 1.3;
+            text-align: center;
+          }
+
           @media (max-width: 768px) {
             #corporate-occasions {
-              padding: 24px 12px !important;
+              padding: 24px 12px 28px !important;
             }
             .occasions-header-wrap {
               margin-bottom: 16px !important;
             }
-            .occasions-pills-wrap {
-              gap: 6px 7px !important;
-              margin-bottom: 18px !important;
+            .occasions-cards-scroll {
+              gap: 12px !important;
+              padding: 4px 4px 16px !important;
+              scrollbar-width: none !important;
+              -ms-overflow-style: none !important;
             }
-            .occasion-pill-item {
-              padding: 6px 12px !important;
-              font-size: 12px !important;
-              gap: 6px !important;
+            .occasions-cards-scroll::-webkit-scrollbar {
+              display: none !important;
+              width: 0 !important;
+              height: 0 !important;
             }
-            .occasion-pill-dot {
-              width: 5px !important;
-              height: 5px !important;
+            .occasion-photo-card {
+              flex: 0 0 calc((100% - 24px) / 2.25) !important;
+              width: calc((100% - 24px) / 2.25) !important;
+              min-width: calc((100% - 24px) / 2.25) !important;
+            }
+            .occasion-card-img-wrap {
+              width: 100% !important;
+              aspect-ratio: 3 / 4 !important;
+              height: auto !important;
+              border-radius: 14px !important;
+              box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07) !important;
+            }
+            .occasion-card-title {
+              font-size: 13px !important;
+              font-weight: 700 !important;
+              margin-top: 8px !important;
+              line-height: 1.25 !important;
             }
             .stats-segmented-bar {
               grid-template-columns: repeat(3, 1fr) !important;
             }
             .stat-segment {
-              padding: 10px 4px !important;
+              padding: 12px 4px !important;
               flex-direction: column !important;
               text-align: center !important;
-              gap: 5px !important;
+              gap: 6px !important;
             }
             .stat-segment:not(:last-child) {
               border-right: 1px solid #E5E7EB !important;
@@ -2379,7 +2616,7 @@ export default function BMCPLanding() {
               height: 16px !important;
             }
             .stat-segment-title {
-              font-size: 11.5px !important;
+              font-size: 12px !important;
               line-height: 1.2 !important;
               text-align: center !important;
             }
@@ -2390,68 +2627,50 @@ export default function BMCPLanding() {
               display: inline !important;
             }
             .stat-segment-desc {
-              display: none !important;
+              display: block !important;
+              font-size: 9.5px !important;
+              color: #6B7280 !important;
+              margin-top: 2px !important;
+              line-height: 1.2 !important;
+              text-align: center !important;
             }
           }
         `}</style>
-        <div className="occasions-header-wrap" style={{ textAlign: "center", marginBottom: 28 }}>
+        <div className="occasions-header-wrap" style={{ textAlign: "center", marginBottom: 24 }}>
           <Badge text="Corporate Celebrations" />
           <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 34px)", margin: "14px 0 0", color: D, letterSpacing: "-0.5px" }}>
             Events &amp; Occasions <span style={{ color: R }}>We Plan &amp; Manage</span>
           </h2>
         </div>
 
-        {/* Occasions List Pills */}
-        <div className="occasions-pills-wrap" style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "10px 14px",
-          maxWidth: 980,
-          margin: "0 auto 32px"
-        }}>
-          {OCCASIONS.map((occ) => (
+        {/* Occasions Photo Cards Scroll Strip */}
+        <div className="occasions-cards-scroll">
+          {OCCASION_CARDS.map((card) => (
             <div
-              key={occ}
-              className="occasion-pill-item"
+              key={card.name}
+              className="occasion-photo-card"
               onClick={() => {
-                setFormData(prev => ({ ...prev, occasion: occ }));
-                const el = document.getElementById("enquiry-cta-section") || document.getElementById("hero-form");
-                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-                setTimeout(() => {
-                  const selectEl = document.getElementById("hero-occasion");
-                  if (selectEl) selectEl.focus();
-                }, 400);
-              }}
-              style={{
-                background: "#FFFFFF",
-                border: `1.5px solid ${B}`,
-                borderRadius: 9999,
-                padding: "9px 20px",
-                fontSize: 14,
-                fontWeight: 600,
-                color: D,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                boxShadow: "0 2px 6px rgba(0,0,0,0.02)",
-                cursor: "pointer",
-                transition: "all 0.2s ease"
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = R;
-                e.currentTarget.style.transform = "translateY(-2px)";
-                e.currentTarget.style.boxShadow = "0 6px 14px rgba(128,40,31,0.08)";
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = B;
-                e.currentTarget.style.transform = "none";
-                e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.02)";
+                setFormData(prev => ({ ...prev, occasion: card.name }));
+                setShowLeadModal(true);
               }}
             >
-              <span className="occasion-pill-dot" style={{ width: 7, height: 7, borderRadius: "50%", background: R, display: "inline-block" }}></span>
-              <span>{occ}</span>
+              <div className="occasion-card-img-wrap">
+                <img
+                  src={card.img}
+                  alt={card.name}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    objectPosition: "center",
+                    display: "block"
+                  }}
+                  loading="lazy"
+                />
+              </div>
+              <div className="occasion-card-title">
+                {card.name}
+              </div>
             </div>
           ))}
         </div>
@@ -2558,6 +2777,25 @@ export default function BMCPLanding() {
         </div>
       </Sec>
 
+      {/* ===== TOP PROBLEMS HR FACES ===== */}
+      <Sec bg="#FFFFFF" id="hr-problems">
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <Badge text="The Real HR Struggle" />
+          <h2 className="section-single-line-title" style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 800, fontSize: "clamp(24px, 2.7vw, 34px)", margin: "14px 0 10px", color: D, letterSpacing: "-0.5px" }}>
+            Top Problems HR Faces <span style={{ color: R }}>When Planning Events</span>
+          </h2>
+          {/* <p className="section-single-line-ref" style={{ fontSize: 14.5, color: G, maxWidth: 1150, margin: "0 auto", lineHeight: 1.6 }}>
+            Planning corporate celebrations sounds exciting until the endless calls, unclear pricing, and vendor chaos begin. Here is what HR teams deal with — and how we eliminate each one.
+          </p> */}
+        </div>
+
+        <div style={{ width: "100%" }}>
+          {HR_PROBLEMS.map((item, idx) => (
+            <HRProblemItem key={item.num || idx} item={item} defaultOpen={false} />
+          ))}
+        </div>
+      </Sec>
+
 
       {/* ===== 2. WHY CHOOSE US ===== */}
       <Sec bg="#FFFFFF" id="why-us" style={{ borderTop: `1px solid ${B}` }}>
@@ -2575,11 +2813,11 @@ export default function BMCPLanding() {
             { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><polyline points="9 15 11 17 15 13" /></svg>, title: "Make Approvals Easier", desc: "Clear proposals and transparent pricing." },
             { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>, title: "Focus on Your Team", desc: "We handle the coordination; you enjoy the event." },
           ].map((b, i) => (
-            <div key={i} style={{ background: "#fff", borderRadius: 14, padding: "24px 16px", border: `1px solid ${B}`, textAlign: "center", transition: "transform 0.2s, box-shadow 0.2s", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start" }} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.05)"; }} onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
-              <div style={{ color: R, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+            <div key={i} className="why-choose-card" style={{ background: "#fff", borderRadius: 14, padding: "24px 16px", border: `1px solid ${B}`, textAlign: "center", transition: "transform 0.2s, box-shadow 0.2s", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start" }} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.05)"; }} onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
+              <div className="why-choose-icon" style={{ color: R, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
                 {b.icon}
               </div>
-              <h4 style={{ margin: 0, fontSize: 15.5, fontWeight: 700, color: D, lineHeight: 1.3 }}>{b.title}</h4>
+              <h4 className="why-choose-title" style={{ margin: 0, fontSize: 15.5, fontWeight: 700, color: D, lineHeight: 1.3 }}>{b.title}</h4>
               {/* <p style={{ margin: 0, fontSize: 13, color: G, lineHeight: 1.6 }}>{b.desc}</p> */}
             </div>
           ))}
@@ -2610,6 +2848,8 @@ export default function BMCPLanding() {
       </Sec>
 
       {/* ===== 7. COMPARISON TABLE (3-COLUMN DESIGN AS REQUESTED) ===== */}
+      {/* Preserved & hidden per user request */}
+      {false && (
       <Sec
         bg="#FFFFFF"
         id="comparison"
@@ -2736,6 +2976,7 @@ export default function BMCPLanding() {
           </div>
         </div>
       </Sec>
+      )}
 
       {/* ===== PREVIOUS COMPARISON MATRIX (PRESERVED & HIDDEN PER USER INSTRUCTION) ===== */}
       <div style={{ display: "none" }} aria-hidden="true">
@@ -3052,6 +3293,8 @@ export default function BMCPLanding() {
       </div>
 
       {/* ===== WHAT WE DELIVER FOR CORPORATES ===== */}
+      {/* Preserved & hidden per user request */}
+      {false && (
       <Sec id="deliver" style={{ padding: "36px clamp(16px, 4vw, 60px) 44px" }}>
         <div style={{ textAlign: "center", marginBottom: 26, padding: "0 20px" }}>
           <Badge text="What We Deliver For Corporates" />
@@ -3109,6 +3352,7 @@ export default function BMCPLanding() {
           </div>
         </div>
       </Sec>
+      )}
 
       {/* ===== 3. VENUE CARDS ===== */}
       <Sec id="venues">
@@ -3198,6 +3442,9 @@ export default function BMCPLanding() {
       {/* ===== VIDEO TESTIMONIALS ===== */}
       {/* <ReviewsSection /> */}
       <EventsSection />
+
+      {/* ===== COMPANY AUTO LOGO MARQUEE SLIDER ===== */}
+      <CompanyLogoSlider />
 
       {/* ===== 4. TESTIMONIALS — GOOGLE REVIEWS ===== */}
       <Sec bg="#F5F5F7">
@@ -3360,15 +3607,39 @@ export default function BMCPLanding() {
               { t: "Compare Packages", d: "Venue photos, capacity, inclusions, per-person pricing. Side-by-side. Site visits on request." },
               { t: "Finalize Your Venue", d: "Pick your venue. Confirm the package. Done in 30 minutes." },
               { t: "We Coordinate Until Your Event", d: "Menu, DJ, decor, branding, team activities — all handled. You just bring your team." },
-            ].map((s, i) => (
-              <div key={i} style={{ flex: "1 1 180px", textAlign: "center", transition: "transform 0.3s ease" }} onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"} onMouseLeave={e => e.currentTarget.style.transform = "none"}>
-                <div style={{ width: 52, height: 52, background: R, color: "#fff", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 800, margin: "0 auto 20px", boxShadow: "0 8px 20px rgba(192,57,43,0.15)" }}>
-                  {i + 1}
+            ].map((s, i) => {
+              const isOpen = !!openSteps[i];
+              return (
+                <div
+                  key={i}
+                  className="step-card"
+                  onClick={() => toggleStep(i)}
+                >
+                  <div className="step-card-header">
+                    <div className="step-header-left">
+                      <div className="step-circle">
+                        {i + 1}
+                      </div>
+                      <h4 className="step-title">{s.t}</h4>
+                    </div>
+                    <span
+                      className="step-toggle-icon"
+                      style={{
+                        transform: isOpen ? "rotate(45deg)" : "none",
+                        transition: "transform 0.3s ease"
+                      }}
+                    >
+                      +
+                    </span>
+                  </div>
+                  <div className={`step-desc-wrapper ${isOpen ? 'step-desc-expanded' : ''}`}>
+                    <p className="step-desc">
+                      {s.d}
+                    </p>
+                  </div>
                 </div>
-                <h4 style={{ fontSize: 15.5, fontWeight: 700, margin: "0 0 10px", color: D, letterSpacing: "-0.2px" }}>{s.t}</h4>
-                <p style={{ fontSize: 13, color: G, lineHeight: 1.7, margin: "0 auto", padding: "0 5px", maxWidth: 170 }}>{s.d}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </Sec>
@@ -3390,6 +3661,8 @@ export default function BMCPLanding() {
       </Sec>
 
       {/* ===== 9. FINAL CTA & LEAD FORM (MERGED UNIFIED SECTION) ===== */}
+      {/* Preserved & hidden per user request */}
+      {false && (
       <section id="enquiry-cta-section" className="cta-section" style={{ background: "#FFFFFF", padding: "80px clamp(24px, 6vw, 140px)", position: "relative", borderTop: `1px solid ${B}` }}>
         <div className="cta-merge-container" style={{ maxWidth: 1240, margin: "0 auto", display: "flex", gap: "clamp(40px, 6vw, 76px)", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", position: "relative", zIndex: 1 }}>
 
@@ -3780,9 +4053,13 @@ export default function BMCPLanding() {
 
         </div>
       </section>
+      )}
 
       {/* ===== INSTAGRAM WIDGET ===== */}
+      {/* Preserved & hidden per user request */}
+      {false && (
       <InstagramWidget />
+      )}
 
       {/* ===== 10. EXECUTIVE FOOTER (BRAND RED THEME) ===== */}
       <footer className="footer-wrap" style={{ background: R, padding: "80px 0 60px" }}>
@@ -3931,8 +4208,9 @@ export default function BMCPLanding() {
           style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(0, 0, 0, 0.65)",
-            backdropFilter: "blur(4px)",
+            background: "rgba(0, 0, 0, 0.68)",
+            backdropFilter: "blur(6px)",
+            WebkitBackdropFilter: "blur(6px)",
             zIndex: 2500,
             display: "flex",
             alignItems: "center",
@@ -3942,17 +4220,19 @@ export default function BMCPLanding() {
           }}
         >
           <div
+            className="lead-modal-card"
             onClick={e => e.stopPropagation()}
             style={{
               background: "#fff",
-              borderRadius: 18,
+              borderRadius: 20,
               width: "100%",
-              maxWidth: 450,
+              maxWidth: 880,
               maxHeight: "92vh",
-              overflowY: "auto",
-              boxShadow: "0 25px 60px rgba(0, 0, 0, 0.3)",
+              overflow: "hidden",
+              boxShadow: "0 25px 70px rgba(0, 0, 0, 0.4)",
               position: "relative",
-              padding: "26px 24px",
+              display: "flex",
+              flexDirection: "row",
               fontFamily: "var(--font-dm-sans), sans-serif",
               boxSizing: "border-box"
             }}
@@ -3961,12 +4241,13 @@ export default function BMCPLanding() {
             <button
               type="button"
               onClick={() => setShowLeadModal(false)}
+              aria-label="Close modal"
               style={{
                 position: "absolute",
-                top: 16,
-                right: 16,
-                width: 32,
-                height: 32,
+                top: 14,
+                right: 14,
+                width: 34,
+                height: 34,
                 borderRadius: "50%",
                 background: "#F3F4F6",
                 border: "none",
@@ -3976,165 +4257,243 @@ export default function BMCPLanding() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                transition: "background 0.2s"
+                transition: "all 0.2s",
+                zIndex: 20
               }}
-              onMouseEnter={e => e.currentTarget.style.background = "#E5E7EB"}
-              onMouseLeave={e => e.currentTarget.style.background = "#F3F4F6"}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = "#E5E7EB";
+                e.currentTarget.style.color = "#111827";
+                e.currentTarget.style.transform = "scale(1.05)";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = "#F3F4F6";
+                e.currentTarget.style.color = "#4B5563";
+                e.currentTarget.style.transform = "scale(1)";
+              }}
             >
               ✕
             </button>
 
-            {formStatus === 'success' ? (
-              <div style={{ textAlign: "center", padding: "28px 0" }}>
-                <div style={{ width: 60, height: 60, background: "#F0FDF4", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </div>
-                <h3 style={{ margin: "0 0 8px", fontSize: 20, fontWeight: 700, color: D }}>Request Received!</h3>
-                <p style={{ fontSize: 13.5, color: G, lineHeight: 1.6, margin: "0 0 22px" }}>
-                  {formMsg || "Thank you! Our corporate party expert will reach out within 30 minutes with curated options."}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => { setFormStatus('idle'); setShowLeadModal(false); }}
-                  style={{ background: R, color: "#fff", border: "none", borderRadius: 8, padding: "12px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}
-                >
-                  Close
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} style={{ margin: 0 }}>
-                <div style={{ marginBottom: 18 }}>
-                  <h3 style={{ margin: "0 0 4px", fontSize: 20, fontWeight: 800, color: D, fontFamily: "var(--font-dm-sans), sans-serif", letterSpacing: "-0.3px" }}>
-                    Get Venue Options Free
-                  </h3>
-                  <p style={{ margin: 0, fontSize: 12.5, color: G }}>
-                    Free for HR &amp; Admin teams. Options within 30 minutes.
-                  </p>
-                </div>
+            {/* Left Column: Brand & Value Proposition Banner */}
+            <div
+              className="lead-modal-left-banner"
+              style={{
+                flex: "0 0 360px",
+                width: 360,
+                background: "linear-gradient(155deg, #80281F 0%, #5B1812 55%, #3D0D09 100%)",
+                padding: "40px 32px",
+                color: "#FFFFFF",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                position: "relative",
+                boxSizing: "border-box",
+                overflow: "hidden"
+              }}
+            >
+              {/* Subtle background glow effect */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: -60,
+                  right: -60,
+                  width: 220,
+                  height: 220,
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%)",
+                  pointerEvents: "none"
+                }}
+              />
 
-                {/* 1. OCCASION */}
-                <div style={{ marginBottom: 12 }}>
-                  <label htmlFor="modal-occasion" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
-                    What u want to book? *
-                  </label>
-                  <div style={{ position: "relative" }}>
-                    <select
-                      id="modal-occasion"
-                      required
-                      value={formData.occasion}
-                      onChange={e => setFormData({ ...formData, occasion: e.target.value })}
-                      style={{
-                        width: "100%",
-                        padding: "9px 12px",
-                        border: `1px solid ${B}`,
-                        borderRadius: 7,
-                        fontSize: 13,
-                        outline: "none",
-                        boxSizing: "border-box",
-                        fontFamily: "var(--font-dm-sans), sans-serif",
-                        background: "#fff",
-                        color: formData.occasion ? D : "#9CA3AF",
-                        WebkitAppearance: "none",
-                        MozAppearance: "none",
-                        appearance: "none",
-                        cursor: "pointer",
-                        position: "relative",
-                        zIndex: 2,
-                        transition: "border-color 0.2s"
-                      }}
-                      onFocus={e => e.target.style.borderColor = R}
-                      onBlur={e => e.target.style.borderColor = formData.occasion ? R : B}
-                    >
-                      <option value="" disabled hidden>Select venue type</option>
-                      {OCCASIONS.map((occ) => (
-                        <option key={occ} value={occ} style={{ color: D }}>{occ}</option>
-                      ))}
-                    </select>
-                    <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 3, display: "flex", alignItems: "center", color: "#6B7280" }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              {/* Banner Content */}
+              <div style={{ position: "relative", zIndex: 1 }}>
+                <h3
+                  style={{
+                    fontSize: 24,
+                    fontWeight: 800,
+                    color: "#FFFFFF",
+                    lineHeight: 1.25,
+                    margin: "0 0 10px",
+                    letterSpacing: "-0.4px"
+                  }}
+                >
+                  Planning a Corporate Event?
+                </h3>
+                <p
+                  style={{
+                    fontSize: 13,
+                    color: "rgba(255, 255, 255, 0.85)",
+                    lineHeight: 1.55,
+                    margin: "0 0 28px"
+                  }}
+                >
+                  Our corporate party specialists curate verified venues, tailored packages &amp; transparent pricing in 30 minutes.
+                </p>
+
+                {/* Benefits List (Icons only, no circular container) */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  {[
+                    {
+                      title: "100% Free Service",
+                      desc: "Zero markups or hidden fees for HR & Admin teams",
+                      icon: (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                      )
+                    },
+                    {
+                      title: "Shortlist in 30 Mins",
+                      desc: "Curated options sent directly to your WhatsApp",
+                      icon: (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                      )
+                    },
+                    {
+                      title: "1,000+ Top Venues",
+                      desc: "Lounges, banquets, rooftop bars & villas in 10+ cities",
+                      icon: (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                          <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                      )
+                    },
+                    {
+                      title: "1 Dedicated SPOC",
+                      desc: "End-to-end venue, DJ, food, bar & AV management",
+                      icon: (
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                      )
+                    }
+                  ].map((item, idx) => (
+                    <div key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                      <div
+                        style={{
+                          flexShrink: 0,
+                          marginTop: 2,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}
+                      >
+                        {item.icon}
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 13.5, fontWeight: 700, color: "#FFFFFF", lineHeight: 1.3 }}>{item.title}</div>
+                        <div style={{ fontSize: 12, color: "rgba(255, 255, 255, 0.72)", lineHeight: 1.35, marginTop: 2 }}>{item.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Lead Form */}
+            <div
+              className="lead-modal-right-form"
+              style={{
+                flex: "1 1 auto",
+                background: "#fff",
+                padding: "32px 30px 24px",
+                position: "relative",
+                overflowY: "auto",
+                maxHeight: "92vh",
+                boxSizing: "border-box"
+              }}
+            >
+              {formStatus === 'success' ? (
+                <div style={{ textAlign: "center", padding: "40px 10px" }}>
+                  <div style={{ width: 64, height: 64, background: "#F0FDF4", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px" }}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  </div>
+                  <h3 style={{ margin: "0 0 8px", fontSize: 22, fontWeight: 700, color: D }}>Request Received!</h3>
+                  <p style={{ fontSize: 14, color: G, lineHeight: 1.6, margin: "0 0 24px" }}>
+                    {formMsg || "Thank you! Our corporate party expert will reach out within 30 minutes with curated options."}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => { setFormStatus('idle'); setShowLeadModal(false); }}
+                    style={{ background: R, color: "#fff", border: "none", borderRadius: 8, padding: "12px 32px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}
+                  >
+                    Close
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} style={{ margin: 0 }}>
+                  <div style={{ marginBottom: 18, paddingRight: 32 }}>
+                    <h3 style={{ margin: "0 0 4px", fontSize: 21, fontWeight: 800, color: D, fontFamily: "var(--font-dm-sans), sans-serif", letterSpacing: "-0.3px" }}>
+                      Get Venue Options Free
+                    </h3>
+                    <p style={{ margin: 0, fontSize: 12.5, color: G }}>
+                      Free for HR &amp; Admin teams. Options within 30 minutes.
+                    </p>
+                  </div>
+
+                  {/* 1. OCCASION */}
+                  <div style={{ marginBottom: 12 }}>
+                    <label htmlFor="modal-occasion" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                      What u want to book? *
+                    </label>
+                    <div style={{ position: "relative" }}>
+                      <select
+                        id="modal-occasion"
+                        required
+                        value={formData.occasion}
+                        onChange={e => setFormData({ ...formData, occasion: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "9px 12px",
+                          border: `1px solid ${B}`,
+                          borderRadius: 7,
+                          fontSize: 13,
+                          outline: "none",
+                          boxSizing: "border-box",
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          background: "#fff",
+                          color: formData.occasion ? D : "#9CA3AF",
+                          WebkitAppearance: "none",
+                          MozAppearance: "none",
+                          appearance: "none",
+                          cursor: "pointer",
+                          position: "relative",
+                          zIndex: 2,
+                          transition: "border-color 0.2s"
+                        }}
+                        onFocus={e => e.target.style.borderColor = R}
+                        onBlur={e => e.target.style.borderColor = formData.occasion ? R : B}
+                      >
+                        <option value="" disabled hidden>Select venue type</option>
+                        {OCCASIONS.map((occ) => (
+                          <option key={occ} value={occ} style={{ color: D }}>{occ}</option>
+                        ))}
+                      </select>
+                      <div style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 3, display: "flex", alignItems: "center", color: "#6B7280" }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* 2. NAME */}
-                <div style={{ marginBottom: 12 }}>
-                  <label htmlFor="modal-name" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
-                    Name *
-                  </label>
-                  <input
-                    id="modal-name"
-                    required
-                    type="text"
-                    placeholder="e.g. Priya Sharma"
-                    value={formData.name}
-                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                    style={{
-                      width: "100%",
-                      padding: "9px 12px",
-                      border: `1px solid ${B}`,
-                      borderRadius: 7,
-                      fontSize: 13,
-                      outline: "none",
-                      boxSizing: "border-box",
-                      fontFamily: "var(--font-dm-sans), sans-serif",
-                      transition: "border-color 0.2s"
-                    }}
-                    onFocus={e => e.target.style.borderColor = R}
-                    onBlur={e => e.target.style.borderColor = B}
-                  />
-                </div>
-
-                {/* 3. EMAIL */}
-                <div style={{ marginBottom: 12 }}>
-                  <label htmlFor="modal-email" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
-                    Email *
-                  </label>
-                  <input
-                    id="modal-email"
-                    required
-                    type="email"
-                    placeholder="you@company.com"
-                    value={formData.email}
-                    onChange={e => setFormData({ ...formData, email: e.target.value })}
-                    style={{
-                      width: "100%",
-                      padding: "9px 12px",
-                      border: `1px solid ${B}`,
-                      borderRadius: 7,
-                      fontSize: 13,
-                      outline: "none",
-                      boxSizing: "border-box",
-                      fontFamily: "var(--font-dm-sans), sans-serif",
-                      transition: "border-color 0.2s"
-                    }}
-                    onFocus={e => e.target.style.borderColor = R}
-                    onBlur={e => e.target.style.borderColor = B}
-                  />
-                </div>
-
-                {/* 4. NUMBER */}
-                <div style={{ marginBottom: 12 }}>
-                  <label htmlFor="modal-phone" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
-                    Number *
-                  </label>
-                  <div style={{ display: "flex", gap: 8, alignItems: "stretch" }}>
+                  {/* 2. NAME */}
+                  <div style={{ marginBottom: 12 }}>
+                    <label htmlFor="modal-name" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                      Name *
+                    </label>
                     <input
-                      id="modal-phone"
+                      id="modal-name"
                       required
-                      type="tel"
-                      placeholder="e.g. 9876543210"
-                      value={formData.whatsappNumber}
-                      onChange={e => {
-                        setFormData({ ...formData, whatsappNumber: e.target.value });
-                        setOtpSent(false);
-                        setOtpVerified(false);
-                        setOtpCode('');
-                        setOtpError('');
-                      }}
+                      type="text"
+                      placeholder="e.g. Priya Sharma"
+                      value={formData.name}
+                      onChange={e => setFormData({ ...formData, name: e.target.value })}
                       style={{
-                        flex: 1,
-                        minWidth: 0,
-                        height: 40,
+                        width: "100%",
                         padding: "9px 12px",
                         border: `1px solid ${B}`,
                         borderRadius: 7,
@@ -4147,161 +4506,227 @@ export default function BMCPLanding() {
                       onFocus={e => e.target.style.borderColor = R}
                       onBlur={e => e.target.style.borderColor = B}
                     />
-                    <button
-                      type="button"
-                      onClick={handleSendOtp}
-                      disabled={!isValidPhone(formData.whatsappNumber) || otpSent || otpLoading}
-                      style={{
-                        width: 96,
-                        minWidth: 96,
-                        maxWidth: 96,
-                        flexShrink: 0,
-                        height: 40,
-                        background: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#F3F4F6",
-                        color: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "#fff" : "#9CA3AF",
-                        border: `1px solid ${(isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#E5E7EB"}`,
-                        borderRadius: 7,
-                        fontSize: 12,
-                        fontWeight: 700,
-                        cursor: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "pointer" : "not-allowed",
-                        transition: "all 0.2s",
-                        whiteSpace: "nowrap",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxSizing: "border-box"
-                      }}
-                    >
-                      {otpLoading ? "Sending..." : otpSent ? "Sent ✓" : "Send OTP"}
-                    </button>
                   </div>
-                </div>
 
-                {/* 5. OTP */}
-                <div style={{ marginBottom: 14 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, minHeight: 14 }}>
-                    <label htmlFor="modal-otp" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, lineHeight: "14px" }}>
-                      OTP *
+                  {/* 3. EMAIL */}
+                  <div style={{ marginBottom: 12 }}>
+                    <label htmlFor="modal-email" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                      Email *
                     </label>
-                    {otpSent && !otpVerified && (
-                      <button
-                        type="button"
-                        onClick={handleSendOtp}
-                        disabled={otpLoading}
-                        style={{
-                          background: "none",
-                          border: "none",
-                          color: R,
-                          fontSize: 10.5,
-                          fontWeight: 600,
-                          cursor: otpLoading ? "not-allowed" : "pointer",
-                          padding: 0,
-                          textDecoration: "underline",
-                          lineHeight: "14px"
-                        }}
-                      >
-                        Resend OTP
-                      </button>
-                    )}
-                  </div>
-                  <div style={{ display: "flex", gap: 8, alignItems: "stretch" }}>
                     <input
-                      id="modal-otp"
-                      type="text"
-                      maxLength={6}
-                      placeholder={otpSent ? "Enter 6-digit OTP" : "Enter number & click Send OTP"}
-                      value={otpCode}
-                      onChange={e => setOtpCode(e.target.value)}
-                      disabled={otpVerified}
+                      id="modal-email"
+                      required
+                      type="email"
+                      placeholder="you@company.com"
+                      value={formData.email}
+                      onChange={e => setFormData({ ...formData, email: e.target.value })}
                       style={{
-                        flex: 1,
-                        minWidth: 0,
-                        height: 40,
+                        width: "100%",
                         padding: "9px 12px",
-                        border: `1px solid ${otpVerified ? "#16A34A" : B}`,
+                        border: `1px solid ${B}`,
                         borderRadius: 7,
                         fontSize: 13,
                         outline: "none",
                         boxSizing: "border-box",
                         fontFamily: "var(--font-dm-sans), sans-serif",
-                        background: otpVerified ? "#F0FDF4" : "#fff",
-                        color: otpVerified ? "#166534" : D,
                         transition: "border-color 0.2s"
                       }}
-                      onFocus={e => e.target.style.borderColor = otpVerified ? "#16A34A" : R}
-                      onBlur={e => e.target.style.borderColor = otpVerified ? "#16A34A" : B}
+                      onFocus={e => e.target.style.borderColor = R}
+                      onBlur={e => e.target.style.borderColor = B}
                     />
-                    <button
-                      type="button"
-                      onClick={() => handleVerifyOtp()}
-                      disabled={otpVerified || !otpCode || otpVerifying}
-                      style={{
-                        width: 96,
-                        minWidth: 96,
-                        maxWidth: 96,
-                        flexShrink: 0,
-                        height: 40,
-                        background: otpVerified ? "#16A34A" : (!otpCode || otpVerifying) ? "#F3F4F6" : "#16A34A",
-                        color: (otpVerified || (otpCode && !otpVerifying)) ? "#fff" : "#9CA3AF",
-                        border: `1px solid ${(otpVerified || otpCode) ? "#16A34A" : "#E5E7EB"}`,
-                        borderRadius: 7,
-                        fontSize: 12,
-                        fontWeight: 700,
-                        cursor: (otpVerified || !otpCode || otpVerifying) ? "default" : "pointer",
-                        transition: "all 0.2s",
-                        whiteSpace: "nowrap",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        boxSizing: "border-box"
-                      }}
-                    >
-                      {otpVerifying ? "..." : otpVerified ? "Verified ✓" : "Verify"}
-                    </button>
                   </div>
-                  {otpError && (
-                    <span style={{ display: "block", color: "#DC2626", fontSize: 11, fontWeight: 600, marginTop: 4 }}>{otpError}</span>
+
+                  {/* 4. NUMBER */}
+                  <div style={{ marginBottom: 12 }}>
+                    <label htmlFor="modal-phone" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                      Number *
+                    </label>
+                    <div style={{ display: "flex", gap: 8, alignItems: "stretch" }}>
+                      <input
+                        id="modal-phone"
+                        required
+                        type="tel"
+                        placeholder="e.g. 9876543210"
+                        value={formData.whatsappNumber}
+                        onChange={e => {
+                          setFormData({ ...formData, whatsappNumber: e.target.value });
+                          setOtpSent(false);
+                          setOtpVerified(false);
+                          setOtpCode('');
+                          setOtpError('');
+                        }}
+                        style={{
+                          flex: 1,
+                          minWidth: 0,
+                          height: 40,
+                          padding: "9px 12px",
+                          border: `1px solid ${B}`,
+                          borderRadius: 7,
+                          fontSize: 13,
+                          outline: "none",
+                          boxSizing: "border-box",
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          transition: "border-color 0.2s"
+                        }}
+                        onFocus={e => e.target.style.borderColor = R}
+                        onBlur={e => e.target.style.borderColor = B}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleSendOtp}
+                        disabled={!isValidPhone(formData.whatsappNumber) || otpSent || otpLoading}
+                        style={{
+                          width: 96,
+                          minWidth: 96,
+                          maxWidth: 96,
+                          flexShrink: 0,
+                          height: 40,
+                          background: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#F3F4F6",
+                          color: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "#fff" : "#9CA3AF",
+                          border: `1px solid ${(isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? R : "#E5E7EB"}`,
+                          borderRadius: 7,
+                          fontSize: 12,
+                          fontWeight: 700,
+                          cursor: (isValidPhone(formData.whatsappNumber) && !otpSent && !otpLoading) ? "pointer" : "not-allowed",
+                          transition: "all 0.2s",
+                          whiteSpace: "nowrap",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxSizing: "border-box"
+                        }}
+                      >
+                        {otpLoading ? "Sending..." : otpSent ? "Sent ✓" : "Send OTP"}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 5. OTP */}
+                  <div style={{ marginBottom: 14 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, minHeight: 14 }}>
+                      <label htmlFor="modal-otp" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, lineHeight: "14px" }}>
+                        OTP *
+                      </label>
+                      {otpSent && !otpVerified && (
+                        <button
+                          type="button"
+                          onClick={handleSendOtp}
+                          disabled={otpLoading}
+                          style={{
+                            background: "none",
+                            border: "none",
+                            color: R,
+                            fontSize: 10.5,
+                            fontWeight: 600,
+                            cursor: otpLoading ? "not-allowed" : "pointer",
+                            padding: 0,
+                            textDecoration: "underline",
+                            lineHeight: "14px"
+                          }}
+                        >
+                          Resend OTP
+                        </button>
+                      )}
+                    </div>
+                    <div style={{ display: "flex", gap: 8, alignItems: "stretch" }}>
+                      <input
+                        id="modal-otp"
+                        type="text"
+                        maxLength={6}
+                        placeholder={otpSent ? "Enter 6-digit OTP" : "Enter number & click Send OTP"}
+                        value={otpCode}
+                        onChange={e => setOtpCode(e.target.value)}
+                        disabled={otpVerified}
+                        style={{
+                          flex: 1,
+                          minWidth: 0,
+                          height: 40,
+                          padding: "9px 12px",
+                          border: `1px solid ${otpVerified ? "#16A34A" : B}`,
+                          borderRadius: 7,
+                          fontSize: 13,
+                          outline: "none",
+                          boxSizing: "border-box",
+                          fontFamily: "var(--font-dm-sans), sans-serif",
+                          background: otpVerified ? "#F0FDF4" : "#fff",
+                          color: otpVerified ? "#166534" : D,
+                          transition: "border-color 0.2s"
+                        }}
+                        onFocus={e => e.target.style.borderColor = otpVerified ? "#16A34A" : R}
+                        onBlur={e => e.target.style.borderColor = otpVerified ? "#16A34A" : B}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleVerifyOtp()}
+                        disabled={otpVerified || !otpCode || otpVerifying}
+                        style={{
+                          width: 96,
+                          minWidth: 96,
+                          maxWidth: 96,
+                          flexShrink: 0,
+                          height: 40,
+                          background: otpVerified ? "#16A34A" : (!otpCode || otpVerifying) ? "#F3F4F6" : "#16A34A",
+                          color: (otpVerified || (otpCode && !otpVerifying)) ? "#fff" : "#9CA3AF",
+                          border: `1px solid ${(otpVerified || otpCode) ? "#16A34A" : "#E5E7EB"}`,
+                          borderRadius: 7,
+                          fontSize: 12,
+                          fontWeight: 700,
+                          cursor: (otpVerified || !otpCode || otpVerifying) ? "default" : "pointer",
+                          transition: "all 0.2s",
+                          whiteSpace: "nowrap",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          boxSizing: "border-box"
+                        }}
+                      >
+                        {otpVerifying ? "..." : otpVerified ? "Verified ✓" : "Verify"}
+                      </button>
+                    </div>
+                    {otpError && (
+                      <span style={{ display: "block", color: "#DC2626", fontSize: 11, fontWeight: 600, marginTop: 4 }}>{otpError}</span>
+                    )}
+                    {otpVerified && (
+                      <span style={{ display: "block", color: "#16A34A", fontSize: 11, fontWeight: 600, marginTop: 4 }}>✓ Phone Verified</span>
+                    )}
+                  </div>
+
+                  {formStatus === 'error' && (
+                    <p style={{ fontSize: 12, color: "#DC2626", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 6, padding: "9px 12px", margin: "0 0 10px" }}>{formMsg}</p>
                   )}
-                  {otpVerified && (
-                    <span style={{ display: "block", color: "#16A34A", fontSize: 11, fontWeight: 600, marginTop: 4 }}>✓ Phone Verified</span>
-                  )}
-                </div>
 
-                {formStatus === 'error' && (
-                  <p style={{ fontSize: 12, color: "#DC2626", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 6, padding: "9px 12px", margin: "0 0 10px" }}>{formMsg}</p>
-                )}
+                  {/* 6. SUBMIT */}
+                  <button
+                    type="submit"
+                    disabled={formStatus === 'submitting' || !isFormValid()}
+                    style={{
+                      width: "100%",
+                      padding: "12px 0",
+                      background: (formStatus === 'submitting' || !isFormValid()) ? "#F3F4F6" : R,
+                      color: (formStatus === 'submitting' || !isFormValid()) ? "#9CA3AF" : "#fff",
+                      border: (formStatus === 'submitting' || !isFormValid()) ? "1px solid #E5E7EB" : "none",
+                      borderRadius: 8,
+                      fontSize: 14,
+                      fontWeight: 700,
+                      cursor: (formStatus === 'submitting' || !isFormValid()) ? "not-allowed" : "pointer",
+                      fontFamily: "var(--font-dm-sans), sans-serif",
+                      boxShadow: (formStatus === 'submitting' || !isFormValid()) ? "none" : "0 4px 14px rgba(128,40,31,0.25)",
+                      transition: "all 0.2s",
+                      letterSpacing: "0.2px"
+                    }}
+                  >
+                    {formStatus === 'submitting' ? 'Submitting...' : 'Get 5 Free Quotes →'}
+                  </button>
 
-                {/* 6. SUBMIT */}
-                <button
-                  type="submit"
-                  disabled={formStatus === 'submitting' || !isFormValid()}
-                  style={{
-                    width: "100%",
-                    padding: "12px 0",
-                    background: (formStatus === 'submitting' || !isFormValid()) ? "#F3F4F6" : R,
-                    color: (formStatus === 'submitting' || !isFormValid()) ? "#9CA3AF" : "#fff",
-                    border: (formStatus === 'submitting' || !isFormValid()) ? "1px solid #E5E7EB" : "none",
-                    borderRadius: 8,
-                    fontSize: 14,
-                    fontWeight: 700,
-                    cursor: (formStatus === 'submitting' || !isFormValid()) ? "not-allowed" : "pointer",
-                    fontFamily: "var(--font-dm-sans), sans-serif",
-                    boxShadow: (formStatus === 'submitting' || !isFormValid()) ? "none" : "0 4px 14px rgba(128,40,31,0.25)",
-                    transition: "all 0.2s",
-                    letterSpacing: "0.2px"
-                  }}
-                >
-                  {formStatus === 'submitting' ? 'Submitting...' : 'Submit'}
-                </button>
-
-                <p style={{ margin: "14px 0 0", fontSize: 11.5, color: G, textAlign: "center", fontStyle: "italic" }}>
-                  Free for HR &amp; Admin teams • Takes 30 seconds • No obligation
-                </p>
-                <p style={{ margin: "6px 0 0", fontSize: 11, color: "#9CA3AF", textAlign: "center" }}>
-                  By clicking submit, you accept our <Link href="/terms" style={{ color: G, textDecoration: "underline" }}>Terms &amp; Conditions</Link>
-                </p>
-              </form>
-            )}
+                  <p style={{ margin: "14px 0 0", fontSize: 11.5, color: G, textAlign: "center", fontStyle: "italic" }}>
+                    Free for HR &amp; Admin teams • Takes 30 seconds • No obligation
+                  </p>
+                  <p style={{ margin: "6px 0 0", fontSize: 11, color: "#9CA3AF", textAlign: "center" }}>
+                    By clicking submit, you accept our <Link href="/terms" style={{ color: G, textDecoration: "underline" }}>Terms &amp; Conditions</Link>
+                  </p>
+                </form>
+              )}
+            </div>
           </div>
         </div>
       )}
