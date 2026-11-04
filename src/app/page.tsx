@@ -1942,38 +1942,96 @@ export default function BMCPLanding() {
             border-bottom: none !important;
           }
 
-          /* Lead Modal on Mobile */
+          /* Lead Modal on Mobile (Show ONLY Form, Compact & No Scrolling) */
           .lead-modal-card {
-            max-width: 480px !important;
+            width: 100% !important;
+            max-width: 420px !important;
             flex-direction: column !important;
             border-radius: 16px !important;
-            max-height: 92vh !important;
+            max-height: 94vh !important;
+            overflow: hidden !important;
+            background: #fff !important;
           }
           .lead-modal-left-banner {
             display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            padding: 0 !important;
           }
           .lead-modal-right-form {
+            display: block !important;
             width: 100% !important;
-            padding: 24px 18px 20px !important;
+            padding: 18px 16px 14px !important;
             border-radius: 16px !important;
+            box-sizing: border-box !important;
+            max-height: 94vh !important;
+            overflow-y: auto !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+          }
+          .lead-modal-right-form::-webkit-scrollbar {
+            display: none !important;
+          }
+          .lead-modal-head {
+            margin-bottom: 10px !important;
+            padding-right: 28px !important;
+          }
+          .lead-modal-title {
+            font-size: 18px !important;
+            margin-bottom: 2px !important;
+          }
+          .lead-modal-subtitle {
+            font-size: 11.5px !important;
+          }
+          .lead-modal-field {
+            margin-bottom: 8px !important;
+          }
+          .lead-modal-label {
+            margin-bottom: 2px !important;
+            font-size: 10.5px !important;
+          }
+          .lead-modal-field input,
+          .lead-modal-field select {
+            height: 36px !important;
+            padding: 6px 10px !important;
+            font-size: 12.5px !important;
+          }
+          .lead-modal-field button {
+            height: 36px !important;
+            font-size: 11.5px !important;
+          }
+          .lead-modal-submit-btn {
+            padding: 10px 0 !important;
+            font-size: 13.5px !important;
+          }
+          .lead-modal-footnote {
+            display: none !important;
+          }
+          .lead-modal-terms {
+            margin-top: 6px !important;
+            font-size: 10px !important;
           }
         }
 
-        /* Lead Modal Popup (Wide 2-Column Desktop Layout) */
-        .lead-modal-card {
-          width: 100% !important;
-          max-width: 880px !important;
-          flex-direction: row !important;
-          border-radius: 20px !important;
-        }
-        .lead-modal-left-banner {
-          display: flex !important;
-          flex: 0 0 360px !important;
-          width: 360px !important;
-        }
-        .lead-modal-right-form {
-          flex: 1 1 auto !important;
-          width: calc(100% - 360px) !important;
+        /* Lead Modal Popup for Desktop / Laptop (Wide 2-Column Layout) */
+        @media (min-width: 769px) {
+          .lead-modal-card {
+            width: 100% !important;
+            max-width: 880px !important;
+            flex-direction: row !important;
+            border-radius: 20px !important;
+          }
+          .lead-modal-left-banner {
+            display: flex !important;
+            flex: 0 0 360px !important;
+            width: 360px !important;
+          }
+          .lead-modal-right-form {
+            display: block !important;
+            flex: 1 1 auto !important;
+            width: calc(100% - 360px) !important;
+          }
         }
         @media (max-width: 920px) and (min-width: 769px) {
           .lead-modal-card {
@@ -2598,27 +2656,29 @@ export default function BMCPLanding() {
               grid-template-columns: repeat(3, 1fr) !important;
             }
             .stat-segment {
-              padding: 12px 4px !important;
+              padding: 10px 4px !important;
               flex-direction: column !important;
               text-align: center !important;
-              gap: 6px !important;
+              gap: 5px !important;
             }
             .stat-segment:not(:last-child) {
               border-right: 1px solid #E5E7EB !important;
               border-bottom: none !important;
             }
             .stat-segment-icon {
-              width: 32px !important;
-              height: 32px !important;
+              width: 30px !important;
+              height: 30px !important;
             }
             .stat-segment-icon svg {
-              width: 16px !important;
-              height: 16px !important;
+              width: 15px !important;
+              height: 15px !important;
             }
             .stat-segment-title {
-              font-size: 12px !important;
+              font-size: 11.5px !important;
+              font-weight: 700 !important;
               line-height: 1.2 !important;
               text-align: center !important;
+              white-space: nowrap !important;
             }
             .stat-title-desktop {
               display: none !important;
@@ -2627,12 +2687,7 @@ export default function BMCPLanding() {
               display: inline !important;
             }
             .stat-segment-desc {
-              display: block !important;
-              font-size: 9.5px !important;
-              color: #6B7280 !important;
-              margin-top: 2px !important;
-              line-height: 1.2 !important;
-              text-align: center !important;
+              display: none !important;
             }
           }
         `}</style>
@@ -4427,18 +4482,18 @@ export default function BMCPLanding() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ margin: 0 }}>
-                  <div style={{ marginBottom: 18, paddingRight: 32 }}>
-                    <h3 style={{ margin: "0 0 4px", fontSize: 21, fontWeight: 800, color: D, fontFamily: "var(--font-dm-sans), sans-serif", letterSpacing: "-0.3px" }}>
+                  <div className="lead-modal-head" style={{ marginBottom: 18, paddingRight: 32 }}>
+                    <h3 className="lead-modal-title" style={{ margin: "0 0 4px", fontSize: 21, fontWeight: 800, color: D, fontFamily: "var(--font-dm-sans), sans-serif", letterSpacing: "-0.3px" }}>
                       Get Venue Options Free
                     </h3>
-                    <p style={{ margin: 0, fontSize: 12.5, color: G }}>
+                    <p className="lead-modal-subtitle" style={{ margin: 0, fontSize: 12.5, color: G }}>
                       Free for HR &amp; Admin teams. Options within 30 minutes.
                     </p>
                   </div>
 
                   {/* 1. OCCASION */}
-                  <div style={{ marginBottom: 12 }}>
-                    <label htmlFor="modal-occasion" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                  <div className="lead-modal-field" style={{ marginBottom: 12 }}>
+                    <label className="lead-modal-label" htmlFor="modal-occasion" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
                       What u want to book? *
                     </label>
                     <div style={{ position: "relative" }}>
@@ -4481,8 +4536,8 @@ export default function BMCPLanding() {
                   </div>
 
                   {/* 2. NAME */}
-                  <div style={{ marginBottom: 12 }}>
-                    <label htmlFor="modal-name" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                  <div className="lead-modal-field" style={{ marginBottom: 12 }}>
+                    <label className="lead-modal-label" htmlFor="modal-name" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
                       Name *
                     </label>
                     <input
@@ -4509,8 +4564,8 @@ export default function BMCPLanding() {
                   </div>
 
                   {/* 3. EMAIL */}
-                  <div style={{ marginBottom: 12 }}>
-                    <label htmlFor="modal-email" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                  <div className="lead-modal-field" style={{ marginBottom: 12 }}>
+                    <label className="lead-modal-label" htmlFor="modal-email" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
                       Email *
                     </label>
                     <input
@@ -4537,8 +4592,8 @@ export default function BMCPLanding() {
                   </div>
 
                   {/* 4. NUMBER */}
-                  <div style={{ marginBottom: 12 }}>
-                    <label htmlFor="modal-phone" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
+                  <div className="lead-modal-field" style={{ marginBottom: 12 }}>
+                    <label className="lead-modal-label" htmlFor="modal-phone" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, marginBottom: 4 }}>
                       Number *
                     </label>
                     <div style={{ display: "flex", gap: 8, alignItems: "stretch" }}>
@@ -4602,9 +4657,9 @@ export default function BMCPLanding() {
                   </div>
 
                   {/* 5. OTP */}
-                  <div style={{ marginBottom: 14 }}>
+                  <div className="lead-modal-field" style={{ marginBottom: 14 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4, minHeight: 14 }}>
-                      <label htmlFor="modal-otp" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, lineHeight: "14px" }}>
+                      <label className="lead-modal-label" htmlFor="modal-otp" style={{ display: "block", fontSize: 11, fontWeight: 600, color: D, lineHeight: "14px" }}>
                         OTP *
                       </label>
                       {otpSent && !otpVerified && (
@@ -4697,6 +4752,7 @@ export default function BMCPLanding() {
 
                   {/* 6. SUBMIT */}
                   <button
+                    className="lead-modal-submit-btn"
                     type="submit"
                     disabled={formStatus === 'submitting' || !isFormValid()}
                     style={{
@@ -4718,10 +4774,10 @@ export default function BMCPLanding() {
                     {formStatus === 'submitting' ? 'Submitting...' : 'Get 5 Free Quotes →'}
                   </button>
 
-                  <p style={{ margin: "14px 0 0", fontSize: 11.5, color: G, textAlign: "center", fontStyle: "italic" }}>
+                  <p className="lead-modal-footnote" style={{ margin: "14px 0 0", fontSize: 11.5, color: G, textAlign: "center", fontStyle: "italic" }}>
                     Free for HR &amp; Admin teams • Takes 30 seconds • No obligation
                   </p>
-                  <p style={{ margin: "6px 0 0", fontSize: 11, color: "#9CA3AF", textAlign: "center" }}>
+                  <p className="lead-modal-terms" style={{ margin: "6px 0 0", fontSize: 11, color: "#9CA3AF", textAlign: "center" }}>
                     By clicking submit, you accept our <Link href="/terms" style={{ color: G, textDecoration: "underline" }}>Terms &amp; Conditions</Link>
                   </p>
                 </form>
