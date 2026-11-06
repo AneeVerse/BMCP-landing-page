@@ -1879,48 +1879,67 @@ export default function BMCPLanding() {
             justify-content: center !important;
           }
           .floating-actions-container {
-            bottom: 14px !important;
-            left: 14px !important;
-            right: 14px !important;
+            bottom: calc(18px + env(safe-area-inset-bottom, 0px)) !important;
+            left: 16px !important;
+            right: 16px !important;
             width: auto !important;
-            max-width: calc(100% - 28px) !important;
+            max-width: calc(100% - 32px) !important;
             margin: 0 auto !important;
             display: flex !important;
             align-items: center !important;
-            justify-content: space-between !important;
-            gap: 10px !important;
+            justify-content: center !important;
             box-sizing: border-box !important;
-            z-index: 9999 !important;
+            z-index: 1000 !important;
+            transform: none !important;
+            will-change: opacity !important;
           }
           .expert-fab {
-            flex: 1 1 auto !important;
-            width: 100% !important;
-            height: 52px !important;
-            padding: 0 16px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 8px !important;
-            font-size: 14.5px !important;
-            font-weight: 800 !important;
-            white-space: nowrap !important;
-            letter-spacing: 0.2px !important;
-            border-radius: 9999px !important;
+            display: none !important;
           }
           .whatsapp-fab-btn {
-            width: 52px !important;
+            width: 100% !important;
+            max-width: 100% !important;
             height: 52px !important;
-            flex-shrink: 0 !important;
-            border-radius: 50% !important;
+            border-radius: 9999px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
+            gap: 10px !important;
+            background: #25D366 !important;
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+            padding: 0 20px !important;
+          }
+          .whatsapp-fab-text {
+            display: inline-block !important;
+            font-size: 15px !important;
+            font-weight: 800 !important;
+            color: #ffffff !important;
+            letter-spacing: 0.2px !important;
           }
           .fab-full-text {
-            display: inline-block !important;
-            font-size: 14px !important;
-            font-weight: 800 !important;
-            white-space: nowrap !important;
+            display: none !important;
+          }
+
+          /* WhatsApp Popup Modal Mobile Sizing */
+          .wa-modal-actions {
+            flex-direction: column-reverse !important;
+            gap: 9px !important;
+            width: 100% !important;
+          }
+          .wa-modal-actions button {
+            width: 100% !important;
+            flex: none !important;
+          }
+          .wa-modal-submit-btn {
+            height: 48px !important;
+            padding: 0 16px !important;
+            font-size: 14.5px !important;
+          }
+          .wa-modal-cancel-btn {
+            height: 40px !important;
+            font-size: 13.5px !important;
           }
 
           /* Trusted by Leading Corporates - 2 column grid on mobile */
@@ -2561,7 +2580,7 @@ export default function BMCPLanding() {
       <Sec bg="#FAFAFA" id="corporate-occasions" style={{ borderTop: `1px solid ${B}`, borderBottom: `1px solid ${B}`, padding: "40px clamp(20px, 6vw, 120px)" }}>
         <style>{`
           .stat-segment:not(:last-child) {
-            border-right: 1px solid #E5E7EB;
+            border-right: 1px solid rgba(255, 255, 255, 0.18);
           }
           .stat-title-mobile {
             display: none;
@@ -2662,16 +2681,22 @@ export default function BMCPLanding() {
               gap: 5px !important;
             }
             .stat-segment:not(:last-child) {
-              border-right: 1px solid #E5E7EB !important;
+              border-right: 1px solid rgba(255, 255, 255, 0.18) !important;
               border-bottom: none !important;
             }
             .stat-segment-icon {
-              width: 30px !important;
-              height: 30px !important;
+              width: auto !important;
+              height: auto !important;
+              background: transparent !important;
+              border: none !important;
+              border-radius: 0 !important;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: center !important;
             }
             .stat-segment-icon svg {
-              width: 15px !important;
-              height: 15px !important;
+              width: 20px !important;
+              height: 20px !important;
             }
             .stat-segment-title {
               font-size: 11.5px !important;
@@ -2679,6 +2704,7 @@ export default function BMCPLanding() {
               line-height: 1.2 !important;
               text-align: center !important;
               white-space: nowrap !important;
+              color: #FFFFFF !important;
             }
             .stat-title-desktop {
               display: none !important;
@@ -2734,10 +2760,10 @@ export default function BMCPLanding() {
         <div style={{
           maxWidth: 860,
           margin: "0 auto",
-          background: "#FFFFFF",
-          border: `1px solid ${B}`,
+          background: R,
+          border: "1px solid rgba(255, 255, 255, 0.15)",
           borderRadius: 16,
-          boxShadow: "0 4px 18px rgba(0,0,0,0.03)",
+          boxShadow: "0 8px 24px rgba(128, 40, 31, 0.25)",
           overflow: "hidden"
         }}>
           <div className="stats-segmented-bar" style={{
@@ -2754,21 +2780,17 @@ export default function BMCPLanding() {
               gap: 14
             }}>
               <div className="stat-segment-icon" style={{
-                width: 42,
-                height: 42,
-                borderRadius: "50%",
-                background: L,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: R,
+                color: "#FFFFFF",
                 flexShrink: 0
               }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3M9 9h1M9 13h1M9 17h1" /></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-3M9 9h1M9 13h1M9 17h1" /></svg>
               </div>
               <div style={{ textAlign: "left" }}>
-                <div className="stat-segment-title" style={{ fontSize: 16.5, fontWeight: 800, color: D, letterSpacing: "-0.3px", lineHeight: 1.2 }}>1000+ Venues</div>
-                <div className="stat-segment-desc" style={{ fontSize: 12, color: G, marginTop: 3, fontWeight: 500 }}>Verified corporate spaces</div>
+                <div className="stat-segment-title" style={{ fontSize: 16.5, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.3px", lineHeight: 1.2 }}>1000+ Venues</div>
+                <div className="stat-segment-desc" style={{ fontSize: 12, color: "rgba(255, 255, 255, 0.85)", marginTop: 3, fontWeight: 500 }}>Verified corporate spaces</div>
               </div>
             </div>
 
@@ -2781,21 +2803,17 @@ export default function BMCPLanding() {
               gap: 14
             }}>
               <div className="stat-segment-icon" style={{
-                width: 42,
-                height: 42,
-                borderRadius: "50%",
-                background: L,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: R,
+                color: "#FFFFFF",
                 flexShrink: 0
               }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
               </div>
               <div style={{ textAlign: "left" }}>
-                <div className="stat-segment-title" style={{ fontSize: 16.5, fontWeight: 800, color: D, letterSpacing: "-0.3px", lineHeight: 1.2 }}>10+ Cities</div>
-                <div className="stat-segment-desc" style={{ fontSize: 12, color: G, marginTop: 3, fontWeight: 500 }}>Major business metros</div>
+                <div className="stat-segment-title" style={{ fontSize: 16.5, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.3px", lineHeight: 1.2 }}>10+ Cities</div>
+                <div className="stat-segment-desc" style={{ fontSize: 12, color: "rgba(255, 255, 255, 0.85)", marginTop: 3, fontWeight: 500 }}>Major business metros</div>
               </div>
             </div>
 
@@ -2808,24 +2826,20 @@ export default function BMCPLanding() {
               gap: 14
             }}>
               <div className="stat-segment-icon" style={{
-                width: 42,
-                height: 42,
-                borderRadius: "50%",
-                background: L,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: R,
+                color: "#FFFFFF",
                 flexShrink: 0
               }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7" r="4" /><path d="M5.5 21a6.5 6.5 0 0 1 13 0" /></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="7" r="4" /><path d="M5.5 21a6.5 6.5 0 0 1 13 0" /></svg>
               </div>
               <div style={{ textAlign: "left" }}>
-                <div className="stat-segment-title" style={{ fontSize: 16.5, fontWeight: 800, color: D, letterSpacing: "-0.3px", lineHeight: 1.2 }}>
+                <div className="stat-segment-title" style={{ fontSize: 16.5, fontWeight: 800, color: "#FFFFFF", letterSpacing: "-0.3px", lineHeight: 1.2 }}>
                   <span className="stat-title-desktop">One Point of Contact</span>
                   <span className="stat-title-mobile">1 Dedicated Contact</span>
                 </div>
-                <div className="stat-segment-desc" style={{ fontSize: 12, color: G, marginTop: 3, fontWeight: 500 }}>From enquiry to execution</div>
+                <div className="stat-segment-desc" style={{ fontSize: 12, color: "rgba(255, 255, 255, 0.85)", marginTop: 3, fontWeight: 500 }}>From enquiry to execution</div>
               </div>
             </div>
           </div>
@@ -2868,11 +2882,37 @@ export default function BMCPLanding() {
             { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><polyline points="9 15 11 17 15 13" /></svg>, title: "Make Approvals Easier", desc: "Clear proposals and transparent pricing." },
             { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M8 14s1.5 2 4 2 4-2 4-2" /><line x1="9" y1="9" x2="9.01" y2="9" /><line x1="15" y1="9" x2="15.01" y2="9" /></svg>, title: "Focus on Your Team", desc: "We handle the coordination; you enjoy the event." },
           ].map((b, i) => (
-            <div key={i} className="why-choose-card" style={{ background: "#fff", borderRadius: 14, padding: "24px 16px", border: `1px solid ${B}`, textAlign: "center", transition: "transform 0.2s, box-shadow 0.2s", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start" }} onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.05)"; }} onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
-              <div className="why-choose-icon" style={{ color: R, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+            <div
+              key={i}
+              className="why-choose-card"
+              style={{
+                background: R,
+                borderRadius: 14,
+                padding: "24px 16px",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+                boxShadow: "0 4px 14px rgba(128, 40, 31, 0.18)",
+                textAlign: "center",
+                transition: "transform 0.2s, box-shadow 0.2s",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "flex-start"
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = "translateY(-5px)";
+                e.currentTarget.style.boxShadow = "0 10px 24px rgba(128, 40, 31, 0.35)";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = "none";
+                e.currentTarget.style.boxShadow = "0 4px 14px rgba(128, 40, 31, 0.18)";
+              }}
+            >
+              <div className="why-choose-icon" style={{ color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
                 {b.icon}
               </div>
-              <h4 className="why-choose-title" style={{ margin: 0, fontSize: 15.5, fontWeight: 700, color: D, lineHeight: 1.3 }}>{b.title}</h4>
+              <h4 className="why-choose-title" style={{ margin: 0, fontSize: 15.5, fontWeight: 700, color: "#FFFFFF", lineHeight: 1.3 }}>
+                {b.title}
+              </h4>
               {/* <p style={{ margin: 0, fontSize: 13, color: G, lineHeight: 1.6 }}>{b.desc}</p> */}
             </div>
           ))}
@@ -3550,6 +3590,11 @@ export default function BMCPLanding() {
                 img: null, initial: "R", color: "#9C27B0",
                 q: "We have had a wonderful experience working with Sachin and Pradeep for our corporate events. Their professionalism and seamless coordination has made our events smooth and successful, and saved a lot of our time on logistics. Highly recommend them for planning your corporate events.",
               },
+              {
+                name: "A. Chauhan", meta: "Local Guide · 7 reviews", time: "2 weeks ago",
+                img: null, initial: "A", color: "#F59E0B",
+                q: "Thank you, Amit, for hosting such a wonderful party, and a big thank you to Pradeep for all the support and coordination. Our entire team had a fantastic time and truly enjoyed the evening! Going forward, Swapna and I will definitely stay in touch with you for any support or coordination needed for our upcoming events and parties in Essar. Thanks a ton to both of you for making it such a memorable evening.",
+              },
             ].map((t, i) => (
               <div key={i} style={{ flex: "0 0 270px", width: 270, background: "#fff", border: `1px solid ${B}`, borderRadius: 14, padding: "14px 16px", boxShadow: "0 4px 12px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column", gap: 0, scrollSnapAlign: "start" }}>
                 {/* Top row: avatar + name + Google logo */}
@@ -4214,11 +4259,11 @@ export default function BMCPLanding() {
         className="floating-actions-container"
         style={{
           zIndex: 1000,
-          transition: "opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s",
-          opacity: showFloatingActions ? 1 : 0,
-          pointerEvents: showFloatingActions ? "auto" : "none",
-          visibility: showFloatingActions ? "visible" : "hidden",
-          transform: showFloatingActions ? "translateY(0) scale(1)" : "translateY(16px) scale(0.95)",
+          transition: "opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s",
+          opacity: (showFloatingActions && !showLeadModal && !showWaPopup) ? 1 : 0,
+          pointerEvents: (showFloatingActions && !showLeadModal && !showWaPopup) ? "auto" : "none",
+          visibility: (showFloatingActions && !showLeadModal && !showWaPopup) ? "visible" : "hidden",
+          transform: (showFloatingActions && !showLeadModal && !showWaPopup) ? "translateY(0) scale(1)" : "translateY(6px) scale(0.97)",
         }}
       >
         {/* Floating "Get 5 Free Quotes" (Form Modal Trigger) */}
@@ -4249,10 +4294,16 @@ export default function BMCPLanding() {
           className="whatsapp-fab-btn"
           aria-label="Chat on WhatsApp"
           title="Chat on WhatsApp"
+          style={{
+            background: "#80281F",
+            border: "1px solid rgba(255, 255, 255, 0.25)",
+            boxShadow: "0 10px 28px rgba(128, 40, 31, 0.4)"
+          }}
         >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" style={{ flexShrink: 0 }}>
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.555 4.197 1.608 6.02L0 24l6.128-1.608a11.847 11.847 0 0 0 5.922 1.583h.005c6.637 0 12.046-5.41 12.051-12.048a11.82 11.82 0 0 0-3.526-8.528"></path>
           </svg>
+          <span className="whatsapp-fab-text">Chat on WhatsApp</span>
         </button>
       </div>
 
@@ -4864,13 +4915,57 @@ export default function BMCPLanding() {
                 </select>
               </div>
 
-              <div style={{ display: "flex", gap: 10 }}>
-                <button type="button" onClick={() => setShowWaPopup(false)} style={{ flex: 1, padding: "12px 0", background: "#fff", color: D, border: `1px solid ${B}`, borderRadius: 9, fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif" }}>
+              <div className="wa-modal-actions" style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                <button
+                  type="button"
+                  className="wa-modal-cancel-btn"
+                  onClick={() => setShowWaPopup(false)}
+                  style={{
+                    flex: 1,
+                    padding: "12px 16px",
+                    background: "#fff",
+                    color: D,
+                    border: `1px solid ${B}`,
+                    borderRadius: 9,
+                    fontSize: 13.5,
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    fontFamily: "var(--font-dm-sans), sans-serif",
+                    whiteSpace: "nowrap",
+                    boxSizing: "border-box"
+                  }}
+                >
                   Cancel
                 </button>
-                <button type="submit" style={{ flex: 2, padding: "12px 0", background: R, color: "#fff", border: "none", borderRadius: 9, fontSize: 14, fontWeight: 700, cursor: "pointer", fontFamily: "var(--font-dm-sans), sans-serif", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.555 4.197 1.608 6.02L0 24l6.128-1.608a11.847 11.847 0 0 0 5.922 1.583h.005c6.637 0 12.046-5.41 12.051-12.048a11.82 11.82 0 0 0-3.526-8.528"></path></svg>
-                  Chat on WhatsApp
+                <button
+                  type="submit"
+                  className="wa-modal-submit-btn"
+                  style={{
+                    flex: 2,
+                    minWidth: 0,
+                    padding: "12px 18px",
+                    background: R,
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: 9,
+                    fontSize: 14,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    fontFamily: "var(--font-dm-sans), sans-serif",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 8,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    boxSizing: "border-box",
+                    boxShadow: "0 4px 14px rgba(128,40,31,0.25)"
+                  }}
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#fff" style={{ flexShrink: 0 }}>
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.555 4.197 1.608 6.02L0 24l6.128-1.608a11.847 11.847 0 0 0 5.922 1.583h.005c6.637 0 12.046-5.41 12.051-12.048a11.82 11.82 0 0 0-3.526-8.528"></path>
+                  </svg>
+                  <span style={{ whiteSpace: "nowrap" }}>Continue to WhatsApp →</span>
                 </button>
               </div>
               <p style={{ fontSize: 10.5, color: "#bbb", textAlign: "center", margin: "12px 0 0" }}>Your details are kept private and never shared.</p>
