@@ -191,15 +191,15 @@ export const OCCASIONS = [
 ] as const;
 
 export const OCCASION_CARDS = [
-  { name: "Cocktail Party", img: "/images/what-you-can-book/nightclubs.png" },
+  { name: "Cocktail Party", img: "/images/occasions/cocktail-party.jpg" },
   { name: "Festival Celebration", img: "/images/what-you-can-book/open-lawn.png" },
   { name: "Team Lunch / Dinner", img: "/images/insta-dinner.png" },
-  { name: "Team Offsite", img: "/images/what-you-can-book/villas.png" },
-  { name: "Annual Day", img: "/images/what-you-can-book/banquets.png" },
-  { name: "Family Day", img: "/images/what-you-can-book/water-parks.png" },
-  { name: "Sports Day", img: "/images/what-you-can-book/sports-bars.png" },
-  { name: "Yacht Party", img: "/images/what-you-can-book/private-YACHT.png" },
-  { name: "Office Catering", img: "/images/what-you-can-book/catering.png" },
+  { name: "Team Offsite", img: "/images/occasions/team-offsite.jpg" },
+  { name: "Annual Day", img: "/images/occasions/annual-day.jpg" },
+  { name: "Family Day", img: "/images/occasions/family-day.jpg" },
+  { name: "Sports Day", img: "/images/occasions/sports-day.jpg" },
+  { name: "Yacht Party", img: "/images/occasions/yacht-party.jpg" },
+  { name: "Office Catering", img: "/images/occasions/office-catering.jpg" },
 ];
 
 type FormType = '' | 'villa' | 'lounge' | 'banquet' | 'nightclub' | 'catering';
@@ -692,6 +692,59 @@ export default function BMCPLanding() {
   const userGeo = useGeoLocation();
   const visitorTracked = useRef(false);
   const testimonialRowRef = useRef<HTMLDivElement>(null);
+  const occasionsScrollRef = useRef<HTMLDivElement>(null);
+  const [isDraggingOccasions, setIsDraggingOccasions] = useState(false);
+  const isOccasionsMouseDownRef = useRef(false);
+  const occasionsStartXRef = useRef(0);
+  const occasionsStartScrollLeftRef = useRef(0);
+  const occasionsDidDragRef = useRef(false);
+
+  const handleOccasionsMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    const container = occasionsScrollRef.current;
+    if (!container) return;
+    isOccasionsMouseDownRef.current = true;
+    occasionsDidDragRef.current = false;
+    occasionsStartXRef.current = e.clientX;
+    occasionsStartScrollLeftRef.current = container.scrollLeft;
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isOccasionsMouseDownRef.current) return;
+      const container = occasionsScrollRef.current;
+      if (!container) return;
+      const dx = e.clientX - occasionsStartXRef.current;
+      if (!occasionsDidDragRef.current && Math.abs(dx) > 5) {
+        occasionsDidDragRef.current = true;
+        setIsDraggingOccasions(true);
+      }
+      if (occasionsDidDragRef.current) {
+        e.preventDefault();
+        container.scrollLeft = occasionsStartScrollLeftRef.current - dx * 1.15;
+      }
+    };
+
+    const stopDragging = () => {
+      if (!isOccasionsMouseDownRef.current) return;
+      isOccasionsMouseDownRef.current = false;
+      setIsDraggingOccasions(false);
+      if (occasionsDidDragRef.current) {
+        setTimeout(() => {
+          occasionsDidDragRef.current = false;
+        }, 50);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", stopDragging);
+    window.addEventListener("blur", stopDragging);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", stopDragging);
+      window.removeEventListener("blur", stopDragging);
+    };
+  }, []);
 
   const isSubmittedRef = useRef(false);
   const partialSentRef = useRef(false);
@@ -2589,11 +2642,23 @@ export default function BMCPLanding() {
             display: flex;
             gap: 20px;
             overflow-x: auto;
-            scroll-snap-type: x mandatory;
+            scroll-snap-type: x proximity;
             -webkit-overflow-scrolling: touch;
             padding: 8px 4px 22px;
             scrollbar-width: none !important;
             -ms-overflow-style: none !important;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+          }
+          .occasions-cards-scroll.is-dragging {
+            cursor: grabbing !important;
+            scroll-snap-type: none !important;
+          }
+          .occasions-cards-scroll.is-dragging .occasion-photo-card {
+            cursor: grabbing !important;
+            transform: none !important;
+            transition: none !important;
           }
           .occasions-cards-scroll::-webkit-scrollbar {
             display: none !important;
@@ -2604,9 +2669,14 @@ export default function BMCPLanding() {
             flex: 0 0 calc((100% - (4 * 20px)) / 4.5);
             width: calc((100% - (4 * 20px)) / 4.5);
             min-width: calc((100% - (4 * 20px)) / 4.5);
-            cursor: pointer;
+            cursor: grab;
             scroll-snap-align: start;
             transition: transform 0.25s ease, box-shadow 0.25s ease;
+          }
+          .occasion-photo-card img {
+            user-select: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
           }
           .occasion-photo-card:hover {
             transform: translateY(-4px);
@@ -2645,6 +2715,7 @@ export default function BMCPLanding() {
             .occasions-cards-scroll {
               gap: 12px !important;
               padding: 4px 4px 16px !important;
+              scroll-snap-type: x mandatory !important;
               scrollbar-width: none !important;
               -ms-overflow-style: none !important;
             }
@@ -2725,12 +2796,18 @@ export default function BMCPLanding() {
         </div>
 
         {/* Occasions Photo Cards Scroll Strip */}
-        <div className="occasions-cards-scroll">
+        <div
+          ref={occasionsScrollRef}
+          className={`occasions-cards-scroll${isDraggingOccasions ? " is-dragging" : ""}`}
+          onMouseDown={handleOccasionsMouseDown}
+          onDragStart={(e) => e.preventDefault()}
+        >
           {OCCASION_CARDS.map((card) => (
             <div
               key={card.name}
               className="occasion-photo-card"
               onClick={() => {
+                if (occasionsDidDragRef.current) return;
                 setFormData(prev => ({ ...prev, occasion: card.name }));
                 setShowLeadModal(true);
               }}
@@ -2739,6 +2816,7 @@ export default function BMCPLanding() {
                 <img
                   src={card.img}
                   alt={card.name}
+                  draggable={false}
                   style={{
                     width: "100%",
                     height: "100%",
