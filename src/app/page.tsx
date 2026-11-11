@@ -1007,10 +1007,26 @@ export default function BMCPLanding() {
     { name: "Open Lawn", img: "/images/what-you-can-book/open-lawn.png", tags: ["Outdoor", "Large Gatherings"], desc: "Expansive open-air lawns for corporate sports days, annual galas, and mega team celebrations.", capacity: "100–2000+ guests" },
   ];
 
+  const whatsappFabStyle = {
+    background: "#80281F",
+    border: "1px solid rgba(255, 255, 255, 0.25)",
+    boxShadow: "0 10px 28px rgba(128, 40, 31, 0.4)",
+  };
+
+  const whatsappFabContent = (
+    <>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" style={{ flexShrink: 0 }}>
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.555 4.197 1.608 6.02L0 24l6.128-1.608a11.847 11.847 0 0 0 5.922 1.583h.005c6.637 0 12.046-5.41 12.051-12.048a11.82 11.82 0 0 0-3.526-8.528"></path>
+      </svg>
+      <span className="whatsapp-fab-text">Chat on WhatsApp</span>
+    </>
+  );
+
   return (
     <div style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: D, overflowX: "hidden" }}>
       <style>{`
         .hamburger-btn { display: none; }
+        .whatsapp-fab-btn.whatsapp-fab-mobile { display: none !important; }
         
         /* Smooth reveal animation for progressive form disclosure */
         @keyframes revealForm {
@@ -1963,6 +1979,14 @@ export default function BMCPLanding() {
             border: 1px solid rgba(255, 255, 255, 0.3) !important;
             color: #ffffff !important;
             padding: 0 20px !important;
+          }
+          .whatsapp-fab-btn.whatsapp-fab-desktop {
+            display: none !important;
+          }
+          .whatsapp-fab-btn.whatsapp-fab-mobile {
+            display: flex !important;
+            box-sizing: border-box !important;
+            text-decoration: none !important;
           }
           .whatsapp-fab-text {
             display: inline-block !important;
@@ -4366,23 +4390,28 @@ export default function BMCPLanding() {
           <span className="fab-full-text">Get 5 Free Quotes</span>
         </button>
 
-        {/* 2. WhatsApp VIP Concierge Button */}
+        {/* 2. WhatsApp VIP Concierge Button (desktop opens popup form; mobile links straight to WhatsApp) */}
         <button
+          type="button"
           onClick={() => setShowWaPopup(true)}
-          className="whatsapp-fab-btn"
+          className="whatsapp-fab-btn whatsapp-fab-desktop"
           aria-label="Chat on WhatsApp"
           title="Chat on WhatsApp"
-          style={{
-            background: "#80281F",
-            border: "1px solid rgba(255, 255, 255, 0.25)",
-            boxShadow: "0 10px 28px rgba(128, 40, 31, 0.4)"
-          }}
+          style={whatsappFabStyle}
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" style={{ flexShrink: 0 }}>
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.414 0 .004 5.408 0 12.044c0 2.123.555 4.197 1.608 6.02L0 24l6.128-1.608a11.847 11.847 0 0 0 5.922 1.583h.005c6.637 0 12.046-5.41 12.051-12.048a11.82 11.82 0 0 0-3.526-8.528"></path>
-          </svg>
-          <span className="whatsapp-fab-text">Chat on WhatsApp</span>
+          {whatsappFabContent}
         </button>
+        <a
+          href={WA}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="whatsapp-fab-btn whatsapp-fab-mobile"
+          aria-label="Chat on WhatsApp"
+          title="Chat on WhatsApp"
+          style={whatsappFabStyle}
+        >
+          {whatsappFabContent}
+        </a>
       </div>
 
       {/* ===== LEAD FORM POPUP MODAL ===== */}
